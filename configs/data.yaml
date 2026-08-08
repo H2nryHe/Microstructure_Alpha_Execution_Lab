@@ -1,5 +1,20 @@
 instrument: BTC-USDT
 timezone: UTC
+vendor_symbols:
+  binance_spot:
+    symbol: BTCUSDT
+    venue: Binance Spot
+    timestamp_column: time
+    timestamp_unit_before_2025_01_01: milliseconds_since_unix_epoch
+    timestamp_unit_from_2025_01_01: microseconds_since_unix_epoch
+    timezone: UTC
+  tardis_binance_spot:
+    symbol: BTCUSDT
+    venue: Tardis normalized Binance Spot
+    timestamp_column: timestamp
+    receive_timestamp_column: local_timestamp
+    timestamp_unit: microseconds_since_unix_epoch
+    timezone: UTC
 raw_data_dir: data/raw
 bronze_data_dir: data/bronze
 expected_inputs:

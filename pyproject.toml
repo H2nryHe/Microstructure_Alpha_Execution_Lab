@@ -27,6 +27,7 @@ dev = [
 [project.scripts]
 microalpha-smoke = "microalpha.cli:main"
 microalpha-ingest = "microalpha.data.ingest_cli:main"
+microalpha-qa = "microalpha.data.qa_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

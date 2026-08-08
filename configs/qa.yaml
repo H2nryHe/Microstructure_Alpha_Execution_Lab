@@ -1,0 +1,18 @@
+qa_version: v0
+timestamp:
+  min_event_time: "2010-01-01T00:00:00+00:00"
+  max_event_time: "2035-01-01T00:00:00+00:00"
+sequence:
+  require_monotonic_when_present: true
+price:
+  discontinuity_bps_error: 1000
+  # Consecutive observed price or BBO mid changes above this threshold are errors.
+size:
+  absolute_quantity_error: 1000000
+  # Quantities above this absolute threshold are treated as implausible for BTC-USDT MVP data.
+gaps:
+  max_inter_update_gap_ms_warning: 60000
+  # Consecutive event-time gaps above this threshold are warnings.
+staleness:
+  stale_bbo_ms_warning: 300000
+  # Unchanged BBO for longer than this threshold is a warning.
