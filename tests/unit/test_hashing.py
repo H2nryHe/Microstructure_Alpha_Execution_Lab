@@ -1,3 +1,5 @@
+import pytest
+
 from microalpha.utils.hashing import hash_config
 
 
@@ -13,3 +15,14 @@ def test_different_config_values_produce_different_hashes() -> None:
     changed = {"model": {"seed": 43}}
 
     assert hash_config(baseline) != hash_config(changed)
+
+
+def test_non_string_mapping_key_fails_before_json_sorting() -> None:
+    with pytest.raises(
+        ValueError,
+        match=(
+            r"Non-string YAML mapping key detected at config\.model\.models: None\. "
+            r"Quote or rename reserved YAML keys\."
+        ),
+    ):
+        hash_config({"model": {"models": {None: {"enabled": True}}}})

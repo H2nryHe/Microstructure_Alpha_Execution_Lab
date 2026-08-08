@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Union
 
+from microalpha.utils.config_validation import validate_string_mapping_keys
+
 
 def _parse_scalar(value: str) -> Any:
     value = value.strip()
@@ -95,6 +97,7 @@ def _load_simple_yaml(path: Path) -> dict[str, Any]:
         raise ValueError(f"Could not parse entire YAML file: {path}")
     if not isinstance(parsed, dict):
         raise ValueError(f"Config file must contain a mapping: {path}")
+    validate_string_mapping_keys(parsed, path.stem)
     return parsed
 
 
@@ -111,6 +114,7 @@ def load_yaml_config(path: Union[str, Path]) -> dict[str, Any]:
         loaded = yaml.safe_load(file) or {}
     if not isinstance(loaded, dict):
         raise ValueError(f"Config file must contain a mapping: {config_path}")
+    validate_string_mapping_keys(loaded, config_path.stem)
     return loaded
 
 
@@ -124,4 +128,5 @@ def load_config_bundle(config_dir: Union[str, Path]) -> dict[str, Any]:
     bundle: dict[str, Any] = {}
     for path in sorted(directory.glob("*.yaml")):
         bundle[path.stem] = load_yaml_config(path)
+    validate_string_mapping_keys(bundle, "config")
     return bundle

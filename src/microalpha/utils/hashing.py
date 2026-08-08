@@ -9,6 +9,8 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
+from microalpha.utils.config_validation import validate_string_mapping_keys
+
 
 def _json_default(value: Any) -> Any:
     if dataclasses.is_dataclass(value):
@@ -27,6 +29,7 @@ def _json_default(value: Any) -> Any:
 def canonical_json(value: Any) -> str:
     """Serialize a value into deterministic JSON."""
 
+    validate_string_mapping_keys(value)
     return json.dumps(
         value,
         sort_keys=True,

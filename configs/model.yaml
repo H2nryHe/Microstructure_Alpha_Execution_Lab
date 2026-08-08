@@ -1,7 +1,7 @@
 model_version: v0
 random_seed: 42
 models:
-  null:
+  null_baseline:
     enabled: true
   ridge:
     enabled: true

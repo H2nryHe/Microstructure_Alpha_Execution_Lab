@@ -27,6 +27,51 @@ treated as immutable unless the specification itself requires revision.
 [ ] Phase 17 - Final packaging
 ```
 
+## CI / Config Hardening
+
+Status: PASS locally; Python 3.11 GitHub Actions confirmation pending
+
+Change:
+
+- Renamed the YAML model key `models.null` to `models.null_baseline` to avoid
+  PyYAML interpreting the reserved unquoted key `null` as Python `None`.
+- Added recursive config validation requiring all mapping keys to be strings
+  after YAML loading. Non-string keys now fail clearly before config hashing,
+  for example:
+  `Non-string YAML mapping key detected at model.models: None. Quote or rename reserved YAML keys.`
+- Added hashing-path validation so direct config hashing cannot fail later in
+  `json.dumps(sort_keys=True)` with mixed key types.
+- Added pytest `pythonpath = ["src"]` so `python -m pytest` works from a
+  checkout without relying on an editable install.
+
+Config-key scan:
+
+- Searched all YAML files under `configs/` for mapping keys that PyYAML may
+  interpret as non-string scalars: `null`, `~`, `true`, `false`, `yes`, `no`,
+  `on`, and `off`.
+- The only mapping-key issue found was `configs/model.yaml` `models.null`.
+- Existing `null` and `true` scalar values remain unchanged because the
+  portability risk is mapping keys, not ordinary scalar values.
+
+Test results:
+
+- `python -m pytest`: PASS, `69 passed in 0.42s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `0fbc90654bf03c51df2c806dc0765a213d28882b909b22b5cfc34faca61f7483`.
+
+Assumptions and risks:
+
+- Local smoke verification used Python with PyYAML but not Python 3.11 because
+  no `python3.11` binary is installed in this workspace.
+- Python 3.11+ compatibility and the GitHub Actions `research-smoke` result
+  must be confirmed from CI after the fix is pushed.
+- This is a configuration serialization/CI portability bug and does not change
+  the Phase 4 causal research dataset acceptance status.
+
 ## Phase 0 - Repository Foundation
 
 Status: PASS
