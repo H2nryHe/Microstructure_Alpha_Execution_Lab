@@ -41,6 +41,17 @@ TARDIS_INCREMENTAL_BOOK_L2_COLUMNS = (
     "amount",
 )
 
+TARDIS_TRADES_COLUMNS = (
+    "exchange",
+    "symbol",
+    "timestamp",
+    "local_timestamp",
+    "id",
+    "side",
+    "price",
+    "amount",
+)
+
 
 @dataclass(frozen=True)
 class VendorIngestionResult:
@@ -412,6 +423,141 @@ def ingest_tardis_incremental_l2_gzip(
     return VendorIngestionResult(
         vendor=vendor,
         dataset_type="book_updates",
+        instrument=instrument,
+        vendor_symbol=vendor_symbol,
+        trade_date=trade_date,
+        raw_path=str(raw_path),
+        bronze_path=str(bronze_path),
+        manifest_path=str(manifest_path),
+        source_checksum=source_checksum,
+        vendor_checksum="",
+        vendor_checksum_verified=False,
+        row_count=row_count,
+        copied_raw=copied_raw,
+    )
+
+
+def ingest_tardis_trades_gzip(
+    *,
+    source_gzip_path: str | Path,
+    instrument: str,
+    vendor_symbol: str,
+    trade_date: str,
+    vendor: str = "tardis_binance_spot",
+    raw_dir: str | Path = "data/raw",
+    bronze_dir: str | Path = "data/bronze",
+    manifest_dir: str | Path = "data/manifests",
+    max_rows: Optional[int] = None,
+) -> VendorIngestionResult:
+    """Ingest Tardis normalized trades gzip into bronze trades CSV."""
+
+    source_gzip = Path(source_gzip_path)
+    source_checksum = sha256_file(source_gzip)
+    checksum_prefix = source_checksum[:16]
+    raw_path = (
+        Path(raw_dir)
+        / _safe_name(vendor)
+        / _safe_name(vendor_symbol)
+        / _safe_name(trade_date)
+        / "trades"
+        / f"{checksum_prefix}-{_safe_name(source_gzip.name)}"
+    )
+    bronze_path = (
+        Path(bronze_dir)
+        / _safe_name(vendor)
+        / _safe_name(instrument)
+        / _safe_name(trade_date)
+        / "trades"
+        / f"{checksum_prefix}.csv"
+    )
+    manifest_path = _manifest_path(
+        manifest_dir=Path(manifest_dir),
+        vendor=vendor,
+        instrument=instrument,
+        trade_date=trade_date,
+        dataset_type="trades",
+        checksum_prefix=checksum_prefix,
+    )
+
+    copied_raw = _copy_immutable(source_gzip, raw_path, source_checksum)
+    bronze_path.parent.mkdir(parents=True, exist_ok=True)
+    row_count = 0
+    with gzip.open(raw_path, "rt", encoding="utf-8", newline="") as source_file:
+        reader = csv.DictReader(source_file)
+        if reader.fieldnames != list(TARDIS_TRADES_COLUMNS):
+            raise DataValidationError(
+                f"Unexpected Tardis trades schema: {reader.fieldnames}; expected "
+                f"{list(TARDIS_TRADES_COLUMNS)}"
+            )
+        fieldnames = [
+            "source_row_number",
+            "event_time",
+            "receive_time",
+            "price",
+            "quantity",
+            "side",
+            "trade_id",
+            "source_trade_id",
+            "source_timestamp",
+            "source_local_timestamp",
+            "instrument",
+            "vendor",
+            "vendor_symbol",
+            "source_checksum",
+        ]
+        with bronze_path.open("w", encoding="utf-8", newline="") as bronze_file:
+            writer = csv.DictWriter(bronze_file, fieldnames=fieldnames)
+            writer.writeheader()
+            for source_row_number, row in enumerate(reader, start=1):
+                if max_rows is not None and row_count >= max_rows:
+                    break
+                writer.writerow(
+                    {
+                        "source_row_number": source_row_number,
+                        "event_time": _epoch_to_utc_iso(row["timestamp"], unit="microseconds"),
+                        "receive_time": _epoch_to_utc_iso(
+                            row["local_timestamp"], unit="microseconds"
+                        ),
+                        "price": row["price"],
+                        "quantity": row["amount"],
+                        "side": row["side"].lower(),
+                        "trade_id": row["id"],
+                        "source_trade_id": row["id"],
+                        "source_timestamp": row["timestamp"],
+                        "source_local_timestamp": row["local_timestamp"],
+                        "instrument": instrument,
+                        "vendor": row["exchange"],
+                        "vendor_symbol": row["symbol"],
+                        "source_checksum": source_checksum,
+                    }
+                )
+                row_count += 1
+
+    manifest = {
+        "vendor": vendor,
+        "vendor_symbol": vendor_symbol,
+        "instrument": instrument,
+        "dataset_type": "trades",
+        "trade_date": trade_date,
+        "source_schema": list(TARDIS_TRADES_COLUMNS),
+        "normalized_schema": fieldnames,
+        "timestamp_unit": "microseconds",
+        "receive_timestamp_unit": "microseconds",
+        "timezone": "UTC",
+        "source_gzip_path": str(source_gzip),
+        "raw_path": str(raw_path),
+        "bronze_path": str(bronze_path),
+        "source_checksum_sha256": source_checksum,
+        "row_count": row_count,
+        "max_rows": max_rows,
+        "ingested_at": utc_now_iso(),
+        "side_semantics": "Tardis normalized trade side as aggressor side: buy or sell",
+    }
+    _write_manifest(manifest_path, manifest)
+
+    return VendorIngestionResult(
+        vendor=vendor,
+        dataset_type="trades",
         instrument=instrument,
         vendor_symbol=vendor_symbol,
         trade_date=trade_date,

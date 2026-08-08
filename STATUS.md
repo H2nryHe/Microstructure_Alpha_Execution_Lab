@@ -11,7 +11,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 1 - Raw market-data ingestion
 [x] Phase 2 - Market-data QA
 [x] Phase 3 - Order-book reconstruction
-[ ] Phase 4 - Research dataset construction
+[x] Phase 4 - Research dataset construction
 [ ] Phase 5 - Feature engineering
 [ ] Phase 6 - Label generation
 [ ] Phase 7 - Baseline statistical research
@@ -481,4 +481,271 @@ Acceptance-gate evidence:
 
 Next steps:
 
-- Stop before Phase 4 until the user accepts Phase 3 or requests continuation.
+- Phase 4 is now complete. Stop before Phase 5 until the user accepts Phase 4 or
+  requests continuation.
+
+## Phase 4 - Research Dataset Construction
+
+Status: PASS
+
+Scope control:
+
+- Phase 5 feature engineering was not started.
+- No queue imbalance, OFI, microprice, labels, models, or trading signals were
+  implemented.
+
+Full-day Phase 3 hardening:
+
+- Full-day Tardis L2 input rows: `6,486,542`.
+- Initial snapshot rows: `2,000`, with `1,000` ask rows and `1,000` bid rows.
+- Effective snapshot-depth limitation: research state is initialized from the
+  finite Tardis snapshot depth present in the file, not infinite/full market
+  depth. Top-10 state is reliable only within the maintained levels after this
+  finite initialization and subsequent updates.
+- Timestamp range replayed:
+  `2019-12-01T00:00:05.045139+00:00` to
+  `2019-12-01T23:59:59.808000+00:00`.
+- Inserts: `2,671,052`.
+- Updates: `835,070`.
+- Deletes: `2,663,854`.
+- No-op deletes: `316,566`.
+- Crossed/invalid states: `0`.
+- Resets: `0`.
+- Final best bid: `7390.16`.
+- Final best ask: `7391.55`.
+- Final top-5 bids:
+  `7390.16 x 0.027057`, `7390.13 x 4.09756`, `7390.11 x 0.59991`,
+  `7390.09 x 4`, `7390.07 x 0.497399`.
+- Final top-5 asks:
+  `7391.55 x 0.022018`, `7391.56 x 0.046975`, `7391.61 x 0.05`,
+  `7392.99 x 0.09282`, `7393 x 2`.
+- Processing time: approximately `68.061` seconds for the first full replay.
+- Deterministic output hash:
+  `582d22aea26c6f177ba7682cc67f02f81697dd6d0a28bc5b2274ab2476d6d110`.
+- Second full replay output hash matched exactly.
+
+No-op delete investigation:
+
+- Tardis represents zero `amount` rows as level removals.
+- A no-op delete means the removal references a price level that is not present
+  in the maintained book at that point.
+- This is not automatically erroneous because the replay starts from a finite
+  2,000-row snapshot, not an infinite-depth book; later removals can reference
+  levels outside the initialized/maintained depth or levels already removed by a
+  prior update.
+- No-op deletes do not alter top-N state directly because they remove no
+  currently maintained level. They are counted and reported because excessive
+  no-ops may indicate snapshot-depth limitations or vendor stream semantics.
+
+Same-day trade data:
+
+- Source: Tardis downloadable CSV datasets API.
+- Exchange: `binance`.
+- Vendor symbol: `BTCUSDT`.
+- Canonical symbol: `BTC-USDT`.
+- Data type: `trades`.
+- Date: `2019-12-01`.
+- Request path:
+  `https://datasets.tardis.dev/v1/binance/trades/2019/12/01/BTCUSDT.csv.gz`
+- HTTP status: `200`.
+- Local raw path:
+  `/tmp/microalpha-real-data/tardis_binance_BTCUSDT_trades_2019-12-01.csv.gz`
+- Compressed size: `6,669,039` bytes.
+- SHA-256:
+  `6a6a2bf2cb8a609f8f2ba4b264d6f3bb31dd3c8b39f93644a87f53e83202e258`.
+- Row count: `420,562`.
+- Headers:
+  `exchange, symbol, timestamp, local_timestamp, id, side, price, amount`.
+- Exchange timestamp range:
+  `1575158403572000` to `1575244799868000`.
+- Local timestamp range:
+  `1575158403820370` to `1575244799991952`.
+- Exchange timestamp monotonic in source order: true.
+- Local timestamp monotonic in source order: true.
+- Trade side/aggressor semantics: Tardis normalized `side` is `buy` or `sell`.
+- Price range: `7210` to `7541.46`.
+- Quantity range: `0.000001` to `63.2398`.
+- Bronze trade rows normalized: `420,562`.
+
+First Tardis trade rows:
+
+```text
+binance,BTCUSDT,1575158403572000,1575158403820370,211646077,sell,7540.78,0.039741
+binance,BTCUSDT,1575158403579000,1575158403820405,211646078,sell,7540.78,0.035479
+binance,BTCUSDT,1575158403622000,1575158403820575,211646079,buy,7541.46,0.03974
+binance,BTCUSDT,1575158403857000,1575158404041373,211646080,buy,7541.45,0.004562
+binance,BTCUSDT,1575158404680000,1575158404802170,211646081,sell,7540.78,0.023631
+```
+
+Real trade regression fixture:
+
+- Fixture:
+  `tests/fixtures/real_subsets/tardis_binance_BTCUSDT_trades_2019-12-01_rows_1_100.csv`
+- Source row range: contiguous rows `1` through `100`.
+- Fixture SHA-256:
+  `cedb2fd4e2f52e10acc1334cd493aa9aae448ff74a9fe3075a94e00a6682a50f`.
+
+Causal time contract:
+
+- `event_time`: exchange-origin timestamp, preserved for analysis.
+- `observation_time`: local/receive timestamp at which the event became
+  observable.
+- `source_row_number`: immutable source-order tie breaker.
+- `feature_cutoff_time`: latest observation time information is allowed to use.
+- For Tardis research data, causal replay and feature availability are based on
+  `observation_time` / `local_timestamp` plus preserved source row ordering.
+- The captured stream is not resorted by non-monotonic exchange `event_time`.
+
+Dataset views implemented:
+
+- Event-state dataset: one row per fully completed logical book-state update
+  group after the active book has been initialized from a valid snapshot.
+- Fixed-clock dataset: 100 ms configurable grid using backward/as-of semantics;
+  a grid row at `T` can only use a fully completed state with
+  `observation_time <= T`.
+- Maximum book-state staleness is configurable; stale rows are marked
+  unavailable rather than carried indefinitely.
+- Trade alignment uses only trades with `trade_observation_time <= T`; exchange
+  trade timestamps are preserved separately.
+- Top-10 book depth is emitted.
+
+Required research-table fields:
+
+- Event/fixed rows include `instrument`, `observation_time`,
+  `feature_cutoff_time`, `book_event_time`, `book_observation_time`,
+  `book_source_row_number`, best bid/ask, top-10 bid/ask prices and sizes,
+  `mid`, `spread`, and latest eligible trade event/observation fields for
+  fixed-clock rows.
+- No forward-return labels are present.
+
+Storage:
+
+- PyArrow is not installed in the current local test environment, so verified
+  large real-data outputs are deterministic CSV files under `/tmp`.
+- Parquet remains preferred once a proper PyArrow runtime is available; testing
+  was not weakened because PyArrow is absent locally.
+
+Meaningful real interval validation:
+
+- L2 source rows: `50,000`.
+- Trade source rows: `420,562`.
+- Event-state rows: `6,983`.
+- Fixed-clock rows: `7,729`.
+- Unavailable/stale rows: `0`.
+- Sampling interval: `100` ms.
+- Timestamp range:
+  `2019-12-01T00:00:05.045139+00:00` to
+  `2019-12-01T00:12:57.845139+00:00`.
+- Duplicate research timestamps: `0`.
+- Crossed/invalid states: `0`.
+- Max RSS reported by process: `557,318,144` bytes-equivalent on macOS.
+- Event-state processing time: approximately `0.663` seconds.
+- Fixed-clock processing time: approximately `2.538` seconds.
+- Event-state hash:
+  `6b9e0a4d3bcdfa8a3ecef5a4af37abce0e878c861a0eb6ef933b3ebc16f28bfb`.
+- Fixed-clock hash:
+  `3de878a37c24ccd3af29e57bb832d6db898d08db98139c64f405f82c3f49e099`.
+- Independent rerun on the same interval produced identical hashes.
+
+Full-day Phase 4 validation:
+
+- L2 source rows: `6,486,542`.
+- Trade source rows: `420,562`.
+- Event-state rows: `815,980`.
+- Fixed-clock rows: `863,949`.
+- Unavailable/stale rows: `13`.
+- Sampling interval: `100` ms.
+- Timestamp range:
+  `2019-12-01T00:00:05.045139+00:00` to
+  `2019-12-01T23:59:59.845139+00:00`.
+- Duplicate research timestamps: `0`.
+- Crossed/invalid states: `0`.
+- Max RSS reported by process: `1,527,881,728` bytes-equivalent on macOS.
+- Event-state processing time: approximately `84.819` seconds.
+- Fixed-clock processing time: approximately `71.381` seconds.
+- Event-state output:
+  `/tmp/microalpha-phase4-full-day/event_states_full.csv`.
+- Fixed-clock output:
+  `/tmp/microalpha-phase4-full-day/fixed_100ms_full.csv`.
+- Event-state hash:
+  `8953bdab6d46556d8f1b51a18695e00050b53abc9d87ad52090e12bb441f876e`.
+- Fixed-clock hash:
+  `46f7fedf461bdaad807c7a16c96bd2a3f543c48c45e1be6097173853a16c16e9`.
+
+Manual fixed-clock row audits:
+
+```text
+cutoff=2019-12-01T00:00:05.045139+00:00
+selected_book=2019-12-01T00:00:05.045139+00:00 source_row=2000
+latest_trade=2019-12-01T00:00:04.802441+00:00
+next_book=2019-12-01T00:00:05.116597+00:00 next_trade=2019-12-01T00:00:05.701053+00:00
+
+cutoff=2019-12-01T06:00:03.745139+00:00
+selected_book=2019-12-01T06:00:03.690874+00:00 source_row=1849626
+latest_trade=2019-12-01T06:00:03.496320+00:00
+next_book=2019-12-01T06:00:03.792105+00:00 next_trade=2019-12-01T06:00:03.902115+00:00
+
+cutoff=2019-12-01T12:00:02.445139+00:00
+selected_book=2019-12-01T12:00:02.357883+00:00 source_row=3395608
+latest_trade=2019-12-01T12:00:02.314170+00:00
+next_book=2019-12-01T12:00:02.458453+00:00 next_trade=2019-12-01T12:00:02.785756+00:00
+
+cutoff=2019-12-01T18:00:01.145139+00:00
+selected_book=2019-12-01T18:00:01.080147+00:00 source_row=5062419
+latest_trade=2019-12-01T18:00:00.327022+00:00
+next_book=2019-12-01T18:00:01.180721+00:00 next_trade=2019-12-01T18:00:02.357109+00:00
+
+cutoff=2019-12-01T23:59:59.845139+00:00
+selected_book=2019-12-01T23:59:59.829502+00:00 source_row=6486535
+latest_trade=2019-12-01T23:59:58.785719+00:00
+next_book=2019-12-01T23:59:59.929296+00:00 next_trade=2019-12-01T23:59:59.991952+00:00
+```
+
+All audited selected book/trade observations are `<= cutoff`; the listed next
+book/trade records are strictly after cutoff and were not selected.
+
+Tests:
+
+- Temporal causality test: PASS.
+- Future mutation test: PASS.
+- Sampling boundary test: PASS.
+- Exact boundary test: PASS.
+- Same-local-timestamp ordering/grouping test: PASS.
+- Staleness test: PASS.
+- Snapshot boundary test: PASS.
+- Determinism/hash test: PASS.
+- No-event-time-resort test: PASS.
+- Trade alignment leakage test: PASS.
+- Real contiguous Phase 4 regression fixture test: PASS.
+
+Test results:
+
+- `/tmp/microalpha-phase0-venv/bin/python -m pytest`: PASS, 51 tests.
+- `/tmp/microalpha-phase0-venv/bin/ruff check src tests scripts`: PASS.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache PYTHONPATH=src python3 -m compileall -q src scripts tests`:
+  PASS.
+
+Acceptance-gate evidence:
+
+- Full-day L2 replay is trusted and deterministic.
+- Same-day real Tardis trades were acquired and normalized.
+- Causal observation-time semantics are explicit in code and status.
+- Source ordering is preserved via `source_row_number`.
+- Event-state research table works.
+- Fixed-clock research table works.
+- Backward/as-of sampling cannot select future book state.
+- Trade alignment cannot select future trades.
+- Future-mutation leakage tests pass.
+- Deterministic dataset hash is demonstrated on real contiguous data.
+- Real-data row audits show no future information usage.
+
+Known limitations:
+
+- Python 3.11+ CI remains unconfirmed in this workspace.
+- Parquet output is deferred until PyArrow is available in the runtime.
+- The initial Tardis snapshot is finite depth, so top-10 research state is
+  supported, but no claim is made about complete full-depth book history.
+
+Next steps:
+
+- Stop before Phase 5 until the user accepts Phase 4 or requests continuation.
