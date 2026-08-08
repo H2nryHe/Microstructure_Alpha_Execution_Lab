@@ -13,7 +13,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 3 - Order-book reconstruction
 [x] Phase 4 - Research dataset construction
 [x] Phase 5 - Feature engineering
-[ ] Phase 6 - Label generation
+[x] Phase 6 - Label generation
 [ ] Phase 7 - Baseline statistical research
 [ ] Phase 8 - Predictive modeling
 [ ] Phase 9 - Walk-forward evaluation
@@ -938,6 +938,9 @@ Full-day real-data results:
   `e95c6dfa6bcb5c21272a267d5f2f3760a3b1f2f53f2af6f3770bee3723419dd2`.
 - Full end-to-end feature build processing time on rerun:
   approximately `549.627` seconds.
+- Future performance-engineering target: reduce the full-day Phase 5 build
+  runtime from approximately `549.627` seconds. Do not optimize this before the
+  performance-engineering phase.
 - Max RSS during full rerun: `1,502,711,808` bytes-equivalent on macOS.
 - The initial full-day feature build wrote the complete CSV but was interrupted
   during the old non-streaming summary pass. The completed CSV was retained,
@@ -1058,4 +1061,229 @@ Known limitations:
 
 Next steps:
 
-- Stop before Phase 6 until the user accepts Phase 5 or requests continuation.
+- Phase 6 label generation was requested after Phase 5 acceptance; see below.
+
+## Phase 6 - Label Generation
+
+Status: PASS locally; Python 3.11 CI for the unpushed Phase 6 changes is not
+yet verified
+
+Files created or modified:
+
+- `STATUS.md`
+- `configs/labels.yaml`
+- `src/microalpha/labels/__init__.py`
+- `src/microalpha/labels/generation.py`
+- `src/microalpha/labels/metadata.py`
+- `tests/unit/test_phase6_labels.py`
+
+Documentation follow-up before implementation:
+
+- Verified that the Phase 5 feature distribution table already records actual
+  missing rate plus min/p1/p5/median/p95/p99/max/mean/std for `qi_1`, `di_5`,
+  `di_10`, `spread_bps`, `microprice_deviation_bps`, `ofi_1s`,
+  `trade_imbalance_1s`, `realized_vol_5s`, and `mom_1s`; no duplicate table was
+  added.
+- Recorded the full-day Phase 5 runtime, approximately `549.627` seconds, as a
+  future Phase 16 performance-engineering target.
+
+Label version and configuration:
+
+- Label version: `microstructure_labels_v1`.
+- Horizons: `100ms`, `500ms`, `1s`, `5s`, `30s`.
+- Regression labels: `ret_fwd_100ms`, `ret_fwd_500ms`, `ret_fwd_1s`,
+  `ret_fwd_5s`, `ret_fwd_30s`.
+- Regression definition: `log(mid_future / mid_T)`.
+- Classification labels: `direction_100ms`, `direction_500ms`,
+  `direction_1s`, `direction_5s`, `direction_30s`.
+- Classification threshold: `0.5` bps, fixed in config and not tuned.
+- Classification rule: `UP` if return `> threshold`, `DOWN` if return
+  `< -threshold`, otherwise `FLAT`.
+- Future lookup rule: `first_observation_at_or_after_horizon`.
+- Initial maximum label delay: `100` ms. This matches the Phase 4 fixed-clock
+  grid spacing: exact target rows are preferred, the next valid fixed-clock row
+  may be accepted, and multi-row/multi-second drift is rejected.
+- Default multi-day policy: `cross_session_labels=false`; labels cannot cross
+  UTC session/date boundaries by default.
+- Binance Spot trades continuously 24/7, so `cross_session_labels=false` refers
+  to the project's UTC research-day / dataset-partition boundary, not to an
+  exchange market close.
+- Next observable mid-change diagnostic search horizon: `30,000` ms.
+
+Timestamp and causality contract:
+
+- Prediction time `T` is `feature_cutoff_time`.
+- Target time is `feature_cutoff_time + horizon`.
+- Future observations are selected by fixed-clock observation/cutoff time, never
+  by exchange `book_event_time`.
+- The input table is validated as monotonic by `feature_cutoff_time` in source
+  row order; the label generator does not reorder rows by exchange event time.
+- Lineage fields are emitted for each horizon:
+  `target_time_*`, `actual_label_time_*`, and `label_delay_ms_*`.
+
+Label output schema:
+
+- Base fields: `label_version`, `instrument`, `observation_time`,
+  `feature_cutoff_time`, `is_available`, `mid`, `spread`,
+  `book_observation_time`, `book_event_time`, `book_source_row_number`.
+- Per-horizon fields: `target_time_*`, `actual_label_time_*`,
+  `label_delay_ms_*`, `ret_fwd_*`, `direction_*`,
+  `future_mid_move_bps_*`, `future_move_in_spreads_*`.
+- Next-mid-change diagnostics: `next_mid_change_available`,
+  `next_mid_change_direction`, `time_to_next_mid_change_ms`.
+
+Missing-label behavior:
+
+- Current stale/unavailable rows receive missing forward labels.
+- Future stale/unavailable rows are skipped; the first valid future row at or
+  after the target is accepted only if delay is within `max_label_delay_ms`.
+- Missing labels are produced when no valid future state exists, accepted delay
+  would exceed the configured limit, the future target crosses the session
+  boundary, or the row is at end-of-data.
+- Rows are preserved even when some or all horizons are missing.
+- `future_move_in_spreads_*` is missing when the current spread is missing or
+  non-positive; it uses the current spread, not the future spread.
+- `next_mid_change_direction` is only `-1` or `+1` when
+  `next_mid_change_available=true`; unavailable/no-observed-move outcomes are
+  blank and cannot be interpreted as neutral, down, or up.
+
+Real data used:
+
+- Canonical instrument: `BTC-USDT`.
+- Vendor: Tardis normalized Binance Spot.
+- Vendor symbol: `BTCUSDT`.
+- Date: `2019-12-01`.
+- Input fixed-clock research table:
+  `/tmp/microalpha-phase4-full-day/fixed_100ms_full.csv`.
+- Label output:
+  `/tmp/microalpha-phase6-full-day/labels_microstructure_labels_v1_full.csv`.
+- Summary output:
+  `/tmp/microalpha-phase6-full-day/summary.json`.
+- Manual audit output:
+  `/tmp/microalpha-phase6-full-day/manual_audits.json`.
+- Full-day label rows: `863,949`.
+- Label columns: `38`.
+- Label output hash:
+  `ab39e25fff543b6cf85c62b5266423ab8deba4e4e54edaca1534e0c87712edf9`.
+- Full-day label processing time: approximately `140.505` seconds.
+
+Full-day real-data label results:
+
+```text
+horizon total_rows valid_reg missing_reg missing_% delay_median delay_p95 delay_max UP_count UP_% FLAT_count FLAT_% DOWN_count DOWN_% return_min return_p1 return_p5 return_median return_p95 return_p99 return_max return_mean return_std
+100ms  863949     863932    17          0.001968  0.0          0.0       100.0     19775    2.28895 824394     95.42348 19763      2.28756 -0.00399630 -0.0000983869 -0.00000888332 0.0 0.00000881197 0.0000989676 0.00256402 -0.0000000232 0.0000303320
+500ms  863949     863926    23          0.002662  0.0          0.0       100.0     72505    8.39250 717535     83.05515 73886      8.55235 -0.00467907 -0.000210647  -0.0000907562 0.0 0.0000908897  0.000214520  0.00258091 -0.0000001159 0.0000669204
+1s     863949     863921    28          0.003241  0.0          0.0       100.0     119800   13.8670 619704     71.73156 124417     14.4014 -0.00485147 -0.000305907  -0.000148145  0.0 0.000149655   0.000318994  0.00305745 -0.0000002319 0.000100079
+5s     863949     863881    68          0.007871  0.0          0.0       100.0     276561   32.0138 295967     34.26016 291353     33.7261 -0.00542819 -0.000720928  -0.000414735 -0.000000687545 0.000430237 0.000751737 0.00355407 -0.0000011552 0.000260738
+30s    863949     863631    318         0.036808  0.0          0.0       100.0     382429   44.2815 72069      8.34488  409133     47.3736 -0.00613216 -0.00165903   -0.00101031  -0.0000164931 0.00105359 0.00167102 0.00567891 -0.0000067571 0.000653610
+```
+
+The table above is descriptive only and has no predictive interpretation.
+
+Manual real-data audits:
+
+- Five cutoffs were audited manually against source fixed-clock rows.
+- Exact-target case row `0`, cutoff
+  `2019-12-01T00:00:05.045139+00:00`, `mid_T=7540.395`:
+  `100ms` exact target return `0.0`, `1s` return
+  `-8.620275218937428e-06`; manual and generated values match.
+- After-target case row `185605`, cutoff
+  `2019-12-01T05:09:25.545139+00:00`, `mid_T=7326.545`:
+  `30s` target used actual observation
+  `2019-12-01T05:09:55.645139+00:00` with `100` ms delay, return
+  `-5.937490511153481e-05`; `1s` exact target return
+  `-1.7061393377150398e-05`; manual and generated values match.
+- Deterministic row `10006`, cutoff
+  `2019-12-01T00:16:45.645139+00:00`, `mid_T=7506.935`:
+  `100ms` return `0.0`, `5s` return `6.726886736064051e-05`; manual and
+  generated values match.
+- Deterministic row `200000`, cutoff
+  `2019-12-01T05:33:25.045139+00:00`, `mid_T=7280.11`:
+  `100ms` return `0.0`, `5s` return `-0.0003441474193888563`; manual and
+  generated values match.
+- End-of-data missing case row `863947`, cutoff
+  `2019-12-01T23:59:59.745139+00:00`, `mid_T=7390.855`:
+  `100ms` exact target return `0.0`; `30s` target
+  `2019-12-02T00:00:29.745139+00:00` is missing because labels do not cross the
+  session boundary and no valid same-session future exists.
+
+Tests added:
+
+- Exact forward return and exact target-time lookup.
+- First-observation-after-target lookup, proving no before-target selection.
+- Delay tolerance rejection and end-of-data missing labels.
+- Classification boundary behavior.
+- Feature-label isolation plus future-mutation asymmetry.
+- Monotonic label time, no event-time resort, and unavailable future skip.
+- Invalid/stale current-row missing labels.
+- Explicit next-mid-change unavailable semantics proving no valid observed move
+  cannot be interpreted as `-1`, `0`, or `+1`.
+- Valid next-mid-change availability and direction.
+- Deterministic label output and deterministic summary output.
+- `cross_session_labels=false` session-boundary behavior.
+
+Exact test results:
+
+- `python -m pytest`: PASS, `80 passed in 0.53s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+GitHub Actions state before marking Phase 6:
+
+- Latest pushed commit on `main`: `c3e38a8b84875c0436a9977f76a4aa0894c44d2d`
+  (`feat: complete Phase 5 feature engineering and documentation`).
+- GitHub Actions `research-smoke` on that commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283616908`.
+- The `research-smoke` workflow uses `actions/setup-python@v5` with
+  `python-version: "3.11"`; job `smoke` and steps `Install package` and
+  `Run tiny research smoke test` passed.
+- GitHub Actions `tests` on that commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283616938`.
+- Local Phase 6 verification used Python `3.10.9`; there is no local
+  `python3.11` binary in this workspace.
+- The Phase 6 changes are not yet pushed, so GitHub Actions has not yet verified
+  these new Phase 6 files under Python 3.11.
+
+Acceptance-gate evidence:
+
+- Required regression, classification, spread-normalized, bps-move, lineage, and
+  next-mid-change diagnostic labels are implemented.
+- Labels are produced separately from features.
+- Feature code does not import `microalpha.labels` or reference label columns.
+- Feature generation is unchanged by future label mutations in regression tests,
+  while labels change as expected.
+- Future lookup uses `feature_cutoff_time`, not exchange `book_event_time`.
+- Invalid/stale current and future states do not create labels.
+- Rows are preserved when horizons are missing.
+- Multi-day readiness is explicit through `cross_session_labels=false`.
+- Full-day real-data smoke and manual audits pass.
+- No feature/label correlation, IC, bucket study, predictive evaluation, model,
+  signal, threshold optimization, backtest, execution logic, or Phase 7 work was
+  implemented.
+
+Assumptions:
+
+- The fixed-clock Phase 4 table is the canonical label input for Phase 6 because
+  it already represents causal observation-time research states.
+- UTC calendar date is the initial session boundary for `cross_session_labels`.
+- A `100` ms maximum label delay is appropriate for the current `100` ms
+  fixed-clock grid; this is a configured engineering tolerance, not a tuned
+  predictive threshold.
+
+Known limitations:
+
+- Local verification did not run under Python 3.11 because no Python 3.11 binary
+  is installed locally.
+- Python 3.11 CI is confirmed for the latest pushed Phase 5 commit, not for the
+  current unpushed Phase 6 changes.
+- Label output is CSV under `/tmp`; Parquet remains deferred until a proper
+  PyArrow runtime is used.
+- Label generation is correct but not optimized for memory or throughput.
+
+Next steps:
+
+- Stop before Phase 7 until the user accepts Phase 6 or requests continuation.

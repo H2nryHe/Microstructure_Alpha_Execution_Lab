@@ -1,4 +1,4 @@
-label_version: v0
+label_version: microstructure_labels_v1
 horizons_ms:
   - 100
   - 500
@@ -7,3 +7,7 @@ horizons_ms:
   - 30000
 classification_threshold_bps: 0.5
 future_lookup_rule: first_observation_at_or_after_horizon
+max_label_delay_ms: 100
+next_mid_change_max_search_ms: 30000
+cross_session_labels: false
+include_lineage_columns: true

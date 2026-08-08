@@ -1,0 +1,2 @@
+"""Label generation components."""
+
