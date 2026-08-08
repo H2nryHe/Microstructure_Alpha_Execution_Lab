@@ -18,6 +18,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--config-path", default="configs/qa.yaml")
     parser.add_argument("--report-out", required=True)
+    parser.add_argument("--order-timestamp-column", default="event_time")
     return parser
 
 
@@ -28,6 +29,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         args.input_path,
         dataset_type=args.dataset_type,
         config=config,
+        order_timestamp_column=args.order_timestamp_column,
     )
     write_qa_report(report, args.report_out)
     print(report.to_json(), end="")

@@ -135,6 +135,11 @@ def _bbo(row: dict[str, str]) -> tuple[Optional[Decimal], Optional[Decimal]]:
     return bid, ask
 
 
+def _has_bbo(row: dict[str, str]) -> bool:
+    bid, ask = _bbo(row)
+    return bid is not None and ask is not None
+
+
 def _observed_price(row: dict[str, str]) -> Optional[Decimal]:
     bid, ask = _bbo(row)
     if bid is not None and ask is not None:
@@ -151,6 +156,7 @@ def validate_market_data_csv(
     *,
     dataset_type: str,
     config: Optional[dict[str, Any]] = None,
+    order_timestamp_column: str = "event_time",
 ) -> QAReport:
     """Run Phase 2 QA checks on a normalized market-data CSV file."""
 
@@ -193,17 +199,29 @@ def validate_market_data_csv(
                 min_event_time=min_event_time,
                 max_event_time=max_event_time,
             )
-            if event_time is not None and previous_event_time is not None:
-                if event_time < previous_event_time:
+            order_time = event_time
+            if order_timestamp_column != "event_time":
+                order_time = _validate_optional_order_timestamp(
+                    row,
+                    column=order_timestamp_column,
+                    row_number=row_number,
+                    report=report,
+                    min_event_time=min_event_time,
+                    max_event_time=max_event_time,
+                )
+            if order_time is not None and previous_event_time is not None:
+                if order_time < previous_event_time:
                     report.timestamp_error_count += 1
                     report.add_issue(
                         severity=ERROR,
                         validator="backward_timestamp",
-                        message=f"Event time moved backward at row {row_number}",
+                        message=(
+                            f"{order_timestamp_column} moved backward at row {row_number}"
+                        ),
                         row_number=row_number,
-                        field="event_time",
+                        field=order_timestamp_column,
                     )
-                gap_ms = _event_gap_ms(previous_event_time, event_time)
+                gap_ms = _event_gap_ms(previous_event_time, order_time)
                 if gap_ms > max_gap_ms:
                     report.add_issue(
                         severity=WARNING,
@@ -212,8 +230,8 @@ def validate_market_data_csv(
                         row_number=row_number,
                         field="event_time",
                     )
-            if event_time is not None:
-                previous_event_time = event_time
+            if order_time is not None:
+                previous_event_time = order_time
 
             previous_sequence = _validate_sequence(
                 row,
@@ -228,13 +246,14 @@ def validate_market_data_csv(
                 max_quantity=max_quantity,
             )
             _validate_book_state(row, row_number=row_number, report=report)
-            previous_price = _validate_price_discontinuity(
-                row,
-                row_number=row_number,
-                previous_price=previous_price,
-                report=report,
-                threshold_bps=price_jump_threshold,
-            )
+            if dataset_type != "book_updates" or _has_bbo(row):
+                previous_price = _validate_price_discontinuity(
+                    row,
+                    row_number=row_number,
+                    previous_price=previous_price,
+                    report=report,
+                    threshold_bps=price_jump_threshold,
+                )
             previous_bbo, stale_bbo_start, stale_bbo_reported = _validate_stale_bbo(
                 row,
                 event_time=event_time,
@@ -300,6 +319,50 @@ def _validate_timestamp(
             field="event_time",
         )
     return event_time
+
+
+def _validate_optional_order_timestamp(
+    row: dict[str, str],
+    *,
+    column: str,
+    row_number: int,
+    report: QAReport,
+    min_event_time: datetime,
+    max_event_time: datetime,
+) -> Optional[datetime]:
+    value = row.get(column)
+    if value in (None, ""):
+        report.timestamp_error_count += 1
+        report.add_issue(
+            severity=ERROR,
+            validator="missing_timestamp",
+            message=f"Missing {column} at row {row_number}",
+            row_number=row_number,
+            field=column,
+        )
+        return None
+    try:
+        order_time = _parse_timestamp(value)
+    except ValueError:
+        report.timestamp_error_count += 1
+        report.add_issue(
+            severity=ERROR,
+            validator="corrupted_timestamp",
+            message=f"Could not parse {column} at row {row_number}",
+            row_number=row_number,
+            field=column,
+        )
+        return None
+    if order_time.tzinfo is None or order_time < min_event_time or order_time > max_event_time:
+        report.timestamp_error_count += 1
+        report.add_issue(
+            severity=ERROR,
+            validator="impossible_timestamp",
+            message=f"{column} outside configured timezone/bounds at row {row_number}",
+            row_number=row_number,
+            field=column,
+        )
+    return order_time
 
 
 def _validate_sequence(

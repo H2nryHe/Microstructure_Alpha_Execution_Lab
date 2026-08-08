@@ -10,7 +10,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 0 - Repository foundation
 [x] Phase 1 - Raw market-data ingestion
 [x] Phase 2 - Market-data QA
-[ ] Phase 3 - Order-book reconstruction
+[x] Phase 3 - Order-book reconstruction
 [ ] Phase 4 - Research dataset construction
 [ ] Phase 5 - Feature engineering
 [ ] Phase 6 - Label generation
@@ -219,11 +219,9 @@ exchange, symbol, timestamp, local_timestamp, is_snapshot, side, price, amount
   - `amount` -> `quantity`.
   - `is_snapshot=true` -> `update_type=snapshot`; otherwise `set`.
   - `side`, `price`, vendor fields, and source timestamps are preserved.
-- Direct Tardis sample URLs tested for Binance Spot `BTCUSDT`
-  `incremental_book_L2` returned HTTP 404 from this environment, despite Tardis
-  metadata listing the dataset support. The adapter is therefore tested with a
-  tiny schema-conformant Tardis regression fixture, and the real Tardis sample
-  download remains a follow-up before Phase 3 replay work.
+- A direct GET request for the documented Binance Spot `BTCUSDT`
+  `incremental_book_L2` sample later succeeded during Phase 3 preflight. The
+  downloaded file is recorded in the Phase 3 section.
 
 Regression fixtures:
 
@@ -314,14 +312,173 @@ Acceptance-gate evidence:
 Known limitations:
 
 - Python 3.11+ CI remains unconfirmed in this workspace.
-- Tardis direct sample file download returned HTTP 404 for the tested Binance
-  Spot `BTCUSDT` incremental L2 URLs. The adapter and tests are ready for the
-  Tardis normalized schema, but a live Tardis incremental L2 sample should be
-  downloaded and recorded before Phase 3 order-book replay is trusted.
+- Phase 2 row/schema QA does not replace Phase 3 state-level book validation.
+- Sequence validation is source-dependent. It is N/A for Tardis normalized L2
+  because the normalized CSV does not supply vendor sequence IDs; replay uses
+  capture-order mode based on source row order and `local_timestamp`.
+- Crossed/locked-book checks on individual incremental updates are not a
+  substitute for reconstructed-state invariants. Phase 3 enforces crossed-book
+  validation after complete logical update groups.
 
 Next steps:
 
-- Do not begin Phase 3 until the user accepts Phase 2 or requests continuation.
-- Before Phase 3 replay, resolve the Tardis sample download path or obtain a
-  small real Tardis `incremental_book_L2` BTCUSDT gzip file and run the adapter
-  plus QA against it.
+- Phase 3 preflight is required before replay work is considered valid.
+
+## Phase 3 - Order-Book Reconstruction
+
+Status: PASS
+
+Real-data preflight source:
+
+- Source: Tardis downloadable CSV datasets API.
+- Exchange: `binance`.
+- Vendor symbol: `BTCUSDT`.
+- Canonical symbol: `BTC-USDT`.
+- Data type: `incremental_book_L2`.
+- Date: `2019-12-01`.
+- Request path:
+  `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2019/12/01/BTCUSDT.csv.gz`
+- HTTP status: `200`.
+- Local raw path:
+  `/tmp/microalpha-real-data/tardis_binance_BTCUSDT_incremental_book_L2_2019-12-01.csv.gz`
+- Source SHA-256:
+  `f7daa040dc33fc7328ff8468b198731fd5add90bc8cef434aab86726268e8a34`.
+- Compressed size: `43,947,405` bytes.
+
+Actual Tardis source schema:
+
+```text
+exchange, symbol, timestamp, local_timestamp, is_snapshot, side, price, amount
+```
+
+Tardis inspection results:
+
+- Decompressed row count: `6,486,542`.
+- Timestamp range: `1575158404999000` to `1575244799808000`
+  microseconds since Unix epoch, UTC.
+- Local timestamp range: `1575158405045139` to `1575244799929296`
+  microseconds since Unix epoch, UTC.
+- `is_snapshot=true` rows: `2,000`.
+- `is_snapshot=false` rows: `6,484,542`.
+- Unique sides: `ask`, `bid`.
+- Price range: `1336.92` to `51000`.
+- Amount range: `0` to `351.854158`.
+- Multiple rows share `local_timestamp`: yes.
+- Exchange `timestamp` monotonic in source row order: no.
+- `local_timestamp` monotonic in source row order: yes.
+- Initial snapshot rows: source rows `1` through `2,000`.
+- First incremental row after snapshot: source row `2,001`.
+
+First 10 raw Tardis rows:
+
+```text
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.38,0.085806
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.39,0.013013
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.4,4
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.44,5.045272
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.45,3.995438
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.46,1.971371
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.47,4
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.48,0.097294
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.49,0.3
+binance,BTCUSDT,1575158405045139,1575158405045139,true,ask,7541.5,0.082835
+```
+
+Source ordering semantics:
+
+- Tardis normalized L2 does not contain `sequence_id`; absence of sequence IDs
+  is not an error for this source.
+- Replay supports two modes:
+  - vendor-sequence mode, used when an explicit source sequence exists;
+  - capture-order mode, used for Tardis normalized L2.
+- Capture-order mode preserves source row order using `source_row_number` and
+  groups logical source messages by `receive_time`/Tardis `local_timestamp`.
+- Replay validates book invariants after complete logical update groups, not
+  halfway through a multi-row source message.
+- Pre-snapshot incremental rows are ignored until the first valid snapshot group
+  initializes the book.
+
+Real regression fixture:
+
+- Fixture:
+  `tests/fixtures/real_subsets/tardis_binance_BTCUSDT_incremental_book_L2_2019-12-01_rows_1_2050.csv`
+- Source row range: contiguous rows `1` through `2,050`, including the full
+  `2,000`-row initial snapshot plus `50` subsequent incremental rows.
+- Fixture SHA-256:
+  `bde8b4ce360d2f8e8a226559aa9b69480fdf5b442981614357b1483f485d740a`.
+- Sampling method: contiguous source-order extraction; no random sampling.
+
+Implementation notes:
+
+- Ordered price levels use a sorted price list plus quantity map per side.
+- Price insertion/removal uses binary search and list insertion/removal; replay
+  does not sort the full book on every event.
+- Baseline complexity is O(log n) search plus O(n) list shift on price-level
+  insert/delete, acceptable for Phase 3 correctness.
+- Maintains bid levels, ask levels, quantities, top-N depth, best bid, best ask,
+  mid, and spread.
+
+Real-data replay validation:
+
+- Input: first `50,000` contiguous rows of the actual Tardis gzip, normalized
+  through the Tardis adapter into `/tmp/microalpha-tardis-preflight/bronze/...`.
+- Rows/events processed: `50,000`.
+- Initial snapshot location: rows `1` through `2,000`.
+- Timestamp range replayed:
+  `2019-12-01T00:00:05.045139+00:00` to
+  `2019-12-01T00:12:57.774000+00:00`.
+- Final best bid: `7506.07`.
+- Final best ask: `7506.95`.
+- Inserts: `21,739`.
+- Updates: `6,260`.
+- Deletions: `19,576`.
+- No-op deletes: `2,425`.
+- Invalid/crossed states: `0`.
+- Replay resets: `0`.
+- Rows ignored before snapshot: `0`.
+- Processing time: approximately `0.435` seconds.
+- Deterministic final-state match: true.
+- Deterministic output hash match: true.
+- Output hash:
+  `3d8e5fdde91499db9b68d5f9f73a48698ac370b323eddff439ac3840cf1d19f7`.
+
+Real Tardis row-level QA:
+
+- QA input: same `50,000`-row Tardis bronze sample.
+- Ordering timestamp: `receive_time`, matching Tardis `local_timestamp`
+  capture-order semantics.
+- Status: PASS.
+- Errors: `0`.
+- Warnings: `0`.
+- `can_continue`: true.
+
+Tests:
+
+- Synthetic Phase 3 tests cover deterministic hand-built book state, level
+  deletion, best-bid improvement, best-ask improvement, multi-level depth
+  ordering, crossed reconstructed state detection, pre-snapshot update handling,
+  same-local-timestamp source-order preservation, deterministic replay,
+  no-sequence-ID Tardis replay, and vendor-sequence replay.
+- Real regression tests cover Tardis snapshot initialization and contiguous
+  source-order replay.
+
+Test results:
+
+- `/tmp/microalpha-phase0-venv/bin/python -m pytest`: PASS, 42 tests.
+- `/tmp/microalpha-phase0-venv/bin/ruff check src tests scripts`: PASS.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache PYTHONPATH=src python3 -m compileall -q src scripts tests`:
+  PASS.
+
+Acceptance-gate evidence:
+
+- Real Tardis L2 dataset successfully acquired and inspected.
+- Real initial snapshot reconstructed.
+- Real incremental updates replayed.
+- Synthetic and real-data regression tests pass.
+- Source ordering semantics are documented.
+- No hidden unresolved book-state inconsistency remains; real replay reported
+  zero invalid/crossed states.
+
+Next steps:
+
+- Stop before Phase 4 until the user accepts Phase 3 or requests continuation.

@@ -342,6 +342,7 @@ def ingest_tardis_incremental_l2_gzip(
                 f"{list(TARDIS_INCREMENTAL_BOOK_L2_COLUMNS)}"
             )
         fieldnames = [
+            "source_row_number",
             "event_time",
             "receive_time",
             "side",
@@ -360,12 +361,13 @@ def ingest_tardis_incremental_l2_gzip(
         with bronze_path.open("w", encoding="utf-8", newline="") as bronze_file:
             writer = csv.DictWriter(bronze_file, fieldnames=fieldnames)
             writer.writeheader()
-            for row in reader:
+            for source_row_number, row in enumerate(reader, start=1):
                 if max_rows is not None and row_count >= max_rows:
                     break
                 update_type = "snapshot" if row["is_snapshot"].lower() == "true" else "set"
                 writer.writerow(
                     {
+                        "source_row_number": source_row_number,
                         "event_time": _epoch_to_utc_iso(row["timestamp"], unit="microseconds"),
                         "receive_time": _epoch_to_utc_iso(
                             row["local_timestamp"], unit="microseconds"
