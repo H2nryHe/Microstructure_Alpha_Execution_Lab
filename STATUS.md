@@ -29,7 +29,7 @@ treated as immutable unless the specification itself requires revision.
 
 ## CI / Config Hardening
 
-Status: PASS locally; Python 3.11 GitHub Actions confirmation pending
+Status: PASS locally and in Python 3.11 GitHub Actions
 
 Change:
 
@@ -62,13 +62,19 @@ Test results:
 - `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
   PASS, config hash
   `0fbc90654bf03c51df2c806dc0765a213d28882b909b22b5cfc34faca61f7483`.
+- GitHub Actions `research-smoke` on commit
+  `be1f24e6fb4a1e7e8d7eed4bf23db2877662bbe2`: PASS.
+- GitHub Actions run:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283323407`.
+- Job `smoke`: PASS. Steps `actions/setup-python@v5`, `Install package`,
+  and `Run tiny research smoke test` all completed successfully.
 
 Assumptions and risks:
 
 - Local smoke verification used Python with PyYAML but not Python 3.11 because
   no `python3.11` binary is installed in this workspace.
-- Python 3.11+ compatibility and the GitHub Actions `research-smoke` result
-  must be confirmed from CI after the fix is pushed.
+- Python 3.11 smoke compatibility is confirmed by GitHub Actions
+  `research-smoke`, whose workflow config uses `python-version: "3.11"`.
 - This is a configuration serialization/CI portability bug and does not change
   the Phase 4 causal research dataset acceptance status.
 
