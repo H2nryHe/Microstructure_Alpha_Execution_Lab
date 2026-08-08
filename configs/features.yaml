@@ -1,10 +1,29 @@
-feature_version: v0
+feature_version: microstructure_v1
 lookbacks:
+  ofi_ms:
+    - 100
+    - 500
+    - 1000
+    - 5000
+    - 30000
   trade_imbalance_ms:
     - 100
     - 500
     - 1000
+    - 5000
+    - 30000
   realized_volatility_ms:
     - 1000
     - 5000
+    - 30000
+  momentum_ms:
+    - 100
+    - 500
+    - 1000
+    - 5000
 missing_data_policy: explicit_nulls
+window_convention: "(T-W, T]"
+causal_timestamp: observation_time
+depth_levels:
+  - 5
+  - 10

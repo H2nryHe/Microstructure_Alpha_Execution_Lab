@@ -12,7 +12,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 2 - Market-data QA
 [x] Phase 3 - Order-book reconstruction
 [x] Phase 4 - Research dataset construction
-[ ] Phase 5 - Feature engineering
+[x] Phase 5 - Feature engineering
 [ ] Phase 6 - Label generation
 [ ] Phase 7 - Baseline statistical research
 [ ] Phase 8 - Predictive modeling
@@ -66,6 +66,10 @@ Test results:
   `be1f24e6fb4a1e7e8d7eed4bf23db2877662bbe2`: PASS.
 - GitHub Actions run:
   `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283323407`.
+- Latest pushed commit `82eb73214dad05054f6e428cd74d8a5eb586a689`
+  also passed GitHub Actions `research-smoke`.
+- Latest GitHub Actions run:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283395667`.
 - Job `smoke`: PASS. Steps `actions/setup-python@v5`, `Install package`,
   and `Run tiny research smoke test` all completed successfully.
 
@@ -723,6 +727,36 @@ Full-day Phase 4 validation:
 - Fixed-clock hash:
   `46f7fedf461bdaad807c7a16c96bd2a3f543c48c45e1be6097173853a16c16e9`.
 
+100 ms grid row-count clarification:
+
+- The full-day fixed-clock table contains `863,949` rows rather than the
+  calendar-day maximum of `864,000` because the grid is bounded by observable
+  book state availability, not midnight-to-midnight wall-clock time.
+- Grid start is the first completed, valid book-state observation:
+  `2019-12-01T00:00:05.045139+00:00`.
+- Grid end is the last grid timestamp `<=` the final completed book-state
+  observation:
+  `2019-12-01T23:59:59.929296+00:00`; with 100 ms spacing from the start, the
+  final emitted grid cutoff is `2019-12-01T23:59:59.845139+00:00`.
+- Row count is therefore:
+  `floor((2019-12-01T23:59:59.929296 - 2019-12-01T00:00:05.045139) / 100ms) + 1
+  = 863,949`.
+
+Logical book update group clarification:
+
+- A complete logical book update group is identified by the source adapter's
+  documented ordering/grouping semantics.
+- For Tardis normalized L2, rows are preserved in source order using
+  `source_row_number`, and rows sharing the same `local_timestamp`
+  (`receive_time`) are treated as one completed observable group because Tardis
+  emits normalized book updates with `local_timestamp` as the capture/arrival
+  timestamp for that source message.
+- Equal timestamps alone are not treated as a universal proof of atomicity for
+  other vendors. If a source supplies explicit sequence/message IDs, the replay
+  layer must use those identifiers instead.
+- Source ordering is preserved in all modes; event-state rows are emitted only
+  after the full applicable group has been processed and validated.
+
 Manual fixed-clock row audits:
 
 ```text
@@ -799,4 +833,229 @@ Known limitations:
 
 Next steps:
 
-- Stop before Phase 5 until the user accepts Phase 4 or requests continuation.
+- Phase 5 feature engineering is now complete. Stop before Phase 6 until the
+  user accepts Phase 5 or requests continuation.
+
+## Phase 5 - Feature Engineering
+
+Status: PASS
+
+Files created or modified:
+
+- `STATUS.md`
+- `configs/features.yaml`
+- `src/microalpha/features/__init__.py`
+- `src/microalpha/features/engineering.py`
+- `src/microalpha/features/metadata.py`
+- `tests/unit/test_phase5_features.py`
+
+Feature version:
+
+- `microstructure_v1`
+
+Feature architecture:
+
+- State features are computed from the latest causally available completed book
+  state at `feature_cutoff_time`.
+- Flow features are computed from underlying book/trade event streams first and
+  then causally aggregated into fixed-clock rows.
+- All trailing windows use `(T-W, T]`: events exactly at `T` are included,
+  events exactly at `T-W` are excluded, and events after `T` are excluded.
+- Tardis observation/local timestamp is the causal eligibility timestamp.
+
+Exact feature definitions:
+
+- `mid = (best_bid + best_ask) / 2`.
+- `spread = best_ask - best_bid`.
+- `relative_spread = spread / mid`.
+- `spread_bps = 10000 * spread / mid`.
+- `qi_1 = (bid_sz_1 - ask_sz_1) / (bid_sz_1 + ask_sz_1)`.
+- `bid_depth_N = sum(bid_sz_1 ... bid_sz_N)` for `N in {5, 10}`.
+- `ask_depth_N = sum(ask_sz_1 ... ask_sz_N)` for `N in {5, 10}`.
+- `di_N = (bid_depth_N - ask_depth_N) / (bid_depth_N + ask_depth_N)` for
+  `N in {5, 10}`.
+- `microprice = ask_px_1 * bid_sz_1 / (bid_sz_1 + ask_sz_1) + bid_px_1 *
+  ask_sz_1 / (bid_sz_1 + ask_sz_1)`.
+- `microprice_deviation = (microprice - mid) / mid`.
+- `microprice_deviation_bps = 10000 * (microprice - mid) / mid`.
+- `ofi_event` follows the documented Cont-style BBO transition formula from
+  consecutive completed observable BBO states.
+- `ofi_W = sum(ofi_event)` over completed BBO transitions in `(T-W, T]`.
+- `book_update_count_W = count(completed BBO transitions)` in `(T-W, T]`.
+- `buy_volume_W`, `sell_volume_W`, `trade_count_W`, and `trade_notional_W` use
+  trades in `(T-W, T]`.
+- `trade_imbalance_W = (buy_volume_W - sell_volume_W) / (buy_volume_W +
+  sell_volume_W)`.
+- `signed_trade_volume_W` is positive for aggressive buys and negative for
+  aggressive sells.
+- `realized_vol_W = sqrt(sum(log(mid_n / mid_{n-1})^2))` over trailing
+  completed-state mid returns in `(T-W, T]`; it is not annualized.
+- `mom_W = log(mid_asof_T / mid_asof_(T-W))` using backward/as-of mid
+  selection.
+
+Configured windows:
+
+- OFI and book-update count: `100ms`, `500ms`, `1s`, `5s`, `30s`.
+- Trade-flow features: `100ms`, `500ms`, `1s`, `5s`, `30s`.
+- Realized volatility: `1s`, `5s`, `30s`.
+- Momentum: `100ms`, `500ms`, `1s`, `5s`.
+
+Missing-data behavior:
+
+- Missing or stale Phase 4 book state leaves state-dependent features blank.
+- Zero denominators for `qi_1`, `di_N`, and microprice-family features produce
+  `NaN`.
+- Missing depth levels are omitted from depth sums; they are not imputed.
+- No-trade windows produce zero count/volume/notional and `NaN`
+  `trade_imbalance`.
+- Realized volatility and momentum are blank until enough trailing mid history
+  exists.
+
+Real data used:
+
+- Canonical instrument: `BTC-USDT`.
+- Vendor: Tardis normalized Binance Spot.
+- Vendor symbol: `BTCUSDT`.
+- Date: `2019-12-01`.
+- Event-state input:
+  `/tmp/microalpha-phase4-full-day/event_states_full.csv`.
+- Fixed-clock input:
+  `/tmp/microalpha-phase4-full-day/fixed_100ms_full.csv`.
+- Trade input:
+  `/tmp/microalpha-tardis-trades/bronze/tardis_binance_spot/BTC-USDT/2019-12-01/trades/6a6a2bf2cb8a609f.csv`.
+- Feature output:
+  `/tmp/microalpha-phase5-full-day/features_microstructure_v1_full.csv`.
+- Summary output:
+  `/tmp/microalpha-phase5-full-day/summary.json`.
+- Manual audit output:
+  `/tmp/microalpha-phase5-full-day/manual_audits.json`.
+
+Full-day real-data results:
+
+- Total feature rows: `863,949`.
+- Feature columns: `91`.
+- Feature output hash:
+  `e95c6dfa6bcb5c21272a267d5f2f3760a3b1f2f53f2af6f3770bee3723419dd2`.
+- Full end-to-end feature build processing time on rerun:
+  approximately `549.627` seconds.
+- Max RSS during full rerun: `1,502,711,808` bytes-equivalent on macOS.
+- The initial full-day feature build wrote the complete CSV but was interrupted
+  during the old non-streaming summary pass. The completed CSV was retained,
+  row-counted, hashed, summarized with the streaming summary implementation,
+  and manually audited.
+- A full rerun with the patched streaming summary wrote
+  `/tmp/microalpha-phase5-full-day-rerun/features_microstructure_v1_full.csv`
+  and reproduced the same feature output hash exactly.
+
+Feature distribution summary:
+
+```text
+feature                  missing_rate        min           p1          p5       median          p95         p99         max        mean        std
+qi_1                     0.0000150472  -0.999999768  -0.999969654  -0.986454  -0.0144416   0.984090   0.999943   1.000000  -0.0296896  0.705152
+di_5                     0.0000150472  -0.998830781  -0.949912445  -0.881049  -0.0755150   0.854105   0.935727   0.998102  -0.0488373  0.569611
+di_10                    0.0000150472  -0.996997093  -0.887659958  -0.780111  -0.0721688   0.748735   0.871000   0.992299  -0.0472432  0.487867
+spread_bps               0.0000150472   0.0132640     0.0135685     0.0672973  1.76922     4.25807    5.62211   22.3764    1.95446    1.22050
+microprice_deviation_bps 0.0000150472 -10.1238150    -2.01402      -1.29917   -0.00284128  1.24599    1.96588    8.40500  -0.0267559  0.783333
+ofi_100ms                0.0000000000 -84.315575     -2.69634      -0.800014   0.00000     0.548697   2.50000  108.326    -0.0133520  0.983538
+ofi_1s                   0.0000000000 -109.979372   -11.2528       -5.80600    0.00000     5.15535   10.5752   136.908    -0.133520   3.91295
+ofi_5s                   0.0000000000 -125.432520   -30.2532      -16.6057    -0.266469   14.5705    26.6764   145.357    -0.667536  10.5192
+trade_imbalance_1s       0.135388779   -1.000000     -1.00000      -1.00000    0.380039    1.00000    1.00000    1.00000   0.130085   0.851310
+trade_count_1s           0.0000000000   0.000000      0.00000       0.00000    3.00000    16.0000    32.0000  1304.000    4.86784    9.51138
+trade_volume_1s          0.0000000000   0.000000      0.00000       0.00000    0.190464    2.56925    9.37140   267.339    0.703365   2.91425
+realized_vol_5s          0.0000011575   0.000000      0.00000240    0.00000478 0.0001169   0.0003886  0.000643  0.004571  0.0001467  0.0001569
+mom_1s                   0.0000115748  -0.00485147   -0.0003059    -0.0001481  0.000000    0.0001497  0.000319  0.003057 -0.000000232 0.0001001
+```
+
+Manual real-data audits:
+
+- Five deterministic rows were audited at feature row indexes `10006`,
+  `200000`, `400000`, `600000`, and `800000`.
+- Each audit records `feature_cutoff_time`, `book_source_row_number`, top-of-book
+  source inputs, OFI source-event index range, trade source-row index range, and
+  as-of mids.
+- Recomputed `qi_1`, `microprice`, `ofi_1s`, `trade_imbalance_1s`, and `mom_1s`
+  matched feature output exactly or within `1e-18` float tolerance for
+  momentum.
+- Audit examples:
+  - row `10006`, cutoff `2019-12-01T00:16:45.645139+00:00`,
+    book source row `73989`: `qi_1=0.9737111542805600800142501945`,
+    `ofi_1s=2.600000`, `trade_imbalance_1s=-1`,
+    `mom_1s=1.3321024705939499e-06`.
+  - row `400000`, cutoff `2019-12-01T11:06:45.045139+00:00`,
+    book source row `3165784`: `qi_1=0.9582831829249456148042292063`,
+    `ofi_1s=6.079340`, `trade_imbalance_1s=1`,
+    `mom_1s=4.3477876900748396e-05`.
+  - row `800000`, cutoff `2019-12-01T22:13:25.045139+00:00`,
+    book source row `6021333`: `qi_1=0.7086629303442754203362690152`,
+    `ofi_1s=0.106706`, `trade_imbalance_1s=-1`,
+    `mom_1s=2.0392383443867545e-06`.
+
+Tests added:
+
+- Exact formula tests for queue imbalance, depth imbalance, microprice,
+  microprice deviation, trade imbalance, momentum, and realized volatility.
+- Exact numeric tests for all eight OFI BBO transition cases.
+- Range tests for imbalance features, spread, depth, and finite numeric output.
+- Mirror-symmetry tests for queue imbalance, depth imbalance, microprice
+  deviation, and OFI.
+- Explicit `(T-W, T]` boundary test.
+- Trade-arrival leakage test using receive time.
+- Future-mutation leakage test covering state, event-flow, trade-flow,
+  realized-volatility, and momentum features.
+- Event-stream OFI test proving intermediate BBO events within a 100 ms bin are
+  retained.
+- Same-observation-time source-order test.
+- No-trade-window, stale-row propagation, missing-depth, zero-denominator, and
+  deterministic feature-hash tests.
+
+Exact test results:
+
+- `/tmp/microalpha-phase0-venv/bin/python -m pytest`: PASS, `63 passed in
+  0.48s`.
+- `/tmp/microalpha-phase0-venv/bin/ruff check src tests scripts`: PASS,
+  `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache PYTHONPATH=src python3 -m compileall -q src scripts tests`:
+  PASS.
+
+Acceptance-gate evidence:
+
+- All required baseline state, flow, activity, realized-volatility, and momentum
+  features are implemented.
+- Event-level OFI is computed from completed real book-state transitions and
+  aggregated causally.
+- Real same-day Tardis `BTCUSDT` trades from `2019-12-01` are used for
+  trade-flow features.
+- All trailing windows use the documented `(T-W, T]` convention.
+- Missing/stale behavior is explicit.
+- Formula, OFI transition, mirror-symmetry, leakage, event-stream OFI,
+  deterministic hash, and source-order tests pass.
+- Real-data distributions were inspected for required important features.
+- At least five manual real-data audits confirmed selected feature
+  calculations.
+
+Assumptions:
+
+- Tardis normalized trade `side` is interpreted as the aggressive trade side;
+  buy is positive and sell is negative for signed volume.
+- Tardis `local_timestamp` / normalized `receive_time` is the causal eligibility
+  clock for both L2 and trade events.
+- For same-observation-time L2 groups, source row order remains the tie breaker.
+- Missing depth levels represent absent captured levels in the Phase 4 row and
+  are omitted from top-N depth sums.
+
+Known limitations:
+
+- Python 3.11+ CI remains unconfirmed in this workspace; local checks still run
+  under Python 3.9.6.
+- Parquet/PyArrow was not introduced because PyArrow is unavailable locally and
+  storage optimization must not block feature correctness.
+- The full-day feature artifact is a large CSV under `/tmp` and is not committed
+  to Git.
+- Feature generation is correct but not yet optimized for production-scale
+  memory or storage throughput.
+- No labels, IC calculations, models, optimized signals, backtests, or trading
+  simulation were implemented.
+
+Next steps:
+
+- Stop before Phase 6 until the user accepts Phase 5 or requests continuation.
