@@ -1065,8 +1065,7 @@ Next steps:
 
 ## Phase 6 - Label Generation
 
-Status: PASS locally; Python 3.11 CI for the unpushed Phase 6 changes is not
-yet verified
+Status: PASS locally + PASS in Python 3.11 CI
 
 Files created or modified:
 
@@ -1234,19 +1233,20 @@ Exact test results:
 
 GitHub Actions state before marking Phase 6:
 
-- Latest pushed commit on `main`: `c3e38a8b84875c0436a9977f76a4aa0894c44d2d`
-  (`feat: complete Phase 5 feature engineering and documentation`).
-- GitHub Actions `research-smoke` on that commit: PASS.
-  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283616908`.
-- The `research-smoke` workflow uses `actions/setup-python@v5` with
-  `python-version: "3.11"`; job `smoke` and steps `Install package` and
-  `Run tiny research smoke test` passed.
-- GitHub Actions `tests` on that commit: PASS.
-  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31283616938`.
-- Local Phase 6 verification used Python `3.10.9`; there is no local
-  `python3.11` binary in this workspace.
-- The Phase 6 changes are not yet pushed, so GitHub Actions has not yet verified
-  these new Phase 6 files under Python 3.11.
+- Phase 6 commit SHA:
+  `a542022b1afb9c0e4766067d9eeb0da7cda9fc39`
+  (`Complete Phase 6 label generation`).
+- CI Python version: workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- GitHub Actions `tests` on the Phase 6 commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31284658549`.
+  Job `pytest` and step `Run tests` passed.
+- GitHub Actions `research-smoke` on the Phase 6 commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31284658533`.
+  Job `smoke` and steps `Install package` and `Run tiny research smoke test`
+  passed.
+- Local Phase 6 verification used Python `3.10.9`; Python 3.11 compatibility is
+  confirmed by the GitHub Actions runs above.
 
 Acceptance-gate evidence:
 
@@ -1277,9 +1277,7 @@ Assumptions:
 Known limitations:
 
 - Local verification did not run under Python 3.11 because no Python 3.11 binary
-  is installed locally.
-- Python 3.11 CI is confirmed for the latest pushed Phase 5 commit, not for the
-  current unpushed Phase 6 changes.
+  is installed locally; Python 3.11 verification came from GitHub Actions.
 - Label output is CSV under `/tmp`; Parquet remains deferred until a proper
   PyArrow runtime is used.
 - Label generation is correct but not optimized for memory or throughput.
