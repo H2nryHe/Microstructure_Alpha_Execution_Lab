@@ -1,0 +1,41 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Local AI-agent prompts/specifications are workspace inputs, not commit artifacts.
+.agents/
+.codex/
+*PROJECT_SPEC*.md
+PROJECT_SPEC.md
+
+# Raw and derived market data should not be committed.
+data/raw/*
+data/bronze/*
+data/silver/*
+data/features/*
+data/manifests/*
+!data/raw/.gitkeep
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/features/.gitkeep
+!data/manifests/.gitkeep
+
+# Experiment outputs are generated artifacts.
+experiments/runs/*
+!experiments/runs/.gitkeep
+reports/figures/*
+reports/tables/*
+reports/final/*
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+!reports/final/.gitkeep

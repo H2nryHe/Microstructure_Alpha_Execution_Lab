@@ -1,0 +1,1 @@
+experiment_id,date,git_commit,data_snapshot,feature_config,label_config,split_config,model,hyperparameters,signal_thresholds,execution_config,validation_metric,test_metric,gross_pnl,net_pnl,turnover,max_drawdown,notes

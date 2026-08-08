@@ -1,0 +1,16 @@
+instrument: BTC-USDT
+timezone: UTC
+raw_data_dir: data/raw
+bronze_data_dir: data/bronze
+expected_inputs:
+  trades:
+    required_columns:
+      - event_time
+      - price
+      - quantity
+  book_updates:
+    required_columns:
+      - event_time
+      - side
+      - price
+      - quantity

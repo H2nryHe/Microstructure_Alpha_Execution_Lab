@@ -1,0 +1,10 @@
+feature_version: v0
+lookbacks:
+  trade_imbalance_ms:
+    - 100
+    - 500
+    - 1000
+  realized_volatility_ms:
+    - 1000
+    - 5000
+missing_data_policy: explicit_nulls

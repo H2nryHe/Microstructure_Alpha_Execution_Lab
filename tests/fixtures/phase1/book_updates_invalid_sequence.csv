@@ -1,0 +1,2 @@
+event_time,side,price,quantity,sequence_id
+2026-01-02T00:00:00Z,bid,42999.90,1.50,100.5

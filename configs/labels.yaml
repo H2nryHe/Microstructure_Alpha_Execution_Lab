@@ -1,0 +1,9 @@
+label_version: v0
+horizons_ms:
+  - 100
+  - 500
+  - 1000
+  - 5000
+  - 30000
+classification_threshold_bps: 0.5
+future_lookup_rule: first_observation_at_or_after_horizon

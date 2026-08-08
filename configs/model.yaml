@@ -1,0 +1,9 @@
+model_version: v0
+random_seed: 42
+models:
+  null:
+    enabled: true
+  ridge:
+    enabled: true
+  lightgbm:
+    enabled: true

@@ -1,0 +1,11 @@
+experiment_id: phase0_smoke
+random_seed: 42
+data_snapshot: synthetic-none
+instrument: BTC-USDT
+date_range:
+  start: null
+  end: null
+feature_version: v0
+label_version: v0
+model_version: v0
+execution_version: v0
