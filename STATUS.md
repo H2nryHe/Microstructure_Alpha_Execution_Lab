@@ -1285,3 +1285,148 @@ Known limitations:
 Next steps:
 
 - Stop before Phase 7 until the user accepts Phase 6 or requests continuation.
+
+## Pre-Phase-7 Multi-Day Data Expansion Gate
+
+Status: FAIL / BLOCKED by primary source availability. Phase 7 has not started.
+
+Phase 6 CI completion:
+
+- Phase 6 commit SHA:
+  `a542022b1afb9c0e4766067d9eeb0da7cda9fc39`
+  (`Complete Phase 6 label generation`).
+- CI Python version: GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- `tests` workflow on the Phase 6 commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31284658549`.
+- `research-smoke` workflow on the Phase 6 commit: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31284658533`.
+- Phase 6 status is therefore: PASS locally + PASS in Python 3.11 CI.
+
+Semantic hardening before data expansion:
+
+- `next_mid_change_direction` no longer uses numeric `0` for unavailable
+  outcomes.
+- `next_mid_change_available` is emitted explicitly.
+- When no valid future mid-price change is observed within the allowed search
+  horizon, `next_mid_change_available=false`,
+  `next_mid_change_direction=""`, and `time_to_next_mid_change_ms=""`.
+- Valid next-mid-price moves remain direction `-1` for down and `1` for up.
+- Regression tests prove unavailable next-move outcomes cannot be interpreted as
+  neutral, down, or up observations.
+- Binance Spot trades 24/7. Therefore `cross_session_labels=false` refers to
+  the project's UTC research-day / dataset-partition boundary, not an exchange
+  market close.
+
+Frozen date registry:
+
+- Machine-readable registry:
+  `data/manifests/research_dates.yaml`.
+- Canonical instrument: `BTC-USDT`.
+- Vendor: `tardis_binance_spot`.
+- Vendor symbol mapping: `BTC-USDT` -> Binance Spot `BTCUSDT`.
+- L2 source type: Tardis Binance Spot `incremental_book_L2`.
+- Trade source type: Tardis Binance Spot `trades`.
+- Development dates: mechanically selected first-of-month dates from
+  `2024-01-01` through `2025-12-01`, inclusive, 24 dates.
+- Holdout dates: available first-of-month 2026 dates through current local date,
+  `2026-01-01` through `2026-08-01`, 8 dates, role `holdout`.
+- Engineering/regression validation date remains `2019-12-01` and is not mixed
+  into the 2024-2025 research sample.
+- The registry records `alpha_analysis_performed_before_freeze=false`.
+
+Source availability result:
+
+- Development registry source check:
+  `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role development --timeout-seconds 6 --max-workers 12`
+  checked 24 dates.
+- Development dates with both same-day L2 and trades available: `0`.
+- Development dates excluded for technical/source availability reasons: `24`.
+- Holdout registry source check:
+  `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role holdout --timeout-seconds 6 --max-workers 8`
+  checked 8 dates.
+- Holdout dates with both same-day L2 and trades available: `0`.
+- The pilot dates `2024-01-01`, `2024-02-01`, and `2024-03-01` could not be
+  processed because the required primary Tardis public URLs returned HTTP 404
+  and/or timed out. Example recorded failures:
+  - `2024-01-01` L2 HEAD
+    `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz`
+    -> `404`; trades HEAD
+    `https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz`
+    -> `TimeoutError`.
+  - `2024-02-01` L2 HEAD
+    `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz`
+    -> `TimeoutError`; trades HEAD
+    `https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz`
+    -> `404`.
+  - `2024-03-01` L2 HEAD
+    `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz`
+    -> `TimeoutError`; trades HEAD
+    `https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz`
+    -> `404`.
+- Exact per-date source URLs, HEAD results, exclusion statuses, and exclusion
+  reasons are recorded in `data/manifests/research_dates.yaml`.
+
+Implemented pre-gate infrastructure:
+
+- Registry creation/loading/writing utilities.
+- Explicit Tardis source URL construction and vendor-symbol mapping.
+- Source availability checker that records objective failed source requests.
+- Per-day Phase 1-6 orchestration entry point with default
+  `cross_day_features=false` and `cross_day_labels=false`.
+- Multi-day registry driver that records failed dates and never silently omits
+  them.
+- Parquet writer/round-trip comparator for large derived artifacts.
+- Deterministic artifact cache manifests using source checksum, config hash, and
+  feature/label version.
+- Large raw and derived artifacts remain ignored by Git; only metadata,
+  fixtures, code, tests, and manifests are tracked.
+
+Tests added for the pre-gate:
+
+- Parquet round-trip preserving timestamp/null/value semantics.
+- Day-boundary feature isolation.
+- Day-boundary label isolation.
+- Dataset-role isolation so development processing does not read holdout
+  artifacts.
+- Manifest/hash consistency.
+- Cache invalidation for changed source checksum, config hash, feature version,
+  label version, and stage.
+- Partial failure handling that records the failed date and reason while
+  preserving registry visibility.
+
+Exact local test results after pre-gate infrastructure:
+
+- `python -m pytest`: PASS, `86 passed, 1 warning in 1.35s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+Gate result:
+
+- Pilot processing was not run because the mechanically selected pilot dates do
+  not have both required primary source files available from the checked public
+  URLs.
+- Full 24-day development processing was not run for the same reason.
+- No aggregate research snapshot manifest or snapshot hash was generated.
+- No failed date was dropped; all failed source checks are retained in the
+  registry.
+- The 2026 holdout remains untouched by predictive research. Only source
+  availability was checked and recorded.
+- No IC, feature bucket study, feature-return relationship, model training,
+  threshold tuning, ablation, backtest, trading logic, or Phase 7 work was run.
+
+Known limitations / required decision before retry:
+
+- The requested primary unauthenticated Tardis public dataset URLs were not
+  available for the frozen 2024-2025 development corpus during this run.
+- Some source checks returned `TimeoutError`; those dates should be retried with
+  a longer timeout, a Tardis API-enabled source path if available, or a
+  deterministic replacement/source policy defined before any predictive
+  analysis.
+- The gate cannot pass until the selected corpus, or objectively documented
+  deterministic replacements, can be processed through Phases 1-6 with same-day
+  L2 and trades.

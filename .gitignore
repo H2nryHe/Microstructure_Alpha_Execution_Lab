@@ -19,6 +19,7 @@ build/
 PROJECT_SPEC.md
 
 # Raw and derived market data should not be committed.
+derived/
 data/raw/*
 data/bronze/*
 data/silver/*
@@ -29,6 +30,8 @@ data/manifests/*
 !data/silver/.gitkeep
 !data/features/.gitkeep
 !data/manifests/.gitkeep
+!data/manifests/research_dates.yaml
+!data/manifests/research_snapshot.yaml
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*
