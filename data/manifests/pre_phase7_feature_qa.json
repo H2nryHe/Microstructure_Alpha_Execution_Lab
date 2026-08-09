@@ -1,0 +1,1649 @@
+{
+  "dates": {
+    "2024-01-01": {
+      "row_count": 863986,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0263489902,
+          "missing_rate": 0.0,
+          "p1": -0.984200108,
+          "p99": 0.98762446
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0306058788,
+          "missing_rate": 0.0,
+          "p1": -0.9937596234,
+          "p99": 0.9955233739
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 3.89376e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0011694162,
+          "p99": 0.0011709549
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15743e-05,
+          "p1": -0.0001403936,
+          "p99": 0.000152519
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00074,
+          "missing_rate": 0.0,
+          "p1": -26.89582,
+          "p99": 25.1845875
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0332823205,
+          "missing_rate": 0.0,
+          "p1": -0.997988847,
+          "p99": 0.998572464
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002623754
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0023440001,
+          "missing_rate": 0.0,
+          "p1": 0.0022684695,
+          "p99": 0.002368099
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.0048472076,
+          "missing_rate": 0.0517635702,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-02-01": {
+      "row_count": 863980,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0655363389,
+          "missing_rate": 0.0,
+          "p1": -0.9798764356,
+          "p99": 0.9752185516
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0692915255,
+          "missing_rate": 0.0,
+          "p1": -0.9901625816,
+          "p99": 0.9877702544
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 8.11511e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0011762493,
+          "p99": 0.0011747174
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15743e-05,
+          "p1": -0.000197716,
+          "p99": 0.0002029125
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00114,
+          "missing_rate": 0.0,
+          "p1": -29.9796157,
+          "p99": 28.645211
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0688506852,
+          "missing_rate": 0.0,
+          "p1": -0.9947425344,
+          "p99": 0.9935801958
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 5.6969e-06,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0003262667
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0023671298,
+          "missing_rate": 0.0,
+          "p1": 0.002316332,
+          "p99": 0.0023847455
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.2214679683,
+          "missing_rate": 0.0461723651,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-03-01": {
+      "row_count": 863986,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0068349988,
+          "missing_rate": 5.78713e-05,
+          "p1": -0.937771923,
+          "p99": 0.9403729361
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0133391195,
+          "missing_rate": 5.78713e-05,
+          "p1": -0.9741444717,
+          "p99": 0.9758748261
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 9.9709e-06,
+          "missing_rate": 5.78713e-05,
+          "p1": -0.0008060677,
+          "p99": 0.0008070162
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15743e-05,
+          "p1": -0.0002443138,
+          "p99": 0.00022967
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00332,
+          "missing_rate": 0.0,
+          "p1": -27.3758615,
+          "p99": 28.1713595
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.01235474,
+          "missing_rate": 5.78713e-05,
+          "p1": -0.9949836492,
+          "p99": 0.9950948355
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 6.99949e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0003602413
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0016149019,
+          "missing_rate": 5.78713e-05,
+          "p1": 0.0015936409,
+          "p99": 0.0016444368
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.0082556968,
+          "missing_rate": 0.0108092029,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-04-01": {
+      "row_count": 863952,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0214187696,
+          "missing_rate": 1.50471e-05,
+          "p1": -0.97479584,
+          "p99": 0.9729479186
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0221404776,
+          "missing_rate": 1.50471e-05,
+          "p1": -0.9853806508,
+          "p99": 0.98474971
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -1.63746e-05,
+          "missing_rate": 1.50471e-05,
+          "p1": -0.0007195728,
+          "p99": 0.0007202328
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15747e-05,
+          "p1": -0.0002247047,
+          "p99": 0.0002168959
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00019,
+          "missing_rate": 0.0,
+          "p1": -24.4926362,
+          "p99": 25.6723273
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0226468204,
+          "missing_rate": 1.50471e-05,
+          "p1": -0.9933331831,
+          "p99": 0.9931636094
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 3.36083e-05,
+          "missing_rate": 1.1575e-06,
+          "p1": 0.0,
+          "p99": 0.0003742128
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0014361427,
+          "missing_rate": 1.50471e-05,
+          "p1": 0.0014051719,
+          "p99": 0.0376366224
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.1837494905,
+          "missing_rate": 0.0218252866,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-05-01": {
+      "row_count": 863986,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0016906473,
+          "missing_rate": 0.0,
+          "p1": -0.9498379394,
+          "p99": 0.9468621259
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0042481497,
+          "missing_rate": 0.0,
+          "p1": -0.9740173057,
+          "p99": 0.9728052695
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 5.4238e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0008649453,
+          "p99": 0.0008642664
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15743e-05,
+          "p1": -0.0004382393,
+          "p99": 0.000429497
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.01247,
+          "missing_rate": 0.0,
+          "p1": -25.4840755,
+          "p99": 23.740019
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0062895505,
+          "missing_rate": 0.0,
+          "p1": -0.9939640206,
+          "p99": 0.9930983442
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.00011592,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.000801854
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0017285483,
+          "missing_rate": 0.0,
+          "p1": 0.0016478123,
+          "p99": 0.0017644195
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.1072927136,
+          "missing_rate": 0.0226716637,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-06-01": {
+      "row_count": 863991,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0961281991,
+          "missing_rate": 5.20839e-05,
+          "p1": -0.9425029176,
+          "p99": 0.9284034665
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.1123578103,
+          "missing_rate": 5.20839e-05,
+          "p1": -0.9731921572,
+          "p99": 0.9633573386
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -8.85022e-05,
+          "missing_rate": 5.20839e-05,
+          "p1": -0.0007312196,
+          "p99": 0.0007288942
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -5.53932e-05,
+          "p99": 5.46258e-05
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00015,
+          "missing_rate": 0.0,
+          "p1": -12.67969,
+          "p99": 11.8281
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.119807304,
+          "missing_rate": 5.20839e-05,
+          "p1": -0.9896465419,
+          "p99": 0.9867268156
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 6.9445e-06,
+          "p1": 0.0,
+          "p99": 0.0001557646
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.001476987,
+          "missing_rate": 5.20839e-05,
+          "p1": 0.0014741997,
+          "p99": 0.001481043
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.2133971292,
+          "missing_rate": 0.1027475981,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-07-01": {
+      "row_count": 863983,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0354367121,
+          "missing_rate": 2.3149e-06,
+          "p1": -0.9404616627,
+          "p99": 0.9377415251
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0427702776,
+          "missing_rate": 2.3149e-06,
+          "p1": -0.9714712508,
+          "p99": 0.9691568762
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -4.04005e-05,
+          "missing_rate": 2.3149e-06,
+          "p1": -0.000786451,
+          "p99": 0.0007861005
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15743e-05,
+          "p1": -0.0001574704,
+          "p99": 0.0001576815
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00026,
+          "missing_rate": 0.0,
+          "p1": -35.6622472,
+          "p99": 35.9715128
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0510481957,
+          "missing_rate": 2.3149e-06,
+          "p1": -0.9923744116,
+          "p99": 0.9920658368
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002896812
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0015834813,
+          "missing_rate": 2.3149e-06,
+          "p1": 0.0015693661,
+          "p99": 0.0015967808
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.0082059533,
+          "missing_rate": 0.0623206707,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-08-01": {
+      "row_count": 863988,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0089228872,
+          "missing_rate": 0.0,
+          "p1": -0.9483635459,
+          "p99": 0.9557789565
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0022863913,
+          "missing_rate": 0.0,
+          "p1": -0.9811022935,
+          "p99": 0.9825477938
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 5.009e-07,
+          "missing_rate": 0.0,
+          "p1": -0.0007738023,
+          "p99": 0.0007746359
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0002510681,
+          "p99": 0.0002537844
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00054,
+          "missing_rate": 0.0,
+          "p1": -30.722359,
+          "p99": 32.9530638
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0006483547,
+          "missing_rate": 0.0,
+          "p1": -0.9934504238,
+          "p99": 0.9940786606
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 7.12702e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0004316675
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0015536038,
+          "missing_rate": 0.0,
+          "p1": 0.0015274872,
+          "p99": 0.0015992836
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.2275751518,
+          "missing_rate": 0.0370028287,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-09-01": {
+      "row_count": 863991,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0402978935,
+          "missing_rate": 2.89355e-05,
+          "p1": -0.9805068493,
+          "p99": 0.978746412
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.053047598,
+          "missing_rate": 2.89355e-05,
+          "p1": -0.9909639293,
+          "p99": 0.990071619
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -3.65702e-05,
+          "missing_rate": 2.89355e-05,
+          "p1": -0.0008587102,
+          "p99": 0.000858597
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0002077645,
+          "p99": 0.0002020057
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00022,
+          "missing_rate": 0.0,
+          "p1": -28.646172,
+          "p99": 26.265603
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0425695612,
+          "missing_rate": 2.89355e-05,
+          "p1": -0.996290934,
+          "p99": 0.9961975793
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 2.28295e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.00044237
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0017178856,
+          "missing_rate": 2.89355e-05,
+          "p1": 0.0016945659,
+          "p99": 0.0017450178
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.08943931,
+          "missing_rate": 0.1057777222,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-10-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.000947106,
+          "missing_rate": 1.3889e-05,
+          "p1": -0.9875776713,
+          "p99": 0.9876454935
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.004176768,
+          "missing_rate": 1.3889e-05,
+          "p1": -0.994772135,
+          "p99": 0.9948412249
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -2.7211e-06,
+          "missing_rate": 1.3889e-05,
+          "p1": -0.0008056985,
+          "p99": 0.0008060553
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0002646861,
+          "p99": 0.0002624545
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00046,
+          "missing_rate": 0.0,
+          "p1": -29.4199827,
+          "p99": 29.2643315
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.003464341,
+          "missing_rate": 1.3889e-05,
+          "p1": -0.9981633562,
+          "p99": 0.9982146148
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 5.84766e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0004952186
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0015774862,
+          "missing_rate": 1.3889e-05,
+          "p1": 0.0015603702,
+          "p99": 0.0016497554
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.0425759552,
+          "missing_rate": 0.0298949527,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-11-01": {
+      "row_count": 863950,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0021901233,
+          "missing_rate": 0.0,
+          "p1": -0.985050742,
+          "p99": 0.9871234371
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0027785599,
+          "missing_rate": 0.0,
+          "p1": -0.993012354,
+          "p99": 0.9933637452
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -1.7804e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0007150865,
+          "p99": 0.0007149175
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15747e-05,
+          "p1": -0.000251807,
+          "p99": 0.0002288732
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00484,
+          "missing_rate": 0.0,
+          "p1": -19.4568125,
+          "p99": 19.0405855
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0024869652,
+          "missing_rate": 0.0,
+          "p1": -0.9951079236,
+          "p99": 0.9951187946
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 5.76934e-05,
+          "missing_rate": 1.1575e-06,
+          "p1": 0.0,
+          "p99": 0.0004335306
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0014379155,
+          "missing_rate": 0.0,
+          "p1": 0.0013998545,
+          "p99": 0.0014504526
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.1453815261,
+          "missing_rate": 0.0493558655,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2024-12-01": {
+      "row_count": 863987,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0960664951,
+          "missing_rate": 0.0,
+          "p1": -0.9942957906,
+          "p99": 0.9949777869
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.1002666462,
+          "missing_rate": 0.0,
+          "p1": -0.9968341787,
+          "p99": 0.9971390146
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -5.23559e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0005144806,
+          "p99": 0.0005155155
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001238569,
+          "p99": 0.0001245945
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00068,
+          "missing_rate": 0.0,
+          "p1": -21.1599098,
+          "p99": 20.1663668
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.1013276509,
+          "missing_rate": 0.0,
+          "p1": -0.9979474072,
+          "p99": 0.9980433699
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002287173
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0010312746,
+          "missing_rate": 0.0,
+          "p1": 0.0010233834,
+          "p99": 0.0010431009
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.2117596888,
+          "missing_rate": 0.0322609021,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-01-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0094777595,
+          "missing_rate": 0.0,
+          "p1": -0.9963852919,
+          "p99": 0.9953285701
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0147995933,
+          "missing_rate": 0.0,
+          "p1": -0.9985654282,
+          "p99": 0.9979367883
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 7.5731e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0005327482,
+          "p99": 0.0005326944
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001339492,
+          "p99": 0.0001392226
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -1e-05,
+          "missing_rate": 0.0,
+          "p1": -13.6957251,
+          "p99": 13.5572919
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.014214031,
+          "missing_rate": 0.0,
+          "p1": -0.9997982365,
+          "p99": 0.9996345175
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002424632
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0010652786,
+          "missing_rate": 0.0,
+          "p1": 0.0010532791,
+          "p99": 0.0010741139
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.0950072074,
+          "missing_rate": 0.1102081964,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-02-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.1415375052,
+          "missing_rate": 0.0,
+          "p1": -0.9959145462,
+          "p99": 0.9978017658
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.1377965143,
+          "missing_rate": 0.0,
+          "p1": -0.9981268232,
+          "p99": 0.9991772523
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 6.41901e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0004904219,
+          "p99": 0.0004917471
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001353922,
+          "p99": 0.0001246297
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00099,
+          "missing_rate": 0.0,
+          "p1": -12.7264914,
+          "p99": 13.36323
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.1309383223,
+          "missing_rate": 0.0,
+          "p1": -0.9993643407,
+          "p99": 0.9996631855
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002455935
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0009795088,
+          "missing_rate": 0.0,
+          "p1": 0.0009733939,
+          "p99": 0.0009959257
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.1168333688,
+          "missing_rate": 0.0353926888,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-03-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.2091268781,
+          "missing_rate": 1.96761e-05,
+          "p1": -0.9956888653,
+          "p99": 0.998505326
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.2116689934,
+          "missing_rate": 1.96761e-05,
+          "p1": -0.9984456473,
+          "p99": 0.999319197
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 0.0001205813,
+          "missing_rate": 1.96761e-05,
+          "p1": -0.0005878513,
+          "p99": 0.000590137
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001983667,
+          "p99": 0.0001994014
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.0011,
+          "missing_rate": 0.0,
+          "p1": -20.747316,
+          "p99": 23.3063041
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.2053104309,
+          "missing_rate": 1.96761e-05,
+          "p1": -0.999344094,
+          "p99": 0.9996731254
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 4.54209e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0003518027
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0011747547,
+          "missing_rate": 1.96761e-05,
+          "p1": 0.0011594739,
+          "p99": 0.0011915633
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.0273571898,
+          "missing_rate": 0.0378915546,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-04-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0150438391,
+          "missing_rate": 0.0,
+          "p1": -0.9967011625,
+          "p99": 0.9966969105
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0165993191,
+          "missing_rate": 0.0,
+          "p1": -0.9978910369,
+          "p99": 0.9980595538
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -9.9312e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0005981821,
+          "p99": 0.0006007939
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001975791,
+          "p99": 0.0002014893
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 0.0,
+          "p1": -26.7697084,
+          "p99": 26.9481205
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0167141799,
+          "missing_rate": 0.0,
+          "p1": -0.9988097538,
+          "p99": 0.9989068454
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 3.88766e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0003065326
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0011897964,
+          "missing_rate": 0.0,
+          "p1": 0.0011712228,
+          "p99": 0.0012118651
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.2,
+          "missing_rate": 0.0678941472,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-05-01": {
+      "row_count": 863991,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0078574378,
+          "missing_rate": 0.0,
+          "p1": -0.9913214244,
+          "p99": 0.9907359115
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0033873637,
+          "missing_rate": 0.0,
+          "p1": -0.993966766,
+          "p99": 0.9929830656
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 1.6109e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0005183471,
+          "p99": 0.0005176464
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001624167,
+          "p99": 0.0001624428
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00052,
+          "missing_rate": 0.0,
+          "p1": -25.849245,
+          "p99": 25.06297
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0030757925,
+          "missing_rate": 0.0,
+          "p1": -0.9954692637,
+          "p99": 0.9945152105
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002995463
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0010398446,
+          "missing_rate": 0.0,
+          "p1": 0.0010279323,
+          "p99": 0.0010611214
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.305227656,
+          "missing_rate": 0.0597263166,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-06-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0394309118,
+          "missing_rate": 0.0,
+          "p1": -0.9873045281,
+          "p99": 0.9936384575
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0363790797,
+          "missing_rate": 0.0,
+          "p1": -0.9909460395,
+          "p99": 0.9952885045
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 1.87082e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0004731017,
+          "p99": 0.0004765184
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001135296,
+          "p99": 0.0001152068
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 0.0,
+          "p1": -16.4485716,
+          "p99": 18.0448863
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0391434455,
+          "missing_rate": 0.0,
+          "p1": -0.9932247192,
+          "p99": 0.9964829614
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002195017
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0009572353,
+          "missing_rate": 0.0,
+          "p1": 0.0009454454,
+          "p99": 0.0009632052
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.1392667061,
+          "missing_rate": 0.0918943694,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-07-01": {
+      "row_count": 863991,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.1282617651,
+          "missing_rate": 3.70374e-05,
+          "p1": -0.9966138424,
+          "p99": 0.9958090746
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.1342483636,
+          "missing_rate": 3.70374e-05,
+          "p1": -0.9976831737,
+          "p99": 0.9971175752
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -6.13896e-05,
+          "missing_rate": 3.70374e-05,
+          "p1": -0.0004689338,
+          "p99": 0.0004687621
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001168495,
+          "p99": 0.0001172212
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.0002,
+          "missing_rate": 0.0,
+          "p1": -16.512583,
+          "p99": 16.621111
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.1308236898,
+          "missing_rate": 3.70374e-05,
+          "p1": -0.9984822946,
+          "p99": 0.99797751
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002155869
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0009386542,
+          "missing_rate": 3.70374e-05,
+          "p1": 0.0009307117,
+          "p99": 0.0009485805
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.0834951456,
+          "missing_rate": 0.0741755412,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-08-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": 0.0009137915,
+          "missing_rate": 0.0,
+          "p1": -0.9953435963,
+          "p99": 0.9960481613
+        },
+        "di_5": {
+          "constant": false,
+          "median": 0.0037222567,
+          "missing_rate": 0.0,
+          "p1": -0.99811021,
+          "p99": 0.9982725343
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": 4.2583e-06,
+          "missing_rate": 0.0,
+          "p1": -0.0004360487,
+          "p99": 0.0004368796
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0002079344,
+          "p99": 0.0002072672
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00107,
+          "missing_rate": 0.0,
+          "p1": -29.6160553,
+          "p99": 30.6612402
+        },
+        "qi_1": {
+          "constant": false,
+          "median": 0.0097717537,
+          "missing_rate": 0.0,
+          "p1": -0.9993966213,
+          "p99": 0.9994695885
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 6.29284e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0003169383
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0008688887,
+          "missing_rate": 0.0,
+          "p1": 0.0008621406,
+          "p99": 0.0008846632
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.4533248635,
+          "missing_rate": 0.0229585459,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-09-01": {
+      "row_count": 863979,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0383629169,
+          "missing_rate": 1.15744e-05,
+          "p1": -0.9912139212,
+          "p99": 0.9913654997
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.03881123,
+          "missing_rate": 1.15744e-05,
+          "p1": -0.9949305396,
+          "p99": 0.9934380216
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -1.762e-05,
+          "missing_rate": 1.15744e-05,
+          "p1": -0.000459022,
+          "p99": 0.0004587205
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15744e-05,
+          "p1": -0.0001587871,
+          "p99": 0.0001642208
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00027,
+          "missing_rate": 0.0,
+          "p1": -44.101791,
+          "p99": 38.7446078
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0382300434,
+          "missing_rate": 1.15744e-05,
+          "p1": -0.9960824793,
+          "p99": 0.99399164
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 3.96486e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002607719
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0009200487,
+          "missing_rate": 1.15744e-05,
+          "p1": 0.0009110953,
+          "p99": 0.0009318592
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.0606927232,
+          "missing_rate": 0.0541402048,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-10-01": {
+      "row_count": 863990,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.1028875631,
+          "missing_rate": 6.9445e-06,
+          "p1": -0.9911679857,
+          "p99": 0.9887436996
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.1082958145,
+          "missing_rate": 6.9445e-06,
+          "p1": -0.992862615,
+          "p99": 0.989780015
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -4.67337e-05,
+          "missing_rate": 6.9445e-06,
+          "p1": -0.0004291129,
+          "p99": 0.0004260713
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.0001435223,
+          "p99": 0.0001495052
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -0.00167,
+          "missing_rate": 0.0,
+          "p1": -41.1844242,
+          "p99": 31.593311
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.1085141736,
+          "missing_rate": 6.9445e-06,
+          "p1": -0.9938940157,
+          "p99": 0.9903654832
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0002546606
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0008584814,
+          "missing_rate": 6.9445e-06,
+          "p1": 0.0008449527,
+          "p99": 0.0008769609
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": -0.46,
+          "missing_rate": 0.068674406,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-11-01": {
+      "row_count": 863990,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0647718861,
+          "missing_rate": 0.0,
+          "p1": -0.9971654178,
+          "p99": 0.993733575
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0642193452,
+          "missing_rate": 0.0,
+          "p1": -0.9982588921,
+          "p99": 0.9959908384
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -3.08782e-05,
+          "missing_rate": 0.0,
+          "p1": -0.0004538424,
+          "p99": 0.0004529429
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -7.19384e-05,
+          "p99": 7.77523e-05
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": -5e-05,
+          "missing_rate": 0.0,
+          "p1": -21.884,
+          "p99": 17.1005683
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0679604312,
+          "missing_rate": 0.0,
+          "p1": -0.9989798326,
+          "p99": 0.9977377473
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.0001749938
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.0009082041,
+          "missing_rate": 0.0,
+          "p1": 0.000905305,
+          "p99": 0.000913559
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.0478994359,
+          "missing_rate": 0.097785854,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    },
+    "2025-12-01": {
+      "row_count": 863992,
+      "stats": {
+        "di_10": {
+          "constant": false,
+          "median": -0.0147122293,
+          "missing_rate": 1.1574e-06,
+          "p1": -0.9979718771,
+          "p99": 0.997996556
+        },
+        "di_5": {
+          "constant": false,
+          "median": -0.0170270842,
+          "missing_rate": 1.1574e-06,
+          "p1": -0.9988578551,
+          "p99": 0.9988949037
+        },
+        "microprice_deviation_bps": {
+          "constant": false,
+          "median": -1.13257e-05,
+          "missing_rate": 1.1574e-06,
+          "p1": -0.0005866176,
+          "p99": 0.0005864573
+        },
+        "mom_1s": {
+          "constant": false,
+          "median": 0.0,
+          "missing_rate": 1.15742e-05,
+          "p1": -0.000306952,
+          "p99": 0.0003110669
+        },
+        "ofi_1s": {
+          "constant": false,
+          "median": 0.00193,
+          "missing_rate": 0.0,
+          "p1": -26.7868167,
+          "p99": 25.1250508
+        },
+        "qi_1": {
+          "constant": false,
+          "median": -0.0195175116,
+          "missing_rate": 1.1574e-06,
+          "p1": -0.9994267123,
+          "p99": 0.9994574826
+        },
+        "realized_vol_5s": {
+          "constant": false,
+          "median": 0.0001026233,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0,
+          "p99": 0.000553077
+        },
+        "spread_bps": {
+          "constant": false,
+          "median": 0.001160066,
+          "missing_rate": 1.1574e-06,
+          "p1": 0.0011241095,
+          "p99": 0.0011884137
+        },
+        "trade_imbalance_1s": {
+          "constant": false,
+          "median": 0.3251533742,
+          "missing_rate": 0.0212826045,
+          "p1": -1.0,
+          "p99": 1.0
+        }
+      }
+    }
+  },
+  "description": "Per-date feature/data QA only; no feature-label comparison performed.",
+  "feature_columns": [
+    "qi_1",
+    "di_5",
+    "di_10",
+    "spread_bps",
+    "microprice_deviation_bps",
+    "ofi_1s",
+    "trade_imbalance_1s",
+    "realized_vol_5s",
+    "mom_1s"
+  ],
+  "generated_at": "2026-08-09T19:55:45+00:00"
+}

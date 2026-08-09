@@ -1715,3 +1715,153 @@ Next required work before Phase 7:
   aggregate frozen research snapshot.
 - Do not begin Phase 7 until the full Pre-Phase-7 Multi-Day Expansion Gate
   passes.
+
+## Pre-Phase-7 Multi-Day Expansion Gate
+
+Status: PASS locally; final push and new Python 3.11 GitHub Actions confirmation
+are pending because the current environment rejected further escalated process
+operations after the local work completed.
+
+Scope:
+
+- No Phase 7 work was started.
+- No IC, bucket studies, feature-return relationships, model training, strategy
+  metrics, or backtests were calculated.
+- `cross_day_features=false` and `cross_day_labels=false` remain set in
+  `data/manifests/research_dates.yaml`.
+- The 2026 holdout dates remain excluded from predictive research and are absent
+  from the frozen development snapshot.
+
+Pilot verification:
+
+- `2024-01-01`, `2024-02-01`, and `2024-03-01` were explicitly verified as
+  Phase 1-6 complete.
+- For each pilot date: source availability PASS, ingestion PASS, QA PASS,
+  book replay PASS, research dataset PASS, feature generation PASS, label
+  generation PASS, feature hash exists, label hash exists, artifact paths exist,
+  source checksums exist, feature version matches config, and label version
+  matches config.
+
+Remaining development-date processing:
+
+- Processed remaining frozen development dates `2024-04-01` through
+  `2025-12-01` with the existing Phase 1-6 driver.
+- Large raw/bronze/derived CSV working files remained outside Git under
+  `/tmp/microalpha-multiday`.
+- For each successful non-pilot date, cleanup retained source gzip files,
+  QA reports, day/artifact manifests, label summaries, and Parquet outputs;
+  cleanup removed raw working copies, bronze CSVs, and derived CSV
+  intermediates.
+- Remaining-date runner result: processed `21`, failed `0`, retried `0`.
+- Remaining-date total runtime: `57320.429` seconds.
+- Slowest remaining dates were `2025-08-01` at `6163.534` seconds and
+  `2025-12-01` at `5429.851` seconds, dominated by large L2 validation/replay
+  and Phase 5 feature generation. Treat Phase 5/runtime as future Phase 16
+  optimization work; no financial logic was optimized during this gate.
+
+Development corpus completeness:
+
+- Included dates: all 24 first-of-month development dates from `2024-01-01`
+  through `2025-12-01`.
+- Excluded dates: none.
+- Failed dates: none.
+- Pending dates: none.
+- Per-date source checksums, row counts, QA status, replay counts, feature
+  hashes, label hashes, runtimes, versions, and artifact paths are recorded in
+  `data/manifests/pre_phase7_verification.json`.
+- Row-count range across included dates:
+  - research rows: `863950` to `863992`.
+  - feature rows: `863950` to `863992`.
+  - label rows: `863950` to `863992`.
+  - unavailable/stale research rows: `0` to `50`.
+  - crossed/invalid book states: `0` on every included date.
+
+Multi-day feature QA:
+
+- Report: `data/manifests/pre_phase7_feature_qa.json`.
+- Important features reviewed per date: `qi_1`, `di_5`, `di_10`,
+  `spread_bps`, `microprice_deviation_bps`, `ofi_1s`,
+  `trade_imbalance_1s`, `realized_vol_5s`, and `mom_1s`.
+- Reported per-date missing rate, p1, median, p99, and constant-feature flag.
+- Review note: no constant important features and no impossible crossed-book
+  replay counts were observed. `trade_imbalance_1s` missingness exceeded a
+  5% review threshold on 12 dates, ranging from about `5.18%` to `11.02%`.
+  This was recorded as data/feature QA only and was not used to drop dates or
+  tune any label/feature logic.
+
+Multi-day label QA:
+
+- Report: `data/manifests/pre_phase7_label_qa.json`.
+- For every included date and label horizon, the report records valid count,
+  missing count, missing percentage, UP/FLAT/DOWN percentages, median lookup
+  delay, p95 lookup delay, and maximum accepted lookup delay.
+- No label missing percentage exceeded `1%` in the generated review.
+- The configured `0.5` bps threshold was not tuned from these results.
+- Class proportions were not interpreted as signal performance.
+
+Frozen aggregate research snapshot:
+
+- Manifest: `data/manifests/pre_phase7_research_snapshot.json`.
+- Snapshot version: `pre_phase7_research_snapshot_v1`.
+- Dataset role: `development`.
+- Canonical instrument: `BTC-USDT`.
+- Vendor: `tardis_binance_spot`.
+- Included dates: all 24 development dates, ordered.
+- Excluded dates: none.
+- Failed dates: none.
+- Snapshot hash:
+  `0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a`.
+- Snapshot hash determinism checks:
+  - same inputs produce the same hash: PASS.
+  - creation timestamp is excluded from the hash: PASS.
+  - controlled dependency change changes the hash: PASS.
+  - absolute local paths such as `/tmp/...` do not affect the hash: PASS.
+  - holdout dates are absent from the included-date list: PASS.
+- This snapshot is the frozen development input for Phase 7. Any later
+  data/config/code change requires a new snapshot version/hash before Phase 7
+  uses it.
+
+Local test results after full multi-day processing:
+
+- `python -m pytest`: PASS, `104 passed, 1 warning in 2.20s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+Python 3.11 CI status:
+
+- Source-verification support commit
+  `4cbb6f0958fc57134913a8490c1385beb4a688e1` was pushed to `origin/main`.
+- GitHub Actions `tests` run `31293453728`: PASS.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31293453728`.
+- GitHub Actions `research-smoke` run `31293453718`: PASS.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31293453718`.
+- Both workflows use `actions/setup-python@v5` with Python `3.11`.
+- The current registry/report/status update has not yet been committed or
+  pushed, so there is not yet a GitHub Actions result for this exact final
+  artifact state.
+
+Assumptions and limitations:
+
+- Local execution used Python 3.10 and emitted the existing pandas warning that
+  installed `bottleneck` is `1.3.5` while pandas asks for `>=1.3.6`.
+- Python 3.11 compatibility for source code is evidenced by GitHub Actions on
+  the pushed source-verification commit; final artifact-state CI still needs a
+  successful push and workflow run.
+- `/tmp/microalpha-multiday` contains the retained local source gzip files and
+  Parquet outputs used to generate the manifests. These large files are not
+  committed to Git.
+- The aggregate snapshot intentionally hashes logical checksums, configs,
+  versions, and ordered dates, not absolute local artifact paths.
+
+Next steps:
+
+- Commit and push the current registry/report/status update when Git operations
+  are available.
+- Confirm GitHub Actions `tests` and `research-smoke` pass on the resulting
+  commit under Python 3.11.
+- Do not begin Phase 7 until that final current-commit CI confirmation is green.

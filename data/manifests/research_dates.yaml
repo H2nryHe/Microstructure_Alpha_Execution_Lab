@@ -1006,24 +1006,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/04/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/04/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 7dddb0101faafc93013a90b018a482cc64a1f7887331b6197636218c48220cdf
+  trade_checksum: 562c9a491f05ca93f9c310dcd765274974ce893701f149c8afbf4622752e3012
   compressed_file_size:
     l2: 128631379
     trades: 20953053
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 21508195
+  trade_row_count: 1893437
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: a5befa9e0544ce059bcfe17ed11f676d6e39540822f6a9e782ff072d8ffc76bc
+  label_hash: 88dfa3d557b5e430eb4697e553f88d36f6d2f618a483f7327c586b8c3cdceba8
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 235.97570679103956
+    research_fixed_clock: 114.41267608292401
+    features: 676.4614466668572
+    labels: 140.6655697079841
+    total: 1984.1761119998991
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-04-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-04-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-04-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-04-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-04-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-04-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-04-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 56dc8b293539698b26e3480f9397483a330804912bd4647a17d0651e5dc5f4b8
+    labels: c2e5a7b7d5b5d368e7e4629f5192f220c6fb3097542237da2f0d594e5631da37
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1144,24 +1158,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/05/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/05/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 5173777ef4dc7418b89ddd04eb90fa1f40f7b0c5523054265b2bc3e3530ada95
+  trade_checksum: 6122f412ca124d1ac160176c0bda3da0c9c5e1b5a5e750fcbab5db847f0e36de
   compressed_file_size:
     l2: 183111008
     trades: 27887574
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 31005311
+  trade_row_count: 2401094
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: d9967c2d5d7660abd8547cd758bc762c2518fd36393fc8066a8bf889caf7f1bf
+  label_hash: 3a5bd1d042c6426efc56f9ffacc8e67a4008b460c98e53bfa60493caa4bad84b
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 344.5833412501961
+    research_fixed_clock: 142.97069874987938
+    features: 933.4165265839547
+    labels: 141.61378629109822
+    total: 2724.048558957875
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-05-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-05-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-05-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-05-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-05-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-05-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-05-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 74695201fed2481d27a51a0c316b806aaaeb2f75c72ccd67be5e8292807d6a39
+    labels: daa4dd339d035f9dd9a73e50bcacd8cc811d7254bc904bb4007c420d1df1ca3a
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1282,24 +1310,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/06/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/06/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: e37e72779e14d326f3bbe86192c04a1aacf4d3ca0d5164dd87705911fb812e41
+  trade_checksum: d91cc18b1d944510ed910b6bb8a1d6fd5385b762c5ffcc7b1346b158a67900bc
   compressed_file_size:
     l2: 43888258
     trades: 7014851
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 6771693
+  trade_row_count: 638497
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 9df626ae63461bdc337a706b361ee81179212671017392e5327964d2e9458434
+  label_hash: 8c55f9e1f903a6cf51f5a77c1f6708ede7ab8605f27d9be2561b51ab8f2a6bc6
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 92.8437615421135
+    research_fixed_clock: 82.41807008301839
+    features: 439.5511568749789
+    labels: 172.11081166611984
+    total: 1172.8691955420654
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-06-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-06-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-06-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-06-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-06-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-06-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-06-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 33b220a587d0308dbf98d7f962dd2251ef72409a66d66c63644624c8c4bb452b
+    labels: 2ca4afa0b8d25830eeb06fddf620ab25bab29b79fc5c51ba1e8488bec516276a
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1420,24 +1462,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/07/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/07/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 2a16299c4b4c04ee909f9b82d30b468355a38a9afafe8591c73d2138703d22e4
+  trade_checksum: fac89d5963b75638a7f74b11bcfb89fefbe59dac69bb31e47582729098c22c7e
   compressed_file_size:
     l2: 92597377
     trades: 14066836
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 14765722
+  trade_row_count: 1461507
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: aa9d4dbecbcca9c370c001b8ca88c8bfcc04dbfe3c563ac945540456d21f4087
+  label_hash: 1f77f2420f9b831dad43abca0a42e660733c7eed2e8a1aaa926dd11ad1b01930
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 162.47539908299223
+    research_fixed_clock: 117.7634072501678
+    features: 588.9503908751067
+    labels: 144.45959929097444
+    total: 1609.6069343751296
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-07-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-07-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-07-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-07-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-07-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-07-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-07-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 88fee2f5f178f21ea8bb0fd1db44d6ee57de1af418d902eadc88c6e157cd93c0
+    labels: 3fb5ebdbd86f20e5996d0cc4b1a0589755a6972ac58f98de147738dc99bd0b61
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1558,24 +1614,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/08/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/08/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: a0c27466b0bd9571eef56bbb0e8975523185dce79e6b3a1b77aa59fb837c0e98
+  trade_checksum: a8714d04e653872dad8f99b78ad537f272563d0c52eea2e8c2ab4b05d3328648
   compressed_file_size:
     l2: 228264661
     trades: 24297903
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 41604072
+  trade_row_count: 2397256
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 233d627b0d7b05eb5bd5f7f80d1c4f1ce893e6d652856d7c55cd9f8192b37ba2
+  label_hash: 59ebd31b9d90c0290ed10998ea295e043d717a4476c49f56c763ae338dadf825
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 454.5270436250139
+    research_fixed_clock: 134.12792933406308
+    features: 845.0858159589116
+    labels: 127.86415691697039
+    total: 3373.3346409169026
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-08-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-08-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-08-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-08-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-08-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-08-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-08-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: f11d645e5751cfe001b57784da47e0ea345a3c1391e1830b9c2ecdb8d587d516
+    labels: 8c3314e4c9287b1f1b36bd6c2d5eb14a72167c0591988a22b2e73a76a7b25cd7
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1696,24 +1766,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/09/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/09/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 8b64ed7982bacb86fa6187aeff437e9bba423ac3774d497d826efd7e9aaf5fde
+  trade_checksum: e543a0f70415afdf0c2793cfd5785165ca10915218fee82067ebf296c8f80eb8
   compressed_file_size:
     l2: 146608095
     trades: 18454299
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 24717509
+  trade_row_count: 2153180
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: d17e9134a354f3f3946095529ab80fe3b282e0c8b0a925bda57bbd96baa1bed5
+  label_hash: 5b2c48d919cc2554785de752cf6005bac87d878e4443148ceac083318c859d42
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 284.70853533316404
+    research_fixed_clock: 122.2778489580378
+    features: 790.1137157920748
+    labels: 132.29069458297454
+    total: 2289.0480054169893
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-09-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-09-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-09-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-09-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-09-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-09-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-09-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: eff37459aa1e9fd9e45f5f6dfefc6346ae8ccc534c2721a01b921a39f8cfca45
+    labels: 0cc155937d387444552e44e0c54f7704bfc373a7d02d345555ad6828f86b018a
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1834,24 +1918,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/10/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/10/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: c32175b8d70171d9b713477b86870613b131632fe96ff39e58a39afe656daf28
+  trade_checksum: 59ddbbff90bc3115983bff9a25d28d47b580c6196c8d6c42978dbb0c56fc1474
   compressed_file_size:
     l2: 188273685
     trades: 42818702
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 31907670
+  trade_row_count: 5607068
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 319a7fe42a736d019754b42314c18de94d5d3b3cc3880d8512bccdf0a53a724b
+  label_hash: de3367c3a1b29dae09d3eae57bb8151944f256b9cdb8247c73ed08a82d8857e7
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 347.7090992080048
+    research_fixed_clock: 210.11904966598377
+    features: 1424.9587320829742
+    labels: 135.01145595894195
+    total: 3436.7501838330645
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-10-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-10-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-10-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-10-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-10-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-10-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-10-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 2c528886fbce68b4b153ed06a0d21dc1504eee5058693a68e1c8ed87aa8ceef7
+    labels: c15277dc418179e990183382cef3fadfaed4e0970138f7c7d42a72680a034e72
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -1972,24 +2070,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/11/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/11/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 96e90d11b79c3880d0f005f3e13c9515d21be3c4052473cbfaad8404651030f8
+  trade_checksum: a633bfcbefec52482f175a7467b2c40bb4b3739be01b3c358d08e71ff812ea14
   compressed_file_size:
     l2: 179804620
     trades: 35179117
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 30136022
+  trade_row_count: 4569271
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 612300c415edae7757fc4bf6c8b1d2e9c37b3668772c494037c7d16cc125d9f3
+  label_hash: abaacc00f7e754955a56eb8fe57380082b8b8207502dd92b09a1ccb26cafb74c
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 318.10719583393075
+    research_fixed_clock: 165.01530833309516
+    features: 1199.7995899170637
+    labels: 135.09014262491837
+    total: 3019.825095166918
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-11-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-11-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-11-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-11-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-11-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-11-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-11-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: dcb8442022d0ec78576f71944a1022f69e3b292359d867b1ce6de7f3bff603ff
+    labels: 8e4177a1dbe1ac68a84b57a1d7df32a18b9413b54f4b452baabbd9a72afc805f
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2110,24 +2222,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/12/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/12/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: a07bf8fe71c3299c1e1f4d4d4ec608bdac61943a0b7ee5b5edbd527458e8e2e8
+  trade_checksum: 9cb9d16aa21bb1e3cb0fbec82480c39458033d8ed025bb3b8d5be5fb553d55d6
   compressed_file_size:
     l2: 117952953
     trades: 26601041
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 19692024
+  trade_row_count: 3342200
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: bf098c4103af35ca916c73aab81d27f3966b930c7c0df618c86bf05a28cc2a1f
+  label_hash: 7be996180552b4fcba3422993bc51744241791101175ee7a30f1a70e53e8059d
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 217.81981458398513
+    research_fixed_clock: 151.95534958294593
+    features: 1057.3502303331625
+    labels: 198.13123262487352
+    total: 2490.374293042114
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2024-12-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2024-12-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2024-12-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2024-12-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2024-12-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2024-12-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2024-12-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: e7cd50fc2b62845897d17ddcdd7b7af98d8fdadbe530e872171ead60e20db31c
+    labels: b458c4c59cef3915e6b666cd7f3689c5e6cefe1938f06cf991ebef60e5ba4d15
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2248,24 +2374,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/01/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/01/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 247ffe94826edd6a1def0b9e2801716b33c7e4d25976c0a3abc9549c49884be6
+  trade_checksum: d0d9ba2575712e6ffce196c722c2c3beadf881763a55149b4c036d76fb96ed85
   compressed_file_size:
     l2: 106042549
     trades: 12827976
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 17618236
+  trade_row_count: 1516556
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 953a29bbb673679a6a689739cf9daa7a3156949de5cfe921bd243c804c9f80e2
+  label_hash: fbfa420032962c2ffbf62823d50a5a5e39e73222405b967daa6feb784d5037f3
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 177.3941291659139
+    research_fixed_clock: 98.66187458392233
+    features: 624.5684670419432
+    labels: 175.0070458748378
+    total: 1774.4598783338442
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-01-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-01-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-01-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-01-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-01-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-01-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-01-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: b93b3b049ec316a930d07a1a491d3b095dab3501be49ebca1edc9d730fb2426e
+    labels: 1d801e3aaa79f1db61aaceff8d05e0d506149c563942d0981bb2f610af25ce9b
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2386,24 +2526,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/02/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/02/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 5561a614ebcbdb27b4ce856fea0f6a1bb15cdc60a2e8900913c4bb0d33f33749
+  trade_checksum: 7f6aca2dca689e206d0ab25f0ecc3f41c6ccd16dffbcba21f209a592f24cc97f
   compressed_file_size:
     l2: 113001846
     trades: 20285003
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 18465577
+  trade_row_count: 2588785
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 2060925de8bdb83a11491e7820318fbca6bddfcf82c0b7299c15f3aa42c0776b
+  label_hash: 04f3c169ee985de888b380b6062ec09d64d451c304c1cb28535e3c52dedcda4a
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 195.35600549983792
+    research_fixed_clock: 106.49213604209945
+    features: 785.4421017500572
+    labels: 125.35569833382033
+    total: 1927.2356360419653
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-02-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-02-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-02-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-02-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-02-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-02-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-02-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: d0d0dfec8c24d2dcdf567f05b4f44265a978370ce798471fdfb8bf94b158015c
+    labels: f847ffe9e518af8bdfd31ef9ccc08c3d8dbb743f573b2d1e5ef548b360ecfd8c
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2524,24 +2678,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/03/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/03/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 21e00e53c2bce133fd84bc3fc040bc8127b55cb2a980e83eef60b5a7530d1949
+  trade_checksum: 28ede02cd777138a99c73b3263cd2ed658dbc60aa1e47d9844fb7f23023dccfe
   compressed_file_size:
     l2: 175547938
     trades: 31748449
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 30283407
+  trade_row_count: 3700728
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: fece0bc1c09437ac0fb5b12e6b3bef6c4712604d84f1fd41da6255180edf44be
+  label_hash: 7ba0888939c38bf77d7af61f051541b84b666631b95dbd217eacf73463e82f2e
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 273.83309229207225
+    research_fixed_clock: 138.80031608394347
+    features: 965.6763634579256
+    labels: 125.21053012507036
+    total: 2581.826979666017
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-03-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-03-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-03-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-03-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-03-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-03-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-03-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 6dbd5b920e85ceb0e6d089cd9c0311c62336891cc933d6214d19337efdbbb886
+    labels: a5808bb681b6332ae86688c833c4a01074eb3f743b26a2a1fdda85758d8d0de5
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2662,24 +2830,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/04/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/04/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 04d760b7c69e85ed9f9a1770b2f5e742285f5e58967225eb7cd4010b632cc4ea
+  trade_checksum: 4abbe4479af43cdb7b826395fb5459cf8dbe99806363bc14d4a0d5605e5dbbdd
   compressed_file_size:
     l2: 206781160
     trades: 29344040
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 36183988
+  trade_row_count: 3328693
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: e5ad6b5a62a42a7a9382b87c771ec63641dec518f30050c86505362d545c376e
+  label_hash: b04583558605bfb9c4191eec4cc24d36dcf30067ece9e2034aa9def96ee435fd
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 336.19593245815486
+    research_fixed_clock: 147.58104745810851
+    features: 920.2513200829271
+    labels: 112.98502245894633
+    total: 2774.7460641250946
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-04-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-04-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-04-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-04-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-04-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-04-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-04-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 86a8b39ee03ecede6cbabfd3f0a828de789517207a60af23c0e6bc3b6d07d6ee
+    labels: 7e00ab0a75cdc10c254740de1c423079f0fe32a1167f561e1544ef02fc68247e
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2800,24 +2982,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/05/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/05/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: ed6f0176eab5f16a2ce546ba4d04af03183997e0e0cd287d16186fd2c84e00d3
+  trade_checksum: a40df3965d9248a989719bd420c19d3643464a13a6385fafc48fd0742340ef0f
   compressed_file_size:
     l2: 146451198
     trades: 23471851
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 25367958
+  trade_row_count: 2925713
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 86697acb218439e50af5dec0ccd92eb8d8e4498c1b4f4a8ab8ddcbb89e780ea4
+  label_hash: 71ff58887029efea7557dc793d0eaedd7eeb220d69fce3d217ef0b58c21d2f93
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 233.63405687501654
+    research_fixed_clock: 131.17715500015765
+    features: 833.0336237500887
+    labels: 122.55096954107285
+    total: 2241.544047874864
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-05-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-05-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-05-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-05-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-05-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-05-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-05-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 4dc1951070a8657e41a8661d96c753a63dc8773ac9a208507a05be315020cb5e
+    labels: 1b6729c53c161277803c7bfd16cd73e296888bc1ebbe1d4fe41cbdd5346e4fc3
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -2938,24 +3134,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/06/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/06/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: fefccfe7a04b9b8763afb42384b5e30f15c59b6ec02dfb5ac68440bff74e31c7
+  trade_checksum: a5aea737b33a7365c1d3a0471273b7bf10e701311b53057af427b56097d9db48
   compressed_file_size:
     l2: 116120739
     trades: 15939287
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 19445916
+  trade_row_count: 1939359
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 691a6bedb81b199693dd6002b335672beab7e3887c8383c5752c32177a294056
+  label_hash: ef02d80df29788fc2c7b024ba5782799e339a787317ceefcf96166c2a5b44024
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 183.5460965419188
+    research_fixed_clock: 116.4371829170268
+    features: 637.8166869168635
+    labels: 141.73621387500316
+    total: 1795.7365650830325
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-06-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-06-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-06-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-06-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-06-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-06-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-06-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: e3afc774c2fee8bd0110919c89c424faf95c4a0d7372095e72bd102121b12b8d
+    labels: 1a9039f4e8a827d491ce196fa45a35e237b2507ecf61b868424dc63b8aff2a2c
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3076,24 +3286,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/07/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/07/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: c6eec36a0a58446e33eeea19c606f02b12672795a12d85b3f0f9fc8e890be0d2
+  trade_checksum: 833f111a1d664abd5b7b5a059510899fd86d1797ee8098305f2461e2e338b17e
   compressed_file_size:
     l2: 143013351
     trades: 17072736
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 25054712
+  trade_row_count: 2013261
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 3ff475daf54b6b617df22c664d6562e8895ad504359012493c9faa0304610086
+  label_hash: 8651e5ee740275a6f45cd33d4b8f646e7f8498962a9806eba2f3e37b7f34e422
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 242.1635135419201
+    research_fixed_clock: 118.5423439159058
+    features: 799.6787145000417
+    labels: 144.151307458058
+    total: 2241.4303926248103
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-07-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-07-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-07-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-07-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-07-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-07-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-07-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: df2ee38d48de64d2641a9b0effee4c13e27338900e10518ce6b249a0c8c28ab4
+    labels: d5f6ca2575af27bf318f8190b47cf28ff7f6d1b56d742c43b4d9bd2d555bc1f6
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3214,24 +3438,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/08/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/08/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: bc4cc55897afea2995f9e481aae24b86aaca62055cddb9ecb637324bd411cf72
+  trade_checksum: a6679d2519500938bc9e63f37eeeaf3599fd3012c95325b541640a294d31aff4
   compressed_file_size:
     l2: 256007757
     trades: 32033932
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 45632771
+  trade_row_count: 4160829
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 8cadf75ec844494728407bf6a0b7ea2e4d922b8303e15c1c2eaa5408d9dea64c
+  label_hash: 1d264f2cf4fe2be43a95e3c72fbfd230d23959b6f6ec8e3899fb2281c5610fc5
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 455.6357160829939
+    research_fixed_clock: 186.16789937508292
+    features: 1170.1420228329953
+    labels: 199.22469850000925
+    total: 6158.814831416123
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-08-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-08-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-08-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-08-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-08-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-08-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-08-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 6135b6d5dd992447a8a740f45aa22a78709b5d82bccf389e40678faa460d3270
+    labels: 89adc229c28c69b4524300615c8a2b29fdcd5becb39cffa88f063f617647c338
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3352,24 +3590,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/09/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/09/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 542100d6617f360d7d41a947c5feabc26569a56d8416afdf4d5ed40d5a757a49
+  trade_checksum: 73ecfaa10e83870dd8d5a0bbb0376064822be2323b36a998dd709285ade37249
   compressed_file_size:
     l2: 187270818
     trades: 21608002
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 32653105
+  trade_row_count: 2729381
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 7dc6e03360ba6fe90e952df99de070568bb3d3ad1f20386e8716e939b34bf606
+  label_hash: 6c9debc0f498755c5c66b7c8cfebdeca46595eec049ea164e423d60372b3af95
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 289.5323046660051
+    research_fixed_clock: 128.70349583309144
+    features: 1017.6231826660223
+    labels: 201.8030552500859
+    total: 3184.4352893750183
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-09-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-09-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-09-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-09-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-09-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-09-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-09-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 0bf8556db8f2cd1f2bd310e681110f815258da55c4368a5dd6fa69f556cb716c
+    labels: bac9d01feb83d6b178de82189736ca9cd311ee512b05c043f592ac48cf57cb42
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3490,24 +3742,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/10/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/10/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: ff178b42eb36893bb438db17a4a0601a55162dada4adfa27998c40a22f07d902
+  trade_checksum: 486468f26ec096f8af54c4b71a9530216e810826adbf29372c9fc15889271f5d
   compressed_file_size:
     l2: 170844610
     trades: 25754654
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 30463696
+  trade_row_count: 3430168
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: c943dc559b5037a42e17b54418f73b09af0aaf9894adab920102145091dc9086
+  label_hash: 2b74c762d2340d32dd4b26880e9c6a215409cbc66b7311df19d93f4b9564a459
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 280.54459887510166
+    research_fixed_clock: 156.39742400008254
+    features: 1124.556224375032
+    labels: 190.19741133297794
+    total: 3210.9986938331276
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-10-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-10-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-10-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-10-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-10-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-10-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-10-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: c5ce945ad6f583b281e70e63c222015a505ea2c9b8ad902a08e60d9edbfdf2ef
+    labels: 6acc6bdb24af7de285777115375c7e3313a4426c702fdfb6ab514d01890f0c7e
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3628,24 +3894,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/11/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/11/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: f30adff81dfacb702793790fdcc6a3fb80dba61c22b0e616cf6f45dcb4aacb00
+  trade_checksum: 23d886d7862f912521aaee78198afeb2630d0bee1023a28d0946b4945b5a9650
   compressed_file_size:
     l2: 84853359
     trades: 15111108
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 14035734
+  trade_row_count: 1994214
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: e69885993f09f8af07ebf0e456f6b425a5f6c60afb0e13cd39726f46b4be0a06
+  label_hash: cd9149618733d58fd6d4e5cb332efb2253a44c651d6ddc7723e9c2dde0320699
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 156.76782570802607
+    research_fixed_clock: 132.5020512090996
+    features: 784.8426246249583
+    labels: 136.19373395806178
+    total: 1820.442580625182
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-11-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-11-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-11-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-11-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-11-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-11-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-11-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 5b79a048996ea7b5b80d0328a480177496ec4967b20335f0ab8b0ec6196209bb
+    labels: b1129f18597c7cf57826a7c1829362b89a7a6f2cd979c1c6fdfcd9f9df99bda7
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -3766,24 +4046,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/12/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2025/12/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 6e71f2b3cd4a45f12b5d3a753e2177323859837d3f6330c2b4bb303058eb4f78
+  trade_checksum: 3b4301c6b772c4ebc0d91999f157bc62038b6aaa33c57e2be25f6e19161b9bcc
   compressed_file_size:
     l2: 275230587
     trades: 55797317
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 49897324
+  trade_row_count: 7709682
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: d9594e9769156de5f14a80ff0f9d28ba171967035e9fc6444a6cd7acd0a626e8
+  label_hash: 9b54d66318943d9301bc98003d2f752ade67a872a6490cc9e5e69aee0a73f009
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 460.0697835420724
+    research_fixed_clock: 217.75842841691338
+    features: 1771.8316420412157
+    labels: 157.34501804108731
+    total: 5424.803977291798
+  artifacts:
+    event_states_csv: /tmp/microalpha-multiday/derived/date=2025-12-01/event_states.csv
+    research_csv: /tmp/microalpha-multiday/derived/date=2025-12-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-multiday/derived/date=2025-12-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-multiday/derived/date=2025-12-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-multiday/derived/date=2025-12-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-multiday/derived/date=2025-12-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-multiday/derived/date=2025-12-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 3d313ffa0154a1aea277b124c4fb4831fc19f14eb136d13732de8eacb7a9ed24
+    labels: fe25ccf66e33e0ec2ea0aca2b48167e8d963a4e748539ba49357ba81b1b654f9
   source_availability_history:
   - checker: legacy_or_previous
     result:

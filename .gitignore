@@ -32,6 +32,10 @@ data/manifests/*
 !data/manifests/.gitkeep
 !data/manifests/research_dates.yaml
 !data/manifests/research_snapshot.yaml
+!data/manifests/pre_phase7_feature_qa.json
+!data/manifests/pre_phase7_label_qa.json
+!data/manifests/pre_phase7_research_snapshot.json
+!data/manifests/pre_phase7_verification.json
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*
