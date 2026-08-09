@@ -1405,6 +1405,16 @@ Exact local test results after pre-gate infrastructure:
   PASS, config hash
   `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
 
+GitHub Actions after pre-gate infrastructure commit:
+
+- Pre-gate infrastructure commit SHA:
+  `efd930ea91425864c8aaa35f8cc9f6f457794dc6`
+  (`Add pre-Phase-7 multi-day gate infrastructure`).
+- `tests` workflow: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31285342173`.
+- `research-smoke` workflow: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31285342179`.
+
 Gate result:
 
 - Pilot processing was not run because the mechanically selected pilot dates do
