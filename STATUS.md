@@ -1440,3 +1440,232 @@ Known limitations / required decision before retry:
 - The gate cannot pass until the selected corpus, or objectively documented
   deterministic replacements, can be processed through Phases 1-6 with same-day
   L2 and trades.
+
+## Pre-Phase-7 Availability Checker Correction
+
+Status: CORRECTION PASS locally; Python 3.11 CI pending until pushed. The
+Pre-Phase-7 Multi-Day Expansion Gate remains BLOCKED because only the
+mechanically selected three-date pilot has been GET-rechecked and processed; the
+remaining development dates still require corrected GET verification and Phase
+1-6 processing before Phase 7 can begin.
+
+Correction to prior conclusion:
+
+- The previous conclusion that all 24 frozen Tardis development dates were
+  objectively unavailable is superseded.
+- The root cause was an availability checker that used authoritative HTTP
+  `HEAD` probes. Tardis downloadable datasets are a `GET` endpoint, and HEAD
+  404/timeout diagnostics are not sufficient evidence of actual dataset
+  unavailability.
+- Legacy HEAD diagnostics are retained in
+  `data/manifests/research_dates.yaml` under `source_availability_history`.
+- Frozen dates that still only have legacy HEAD diagnostics are now marked
+  `requires_recheck`, not permanently excluded.
+- Corrected registry state:
+  - Development `included`: `3` dates, the pilot
+    `2024-01-01`, `2024-02-01`, `2024-03-01`.
+  - Development `requires_recheck`: `21` dates.
+  - Holdout `requires_recheck`: `8` dates.
+
+Corrected source availability checker:
+
+- Uses HTTP `GET`, not `HEAD`, for Tardis source probes.
+- Uses a normal browser-compatible project User-Agent.
+- Reads only the configured initial byte sample, default `2` bytes and `64`
+  bytes for live diagnostics here, then closes the stream.
+- Does not assume Range support. Range probing was tested and returned
+  Cloudflare `403` for the known-good 2019 source, so the default probe is plain
+  GET with early close.
+- Records method, status, content headers, diagnostic headers, bytes read, first
+  bytes, gzip signature result, elapsed time, exception details, redirects, and
+  small textual error bodies.
+- Uses explicit statuses: `AVAILABLE`, `CONFIRMED_UNAVAILABLE`,
+  `TRANSIENT_ERROR`, `AUTH_REQUIRED`, and `CHECK_FAILED`.
+- Retries transient failures with bounded exponential backoff.
+- Timeouts and network errors produce `TRANSIENT_ERROR` and cannot permanently
+  exclude a frozen date.
+- `401` / `403` produce `AUTH_REQUIRED`, not "dataset missing".
+- `404` is not treated as a permanent exclusion when Tardis metadata still
+  indicates the symbol, date coverage, and data types should exist.
+
+Known-good 2019 validation:
+
+- L2 URL:
+  `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2019/12/01/BTCUSDT.csv.gz`
+  - Method: `GET`
+  - Status: `200`
+  - Content-Type: `text/csv`
+  - Content-Length: `43947405`
+  - Bytes read: `64`
+  - Gzip signature: `true`
+  - `x-md5`: `"bd2c0f56f73bd9508b92535ebe3c249b"`
+  - First bytes hex:
+    `1f8b0800000000000203acbddbb2243b8e9e793fcf121646103cdecee80d46732d`
+- Trades URL:
+  `https://datasets.tardis.dev/v1/binance/trades/2019/12/01/BTCUSDT.csv.gz`
+  - Method: `GET`
+  - Status: `200`
+  - Content-Type: `text/csv`
+  - Content-Length: `6669039`
+  - Bytes read: `64`
+  - Gzip signature: `true`
+  - `x-md5`: `"f7e5676fde021190b82756ec62074a89"`
+  - First bytes hex:
+    `1f8b0800000000000203acbdd9ce2dc9729877ef67696ce4109199716bfb0d2c5d`
+
+Manual `2024-01-01` GET behavior:
+
+- L2 URL:
+  `https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz`
+  - Method: `GET`
+  - Status: `200`
+  - Content-Type: `text/csv`
+  - Content-Length: `79021220`
+  - Bytes read: `64`
+  - Gzip signature: `true`
+  - `x-md5`: `"db1c748517df066c3127ab61375edb54"`
+  - Redirect URL: none
+  - Error body: none
+  - First bytes hex:
+    `1f8b0800000000000203acbdcb92253b729e3bd7b3a42d83038edb54d21b1c9d`
+- Trades URL:
+  `https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz`
+  - Method: `GET`
+  - Status: `200`
+  - Content-Type: `text/csv`
+  - Content-Length: `13066686`
+  - Bytes read: `64`
+  - Gzip signature: `true`
+  - `x-md5`: `"a7ece8f3d15e77f4c1ca13ea646f83a6"`
+  - Redirect URL: none
+  - Error body: none
+  - First bytes hex:
+    `1f8b0800000000000203acbddd8e25bb8ee777ef67d928e893a46e6dbf8167ae8d`
+
+Tardis metadata cross-check:
+
+- Metadata endpoint checked:
+  `https://api.tardis.dev/v1/exchanges/binance`.
+- Exchange id: `binance`.
+- Exchange `availableSince`: `2019-03-30T00:00:00.000Z`.
+- Dataset `exportedUntil` observed during this correction run:
+  `2026-08-09T00:00:00.000Z`.
+- `BTCUSDT` metadata:
+  - Symbol exists in dataset metadata.
+  - Type: `spot`.
+  - Available since: `2019-03-30T00:00:00.000Z`.
+  - Available to: `2026-08-09T00:00:00.000Z`.
+  - Supported data types include `trades` and `incremental_book_L2`.
+  - Other listed data types: `quotes`, `book_snapshot_5`,
+    `book_snapshot_25`, `book_ticker`.
+
+Pilot availability recheck:
+
+- Command:
+  `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role development --date 2024-01-01 --date 2024-02-01 --date 2024-03-01 --timeout-seconds 30 --read-bytes 64 --max-attempts 3 --max-workers 1`.
+- Result:
+  - `available`: `2024-01-01`, `2024-02-01`, `2024-03-01`.
+  - `not_available`: none.
+- `2024-02-01` GET metadata:
+  - L2 status `200`, content length `113798361`, bytes read `64`,
+    gzip signature `true`, `x-md5`
+    `"0db6dac8f41fce94d1d5aaf427092acf"`.
+  - Trades status `200`, content length `15827091`, bytes read `64`,
+    gzip signature `true`, `x-md5`
+    `"bbee6a6e2fe342b938c80b2cb693952d"`.
+- `2024-03-01` GET metadata:
+  - L2 status `200`, content length `144163385`, bytes read `64`,
+    gzip signature `true`, `x-md5`
+    `"9c6a267be7f5b73a0339cb4f0109dae2"`.
+  - Trades status `200`, content length `22046896`, bytes read `64`,
+    gzip signature `true`, `x-md5`
+    `"b5f27c8d3f1c59214017e8403dec91f5"`.
+
+Pilot Phase 1-6 execution:
+
+- Command:
+  `PYTHONPATH=src python scripts/run_research_registry.py --registry data/manifests/research_dates.yaml --role development --date 2024-01-01 --date 2024-02-01 --date 2024-03-01 --work-root /tmp/microalpha-prephase7-pilot --source-root /tmp/microalpha-prephase7-pilot/source --stop-on-error`.
+- Result:
+  - `processed`: `2024-01-01`, `2024-02-01`, `2024-03-01`.
+  - `failed`: none.
+  - `stop_on_error`: `true`.
+- Large source/raw/bronze/derived artifacts were written only under `/tmp` and
+  remain outside Git.
+
+Pilot per-day results:
+
+```text
+date        l2_rows   trade_rows research_rows unavailable_research_rows feature_rows label_rows invalid_crossed feature_runtime_s label_runtime_s total_runtime_s feature_hash                                                      label_hash
+2024-01-01  12284879  1114633    863986        0                         863986       863986     0               708.818           187.177         1872.677        c0e8e2387fe6cc1107962ffc9e5d977e76ace565b9d9c352b5a561ce23c4af6f d61e2ebcb617f8534bfd74bb524f610ebdce2f68d582dccbf5268732716a4ec2
+2024-02-01  18878457  1392269    863980        0                         863980       863980     0               808.075           578.121         3062.580        bfb8be02390943e2c659d4c3ba388c7129d4d28a3950280c87c858a268a8a10f 6350b78ee606d35de4e0399f5be1a6bf79e25bb1442c79ab370bfc5b3d425782
+2024-03-01  23766560  1947370    863986        50                        863986       863986     0               1708.514          844.662         5031.152        24af17d47dee64200f23aa4d518b8fdefcb777f8a43afdaaef1ee83f25930b11 840f9ede0719b28030bff1973ee73d50ea4db7119cf56cd01d17482be5a27296
+```
+
+Pilot QA results:
+
+- `2024-01-01` L2 QA: PASS, rows `12284879`, errors `0`, warnings `0`,
+  duplicates `0`.
+- `2024-01-01` trades QA: PASS, rows `1114633`, errors `0`, warnings `0`,
+  duplicates `0`.
+- `2024-02-01` L2 QA: PASS, rows `18878457`, errors `0`, warnings `0`,
+  duplicates `0`.
+- `2024-02-01` trades QA: PASS, rows `1392269`, errors `0`, warnings `0`,
+  duplicates `0`.
+- `2024-03-01` L2 QA: PASS, rows `23766560`, errors `0`, warnings `0`,
+  duplicates `0`.
+- `2024-03-01` trades QA: PASS, rows `1947370`, errors `0`, warnings `0`,
+  duplicates `0`.
+
+Implementation notes:
+
+- `validate_market_data_csv` duplicate detection was hardened for full-day
+  multi-million-row L2 files by replacing per-row sorted tuple retention with a
+  deterministic SHA-256 row fingerprint over CSV field order. The previous
+  implementation stalled during full-day 2024 QA after Phase 1; the corrected
+  duplicate detector completed QA for all three pilot days.
+- The full pilot run remains slow, especially Phase 5 feature generation:
+  approximately `708.8`, `808.1`, and `1708.5` seconds for the three dates.
+  No causal feature logic was rewritten for speed.
+- No IC, bucket returns, feature-return relationship, threshold tuning,
+  strategy, model, backtest, or Phase 7 analysis was performed.
+
+Tests required by the availability correction:
+
+- GET `200` -> `AVAILABLE`.
+- GET `206` -> `AVAILABLE`.
+- GET `404` handling with metadata cross-check.
+- GET `403` -> `AUTH_REQUIRED`, not missing.
+- Timeout -> `TRANSIENT_ERROR`.
+- Network error -> `TRANSIENT_ERROR`.
+- Retry succeeds after transient failure.
+- Gzip signature validation.
+- Response body is not fully downloaded.
+- Known-good 2019 Tardis URL logic.
+- Metadata confirms known-good 2019 symbol/date/data types.
+- Failed HEAD response no longer determines availability.
+- Successful GET recheck clears stale HEAD-derived `not_run_source_unavailable`
+  statuses.
+- 404 plus supporting metadata requires recheck rather than permanent exclusion.
+- 404 plus metadata date gap can produce a permanent exclusion.
+
+Exact local test results for this correction:
+
+- `python -m pytest`: PASS, `100 passed, 1 warning in 1.85s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+Next required work before Phase 7:
+
+- Run corrected GET availability checks for the remaining 21 development dates
+  with low initial concurrency.
+- If available, process the remaining development dates through the same Phase
+  1-6 pipeline.
+- Only after the full frozen development corpus is processed, or objective
+  corrected-GET/metadata-backed exclusions are documented, generate the
+  aggregate frozen research snapshot.
+- Do not begin Phase 7 until the full Pre-Phase-7 Multi-Day Expansion Gate
+  passes.

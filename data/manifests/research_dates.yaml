@@ -14,24 +14,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: ca47290bf3cb869e7aaab791ea208efb36184506e799ddbb91b53556a7a71bde
+  trade_checksum: 5c3ffaf20c4d0eecf6d3fd60f9be3404ca4841a9e362b89ec6115749032746ab
   compressed_file_size:
     l2: 79021220
     trades: 13066686
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 12284879
+  trade_row_count: 1114633
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: c0e8e2387fe6cc1107962ffc9e5d977e76ace565b9d9c352b5a561ce23c4af6f
+  label_hash: d61e2ebcb617f8534bfd74bb524f610ebdce2f68d582dccbf5268732716a4ec2
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 145.45104629197158
+    research_fixed_clock: 132.16769366711378
+    features: 708.8184737500269
+    labels: 187.1767200420145
+    total: 1872.6765418329742
+  artifacts:
+    event_states_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/event_states.csv
+    research_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-01-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 69c0c309db0f8bfe1793548808bbf49a3a0d2d640f2ecb15e24bb6f84466db83
+    labels: 8c4025686f09f1b73311ddd93cbe98c6cdba0e06895d39e054c32dcab19947f3
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -107,6 +121,66 @@ dates:
             Server: cloudflare
           redirect_url: ''
           error_body: ''
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 79021220
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbdcb92253b729e3bd7b3a42d83038edb54d21b1c9db1ac49f591da443669da2d33e9ed0f10002232575601bef3ff39a07557153f22
+          gzip_signature: true
+          elapsed_seconds: 0.892460374860093
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:18 GMT
+            Content-Type: text/csv
+            Content-Length: '79021220'
+            x-dataset-size: '79021220'
+            x-md5: '"db1c748517df066c3127ab61375edb54"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 13066686
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddd8e25bb8ee777ef67d928e893a46e6dbf8167ae8dd33d07f601fa63e0ee013c6f3fd2ca5c8bff6030b8422bf362a3aab42b7f25
+          gzip_signature: true
+          elapsed_seconds: 0.40045112487860024
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:18 GMT
+            Content-Type: text/csv
+            Content-Length: '13066686'
+            x-dataset-size: '13066686'
+            x-md5: '"a7ece8f3d15e77f4c1ca13ea646f83a6"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
@@ -125,11 +199,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbdcb92253b729e3bd7b3a42d83038edb54d21b1c9db1ac49f591da443669da2d33e9ed0f10002232575601bef3ff39a07557153f22
         gzip_signature: true
-        elapsed_seconds: 0.892460374860093
+        elapsed_seconds: 0.7921569589525461
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Date: Sun, 09 Aug 2026 03:31:32 GMT
           Content-Type: text/csv
           Content-Length: '79021220'
           x-dataset-size: '79021220'
@@ -154,11 +228,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbddd8e25bb8ee777ef67d928e893a46e6dbf8167ae8dd33d07f601fa63e0ee013c6f3fd2ca5c8bff6030b8422bf362a3aab42b7f25
         gzip_signature: true
-        elapsed_seconds: 0.40045112487860024
+        elapsed_seconds: 0.3507565420586616
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Date: Sun, 09 Aug 2026 03:31:32 GMT
           Content-Type: text/csv
           Content-Length: '13066686'
           x-dataset-size: '13066686'
@@ -166,6 +240,40 @@ dates:
           Server: cloudflare
         redirect_url: ''
         error_body: ''
+  source_metadata_check:
+    exchange: binance
+    dataset_symbol: BTCUSDT
+    requested_date: '2024-01-01'
+    required_data_types:
+    - incremental_book_L2
+    - trades
+    metadata_url: https://api.tardis.dev/v1/exchanges/binance
+    status: 200
+    ok: true
+    symbol_exists: true
+    dataset_symbol_exists: true
+    coverage_includes_date: true
+    requested_data_types_supported: true
+    available_since: '2019-03-30T00:00:00.000Z'
+    available_to: '2026-08-09T00:00:00.000Z'
+    exported_from: '2019-03-30T00:00:00.000Z'
+    exported_until: '2026-08-09T00:00:00.000Z'
+    supported_data_types:
+    - trades
+    - incremental_book_L2
+    - quotes
+    - book_snapshot_5
+    - book_snapshot_25
+    - book_ticker
+    elapsed_seconds: 0.4819297499489039
+    exception_type: ''
+    exception_message: ''
+    headers:
+      Date: Sun, 09 Aug 2026 03:31:33 GMT
+      Content-Type: application/json
+      Content-Length: '1095634'
+      Cache-Control: public, max-age=60
+      Server: cloudflare
 - date: '2024-02-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -174,24 +282,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 7e04e7a4eed6dbb3e73d200fb3c30003a87416e463220def326b43e6b737d581
+  trade_checksum: b7c16a4d847d01f992008fa8f1039a93d7d5d3278f7121b4a89d6a50074185a0
   compressed_file_size:
     l2: 113798361
     trades: 15827091
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 18878457
+  trade_row_count: 1392269
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: bfb8be02390943e2c659d4c3ba388c7129d4d28a3950280c87c858a268a8a10f
+  label_hash: 6350b78ee606d35de4e0399f5be1a6bf79e25bb1442c79ab370bfc5b3d425782
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 215.58774441690184
+    research_fixed_clock: 176.59392325021327
+    features: 808.0747543340549
+    labels: 578.1207395840902
+    total: 3062.5800138330087
+  artifacts:
+    event_states_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/event_states.csv
+    research_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-02-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: a4530007a0c4337af6728883eae4a7827a5d370923a0fc241fbf8fbc297ec5c1
+    labels: 25eb501e6bf9166eea10b59343533027f6507500a295fe96c562e437d60ee982
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -267,6 +389,66 @@ dates:
             Server: cloudflare
           redirect_url: ''
           error_body: ''
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 113798361
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbce663f72de779e6b69bc607153244f93dc419c63636c2bb1104b323c3290dc7db85debebefdf4dd6f4f3401809eaeef9818b2f
+          gzip_signature: true
+          elapsed_seconds: 0.3428216250613332
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:18 GMT
+            Content-Type: text/csv
+            Content-Length: '113798361'
+            x-dataset-size: '113798361'
+            x-md5: '"0db6dac8f41fce94d1d5aaf427092acf"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 15827091
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbdddae2c3b8ea077ef67296c847ef8776bfb0d3cbe367a661a7603dd3303f70ce0797b53b9d64a32184c6628d7ae2a1c9cd2d9f91d
+          gzip_signature: true
+          elapsed_seconds: 0.3481980829965323
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:19 GMT
+            Content-Type: text/csv
+            Content-Length: '15827091'
+            x-dataset-size: '15827091'
+            x-md5: '"bbee6a6e2fe342b938c80b2cb693952d"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
@@ -285,11 +467,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbddbce663f72de779e6b69bc607153244f93dc419c63636c2bb1104b323c3290dc7db85debebefdf4dd6f4f3401809eaeef9818b2f
         gzip_signature: true
-        elapsed_seconds: 0.3428216250613332
+        elapsed_seconds: 0.3510431661270559
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Date: Sun, 09 Aug 2026 03:31:33 GMT
           Content-Type: text/csv
           Content-Length: '113798361'
           x-dataset-size: '113798361'
@@ -314,11 +496,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbdddae2c3b8ea077ef67296c847ef8776bfb0d3cbe367a661a7603dd3303f70ce0797b53b9d64a32184c6628d7ae2a1c9cd2d9f91d
         gzip_signature: true
-        elapsed_seconds: 0.3481980829965323
+        elapsed_seconds: 0.35380033403635025
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:19 GMT
+          Date: Sun, 09 Aug 2026 03:31:34 GMT
           Content-Type: text/csv
           Content-Length: '15827091'
           x-dataset-size: '15827091'
@@ -326,6 +508,44 @@ dates:
           Server: cloudflare
         redirect_url: ''
         error_body: ''
+  source_metadata_check:
+    exchange: binance
+    dataset_symbol: BTCUSDT
+    requested_date: '2024-02-01'
+    required_data_types:
+    - incremental_book_L2
+    - trades
+    metadata_url: https://api.tardis.dev/v1/exchanges/binance
+    status: 200
+    ok: true
+    symbol_exists: true
+    dataset_symbol_exists: true
+    coverage_includes_date: true
+    requested_data_types_supported: true
+    available_since: '2019-03-30T00:00:00.000Z'
+    available_to: '2026-08-09T00:00:00.000Z'
+    exported_from: '2019-03-30T00:00:00.000Z'
+    exported_until: '2026-08-09T00:00:00.000Z'
+    supported_data_types:
+    - trades
+    - incremental_book_L2
+    - quotes
+    - book_snapshot_5
+    - book_snapshot_25
+    - book_ticker
+    elapsed_seconds: 0.1935730001423508
+    exception_type: ''
+    exception_message: ''
+    headers:
+      Date: Sun, 09 Aug 2026 03:31:34 GMT
+      Content-Type: application/json
+      Content-Length: '1095634'
+      CF-Cache-Status: HIT
+      Accept-Ranges: bytes
+      Age: '0'
+      Cache-Control: public, max-age=60
+      Last-Modified: Sun, 09 Aug 2026 03:31:33 GMT
+      Server: cloudflare
 - date: '2024-03-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -334,24 +554,38 @@ dates:
   dataset_role: development
   l2_source: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
   trade_source: https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
-  l2_checksum: ''
-  trade_checksum: ''
+  l2_checksum: 46ed580a3f09a11e06f94fb42fb3279dd7a8f222a830e3d6d0ce64e9c4bca2f3
+  trade_checksum: 2165c17b6369968ee5277bcfd6609cb4fe272c80162c7b5edfd047f8be9358cb
   compressed_file_size:
     l2: 144163385
     trades: 22046896
-  l2_row_count: null
-  trade_row_count: null
-  qa_status: pending
-  book_replay_status: pending
-  feature_status: pending
-  label_status: pending
-  feature_hash: ''
-  label_hash: ''
+  l2_row_count: 23766560
+  trade_row_count: 1947370
+  qa_status: PASS
+  book_replay_status: PASS
+  feature_status: PASS
+  label_status: PASS
+  feature_hash: 24af17d47dee64200f23aa4d518b8fdefcb777f8a43afdaaef1ee83f25930b11
+  label_hash: 840f9ede0719b28030bff1973ee73d50ea4db7119cf56cd01d17482be5a27296
   exclusion_status: included
   exclusion_reason: ''
-  runtime_seconds: {}
-  artifacts: {}
-  cache_keys: {}
+  runtime_seconds:
+    replay_event_states: 247.0041996249929
+    research_fixed_clock: 262.85031616617925
+    features: 1708.5141183750238
+    labels: 844.6620065830648
+    total: 5031.151769042015
+  artifacts:
+    event_states_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/event_states.csv
+    research_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/research_100ms.csv
+    research_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/research_100ms.parquet
+    features_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/features_microstructure_v1.csv
+    features_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/features_microstructure_v1.parquet
+    labels_csv: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/labels_microstructure_labels_v1.csv
+    labels_parquet: /tmp/microalpha-prephase7-pilot/derived/date=2024-03-01/labels_microstructure_labels_v1.parquet
+  cache_keys:
+    features: 0a2713610ab9a785acdd5fdb9e388ac59fe58f32b15d09959dd227f90a922b32
+    labels: 68d4836491090a779806181d12056ae364fa3c34084a3d2e5ffa64cb0638fd49
   source_availability_history:
   - checker: legacy_or_previous
     result:
@@ -427,6 +661,66 @@ dates:
             Server: cloudflare
           redirect_url: ''
           error_body: ''
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 144163385
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbb26ebb6e9d779f6799f5170982a7db246f10e7dab56d2bb12a96e4f296ab92b70f8fbd8f31342709add6ae7634d6cc6776fe3c
+          gzip_signature: true
+          elapsed_seconds: 0.4209529999643564
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:19 GMT
+            Content-Type: text/csv
+            Content-Length: '144163385'
+            x-dataset-size: '144163385'
+            x-md5: '"9c6a267be7f5b73a0339cb4f0109dae2"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 22046896
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbb2ad2b8ea077ef67d931e3070924ddda7e03775f3bb2aa33ec8ca84387ab3ac2fdf62dc6494230342673aeca3aac4dedf12df8
+          gzip_signature: true
+          elapsed_seconds: 0.4070380839984864
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:42:20 GMT
+            Content-Type: text/csv
+            Content-Length: '22046896'
+            x-dataset-size: '22046896'
+            x-md5: '"b5f27c8d3f1c59214017e8403dec91f5"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
@@ -445,11 +739,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbddbb26ebb6e9d779f6799f5170982a7db246f10e7dab56d2bb12a96e4f296ab92b70f8fbd8f31342709add6ae7634d6cc6776fe3c
         gzip_signature: true
-        elapsed_seconds: 0.4209529999643564
+        elapsed_seconds: 0.3397504170425236
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:19 GMT
+          Date: Sun, 09 Aug 2026 03:31:34 GMT
           Content-Type: text/csv
           Content-Length: '144163385'
           x-dataset-size: '144163385'
@@ -474,11 +768,11 @@ dates:
         bytes_read: 64
         first_bytes_hex: 1f8b0800000000000203acbddbb2ad2b8ea077ef67d931e3070924ddda7e03775f3bb2aa33ec8ca84387ab3ac2fdf62dc6494230342673aeca3aac4dedf12df8
         gzip_signature: true
-        elapsed_seconds: 0.4070380839984864
+        elapsed_seconds: 0.584028874989599
         exception_type: ''
         exception_message: ''
         headers:
-          Date: Sun, 09 Aug 2026 00:42:20 GMT
+          Date: Sun, 09 Aug 2026 03:31:34 GMT
           Content-Type: text/csv
           Content-Length: '22046896'
           x-dataset-size: '22046896'
@@ -486,6 +780,44 @@ dates:
           Server: cloudflare
         redirect_url: ''
         error_body: ''
+  source_metadata_check:
+    exchange: binance
+    dataset_symbol: BTCUSDT
+    requested_date: '2024-03-01'
+    required_data_types:
+    - incremental_book_L2
+    - trades
+    metadata_url: https://api.tardis.dev/v1/exchanges/binance
+    status: 200
+    ok: true
+    symbol_exists: true
+    dataset_symbol_exists: true
+    coverage_includes_date: true
+    requested_data_types_supported: true
+    available_since: '2019-03-30T00:00:00.000Z'
+    available_to: '2026-08-09T00:00:00.000Z'
+    exported_from: '2019-03-30T00:00:00.000Z'
+    exported_until: '2026-08-09T00:00:00.000Z'
+    supported_data_types:
+    - trades
+    - incremental_book_L2
+    - quotes
+    - book_snapshot_5
+    - book_snapshot_25
+    - book_ticker
+    elapsed_seconds: 0.19089741609059274
+    exception_type: ''
+    exception_message: ''
+    headers:
+      Date: Sun, 09 Aug 2026 03:31:35 GMT
+      Content-Type: application/json
+      Content-Length: '1095634'
+      CF-Cache-Status: HIT
+      Accept-Ranges: bytes
+      Age: '2'
+      Cache-Control: public, max-age=60
+      Last-Modified: Sun, 09 Aug 2026 03:31:33 GMT
+      Server: cloudflare
 - date: '2024-04-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -501,32 +833,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/04/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/04/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-05-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -542,32 +875,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/05/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/05/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-06-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -583,32 +917,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/06/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/06/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-07-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -624,32 +959,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/07/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/07/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-08-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -665,32 +1001,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/08/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/08/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-09-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -706,32 +1043,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/09/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/09/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/09/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/09/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/09/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/09/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-10-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -747,32 +1085,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/10/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/10/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/10/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/10/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/10/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/10/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2024-11-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -788,32 +1127,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/11/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/11/01/BTCUSDT.csv.gz
-    -> 404
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/11/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/11/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/11/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/11/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
 - date: '2024-12-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -829,32 +1169,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/12/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/12/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/12/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2024/12/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/12/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/12/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-01-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -870,32 +1211,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/01/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/01/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-02-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -911,32 +1253,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/02/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/02/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-03-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -952,32 +1295,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/03/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/03/01/BTCUSDT.csv.gz
-    -> 404
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
 - date: '2025-04-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -993,32 +1337,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/04/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/04/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-05-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1034,32 +1379,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/05/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/05/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-06-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1075,32 +1421,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/06/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/06/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-07-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1116,32 +1463,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/07/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/07/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-08-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1157,32 +1505,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/08/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/08/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-09-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1198,32 +1547,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/09/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/09/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/09/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/09/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/09/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/09/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-10-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1239,32 +1589,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/10/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/10/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/10/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/10/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/10/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/10/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-11-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1280,32 +1631,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/11/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/11/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/11/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/11/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/11/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/11/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2025-12-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1321,32 +1673,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/12/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2025/12/01/BTCUSDT.csv.gz
-    -> 404
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/12/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2025/12/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2025/12/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2025/12/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
 - date: '2026-01-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1362,32 +1715,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/01/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/01/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-02-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1403,32 +1757,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/02/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/02/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-03-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1444,32 +1799,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/03/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/03/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-04-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1485,32 +1841,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/04/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/04/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/04/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/04/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-05-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1526,32 +1883,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/05/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/05/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/05/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/05/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-06-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1567,32 +1925,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/06/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/06/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/06/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/06/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-07-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1608,32 +1967,33 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/07/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/07/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/07/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/07/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
 - date: '2026-08-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -1649,29 +2009,30 @@ dates:
     trades: null
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: not_run_source_recheck
+  book_replay_status: not_run_source_recheck
+  feature_status: not_run_source_recheck
+  label_status: not_run_source_recheck
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/08/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2026/08/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: requires_recheck
+  exclusion_reason: legacy HEAD-only diagnostic is not authoritative; GET recheck
+    required
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
-  source_availability:
-    l2:
-      url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
-    trades:
-      url: https://datasets.tardis.dev/v1/binance/trades/2026/08/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+  source_availability_history:
+  - checker: legacy_head
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2026/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2026/08/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError

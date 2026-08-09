@@ -154,8 +154,8 @@ def _event_gap_ms(previous: datetime, current: datetime) -> Decimal:
 
 def _row_fingerprint(row: dict[str, str], fieldnames: list[str]) -> bytes:
     digest = hashlib.sha256()
-    for field in fieldnames:
-        value = row.get(field, "")
+    for column in fieldnames:
+        value = row.get(column, "")
         encoded = value.encode("utf-8")
         digest.update(len(encoded).to_bytes(4, "big"))
         digest.update(encoded)

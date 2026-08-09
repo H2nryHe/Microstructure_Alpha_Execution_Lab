@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import json
 from io import BytesIO
-from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 
@@ -14,6 +14,7 @@ from microalpha.pipeline.availability import (
     CONFIRMED_UNAVAILABLE_STATUS,
     TRANSIENT_STATUS,
     check_record_sources,
+    check_tardis_exchange_metadata,
     probe_source_get,
 )
 from microalpha.pipeline.registry import empty_registry_record, tardis_source_url
@@ -68,13 +69,59 @@ def make_urlopen_sequence(responses: list[Any]):
     return fake_urlopen
 
 
-def http_error(status: int, body: bytes = b"not found", content_type: str = "text/plain") -> HTTPError:
+def http_error(
+    status: int,
+    body: bytes = b"not found",
+    content_type: str = "text/plain",
+) -> HTTPError:
     return HTTPError(
         "https://datasets.tardis.dev/test.csv.gz",
         status,
         "error",
         {"Content-Type": content_type, "Content-Length": str(len(body))},
         BytesIO(body),
+    )
+
+
+def metadata_response(
+    *,
+    symbol: str = "BTCUSDT",
+    data_types: list[str] | None = None,
+    available_since: str = "2019-03-30T00:00:00.000Z",
+    available_to: str = "2026-08-08T00:00:00.000Z",
+) -> FakeResponse:
+    if data_types is None:
+        data_types = ["trades", "incremental_book_L2", "quotes"]
+    body = json.dumps(
+        {
+            "id": "binance",
+            "availableSymbols": [
+                {
+                    "id": "btcusdt",
+                    "type": "spot",
+                    "availableSince": available_since,
+                }
+            ],
+            "datasets": {
+                "exportedFrom": available_since,
+                "exportedUntil": available_to,
+                "symbols": [
+                    {
+                        "id": symbol,
+                        "type": "spot",
+                        "availableSince": available_since,
+                        "availableTo": available_to,
+                        "dataTypes": data_types,
+                    }
+                ],
+            },
+        }
+    ).encode()
+    return FakeResponse(
+        status=200,
+        headers={"Content-Type": "application/json", "Content-Length": str(len(body))},
+        body=body,
+        url="https://api.tardis.dev/v1/exchanges/binance",
     )
 
 
@@ -190,21 +237,85 @@ def test_known_good_2019_tardis_url_logic(monkeypatch: pytest.MonkeyPatch) -> No
     assert probe.availability_status == AVAILABLE_STATUS
 
 
+def test_metadata_confirms_known_good_2019_tardis_symbol_and_data_types(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake = make_urlopen_sequence([metadata_response()])
+    monkeypatch.setattr(availability, "urlopen", fake)
+
+    check = check_tardis_exchange_metadata(
+        exchange="binance",
+        dataset_symbol="BTCUSDT",
+        requested_date="2019-12-01",
+        required_data_types=("incremental_book_L2", "trades"),
+    )
+
+    assert check.ok
+    assert check.symbol_exists
+    assert check.dataset_symbol_exists
+    assert check.coverage_includes_date
+    assert check.requested_data_types_supported
+    assert set(check.supported_data_types) >= {"incremental_book_L2", "trades"}
+
+
 def test_failed_head_history_no_longer_determines_availability(
     monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
 ) -> None:
-    del tmp_path
     record = empty_registry_record("2024-01-01", "development")
     record["source_availability"] = {
         "l2": {"method": "HEAD", "status": 404, "ok": False},
         "trades": {"method": "HEAD", "status": 404, "ok": False},
     }
-    fake = make_urlopen_sequence([FakeResponse(status=200), FakeResponse(status=200)])
+    record["qa_status"] = "not_run_source_unavailable"
+    record["book_replay_status"] = "not_run_source_unavailable"
+    record["feature_status"] = "not_run_source_unavailable"
+    record["label_status"] = "not_run_source_unavailable"
+    fake = make_urlopen_sequence(
+        [FakeResponse(status=200), FakeResponse(status=200), metadata_response()]
+    )
     monkeypatch.setattr(availability, "urlopen", fake)
 
     updated = check_record_sources(record)
 
     assert updated["exclusion_status"] == "included"
+    assert updated["qa_status"] == "pending"
+    assert updated["book_replay_status"] == "pending"
+    assert updated["feature_status"] == "pending"
+    assert updated["label_status"] == "pending"
     assert updated["source_availability"]["l2"]["method"] == "GET"
     assert updated["source_availability_history"][0]["result"]["l2"]["method"] == "HEAD"
+    assert updated["source_metadata_check"]["ok"] is True
+
+
+def test_get_404_with_supporting_metadata_requires_recheck(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    record = empty_registry_record("2024-04-01", "development")
+    fake = make_urlopen_sequence([http_error(404), FakeResponse(status=200), metadata_response()])
+    monkeypatch.setattr(availability, "urlopen", fake)
+
+    updated = check_record_sources(record)
+
+    assert updated["source_availability"]["l2"]["availability_status"] == (
+        CONFIRMED_UNAVAILABLE_STATUS
+    )
+    assert updated["source_metadata_check"]["ok"] is True
+    assert updated["exclusion_status"] == "requires_recheck"
+    assert "metadata indicates" in updated["exclusion_reason"]
+
+
+def test_get_404_with_metadata_gap_can_exclude(monkeypatch: pytest.MonkeyPatch) -> None:
+    record = empty_registry_record("2027-01-01", "development")
+    fake = make_urlopen_sequence(
+        [
+            http_error(404),
+            http_error(404),
+            metadata_response(available_to="2026-08-08T00:00:00.000Z"),
+        ]
+    )
+    monkeypatch.setattr(availability, "urlopen", fake)
+
+    updated = check_record_sources(record)
+
+    assert updated["source_metadata_check"]["coverage_includes_date"] is False
+    assert updated["exclusion_status"] == "excluded"

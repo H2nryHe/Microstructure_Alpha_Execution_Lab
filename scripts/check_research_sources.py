@@ -18,6 +18,7 @@ def main() -> int:
     parser.add_argument("--read-bytes", type=int, default=2)
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument("--max-workers", type=int, default=1)
+    parser.add_argument("--metadata-timeout-seconds", type=float, default=15.0)
     args = parser.parse_args()
     registry = load_registry(args.registry)
     selected_dates = {record["date"] for record in records_for_role(registry["dates"], args.role)}
@@ -29,6 +30,7 @@ def main() -> int:
         read_bytes=args.read_bytes,
         max_attempts=args.max_attempts,
         max_workers=args.max_workers,
+        metadata_timeout_seconds=args.metadata_timeout_seconds,
     )
     by_date = {record["date"]: record for record in checked}
     registry["dates"] = [by_date.get(record["date"], record) for record in registry["dates"]]
