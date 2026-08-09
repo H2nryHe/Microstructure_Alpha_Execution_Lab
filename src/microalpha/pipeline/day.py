@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import json
 import time
-import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+from urllib.request import Request, urlopen
 
 from microalpha.book.replay import read_bronze_book_events
 from microalpha.config import load_config_bundle, load_yaml_config
@@ -19,6 +19,7 @@ from microalpha.data.vendor_adapters import (
 from microalpha.features.engineering import FeatureConfig, build_feature_table
 from microalpha.features.metadata import FEATURE_VERSION
 from microalpha.labels.generation import LabelConfig, build_label_table, write_label_summary
+from microalpha.pipeline.availability import USER_AGENT
 from microalpha.pipeline.cache import artifact_manifest
 from microalpha.pipeline.registry import INSTRUMENT, VENDOR_SYMBOL, tardis_source_url
 from microalpha.research.dataset import (
@@ -47,7 +48,13 @@ def _download_if_needed(url: str, destination: Path) -> tuple[Path, int]:
     if destination.exists():
         return destination, destination.stat().st_size
     destination.parent.mkdir(parents=True, exist_ok=True)
-    urllib.request.urlretrieve(url, destination)
+    request = Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*"}, method="GET")
+    with urlopen(request, timeout=120) as response, destination.open("wb") as output:
+        while True:
+            chunk = response.read(1024 * 1024)
+            if not chunk:
+                break
+            output.write(chunk)
     return destination, destination.stat().st_size
 
 

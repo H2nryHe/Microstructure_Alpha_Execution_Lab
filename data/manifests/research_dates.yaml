@@ -17,36 +17,155 @@ dates:
   l2_checksum: ''
   trade_checksum: ''
   compressed_file_size:
-    l2: null
-    trades: null
+    l2: 79021220
+    trades: 13066686
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: pending
+  book_replay_status: pending
+  feature_status: pending
+  label_status: pending
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
-    -> 404; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
-    -> TimeoutError
+  exclusion_status: included
+  exclusion_reason: ''
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
+  source_availability_history:
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 79021220
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbdcb92253b729e3bd7b3a42d83038edb54d21b1c9db1ac49f591da443669da2d33e9ed0f10002232575601bef3ff39a07557153f22
+          gzip_signature: true
+          elapsed_seconds: 0.3539200839586556
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:21 GMT
+            Content-Type: text/csv
+            Content-Length: '79021220'
+            x-dataset-size: '79021220'
+            x-md5: '"db1c748517df066c3127ab61375edb54"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 13066686
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddd8e25bb8ee777ef67d928e893a46e6dbf8167ae8dd33d07f601fa63e0ee013c6f3fd2ca5c8bff6030b8422bf362a3aab42b7f25
+          gzip_signature: true
+          elapsed_seconds: 0.43113895901478827
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:21 GMT
+            Content-Type: text/csv
+            Content-Length: '13066686'
+            x-dataset-size: '13066686'
+            x-md5: '"a7ece8f3d15e77f4c1ca13ea646f83a6"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 79021220
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbdcb92253b729e3bd7b3a42d83038edb54d21b1c9db1ac49f591da443669da2d33e9ed0f10002232575601bef3ff39a07557153f22
+        gzip_signature: true
+        elapsed_seconds: 0.892460374860093
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Content-Type: text/csv
+          Content-Length: '79021220'
+          x-dataset-size: '79021220'
+          x-md5: '"db1c748517df066c3127ab61375edb54"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
     trades:
       url: https://datasets.tardis.dev/v1/binance/trades/2024/01/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 13066686
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbddd8e25bb8ee777ef67d928e893a46e6dbf8167ae8dd33d07f601fa63e0ee013c6f3fd2ca5c8bff6030b8422bf362a3aab42b7f25
+        gzip_signature: true
+        elapsed_seconds: 0.40045112487860024
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Content-Type: text/csv
+          Content-Length: '13066686'
+          x-dataset-size: '13066686'
+          x-md5: '"a7ece8f3d15e77f4c1ca13ea646f83a6"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
 - date: '2024-02-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -58,36 +177,155 @@ dates:
   l2_checksum: ''
   trade_checksum: ''
   compressed_file_size:
-    l2: null
-    trades: null
+    l2: 113798361
+    trades: 15827091
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: pending
+  book_replay_status: pending
+  feature_status: pending
+  label_status: pending
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
-    -> 404
+  exclusion_status: included
+  exclusion_reason: ''
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
+  source_availability_history:
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 113798361
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbce663f72de779e6b69bc607153244f93dc419c63636c2bb1104b323c3290dc7db85debebefdf4dd6f4f3401809eaeef9818b2f
+          gzip_signature: true
+          elapsed_seconds: 0.5067907499615103
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:22 GMT
+            Content-Type: text/csv
+            Content-Length: '113798361'
+            x-dataset-size: '113798361'
+            x-md5: '"0db6dac8f41fce94d1d5aaf427092acf"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 15827091
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbdddae2c3b8ea077ef67296c847ef8776bfb0d3cbe367a661a7603dd3303f70ce0797b53b9d64a32184c6628d7ae2a1c9cd2d9f91d
+          gzip_signature: true
+          elapsed_seconds: 0.47418391704559326
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:22 GMT
+            Content-Type: text/csv
+            Content-Length: '15827091'
+            x-dataset-size: '15827091'
+            x-md5: '"bbee6a6e2fe342b938c80b2cb693952d"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 113798361
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbddbce663f72de779e6b69bc607153244f93dc419c63636c2bb1104b323c3290dc7db85debebefdf4dd6f4f3401809eaeef9818b2f
+        gzip_signature: true
+        elapsed_seconds: 0.3428216250613332
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:18 GMT
+          Content-Type: text/csv
+          Content-Length: '113798361'
+          x-dataset-size: '113798361'
+          x-md5: '"0db6dac8f41fce94d1d5aaf427092acf"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
     trades:
       url: https://datasets.tardis.dev/v1/binance/trades/2024/02/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 15827091
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbdddae2c3b8ea077ef67296c847ef8776bfb0d3cbe367a661a7603dd3303f70ce0797b53b9d64a32184c6628d7ae2a1c9cd2d9f91d
+        gzip_signature: true
+        elapsed_seconds: 0.3481980829965323
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:19 GMT
+          Content-Type: text/csv
+          Content-Length: '15827091'
+          x-dataset-size: '15827091'
+          x-md5: '"bbee6a6e2fe342b938c80b2cb693952d"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
 - date: '2024-03-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT
@@ -99,36 +337,155 @@ dates:
   l2_checksum: ''
   trade_checksum: ''
   compressed_file_size:
-    l2: null
-    trades: null
+    l2: 144163385
+    trades: 22046896
   l2_row_count: null
   trade_row_count: null
-  qa_status: not_run_source_unavailable
-  book_replay_status: not_run_source_unavailable
-  feature_status: not_run_source_unavailable
-  label_status: not_run_source_unavailable
+  qa_status: pending
+  book_replay_status: pending
+  feature_status: pending
+  label_status: pending
   feature_hash: ''
   label_hash: ''
-  exclusion_status: excluded
-  exclusion_reason: L2 HEAD https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
-    -> TimeoutError; trades HEAD https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
-    -> 404
+  exclusion_status: included
+  exclusion_reason: ''
   runtime_seconds: {}
   artifacts: {}
   cache_keys: {}
+  source_availability_history:
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: null
+        content_length: null
+        error: TimeoutError
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
+        ok: false
+        status: 404
+        content_length: null
+        error: 'HTTPError: 404'
+  - checker: legacy_or_previous
+    result:
+      l2:
+        url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 144163385
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbb26ebb6e9d779f6799f5170982a7db246f10e7dab56d2bb12a96e4f296ab92b70f8fbd8f31342709add6ae7634d6cc6776fe3c
+          gzip_signature: true
+          elapsed_seconds: 0.5390035840682685
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:23 GMT
+            Content-Type: text/csv
+            Content-Length: '144163385'
+            x-dataset-size: '144163385'
+            x-md5: '"9c6a267be7f5b73a0339cb4f0109dae2"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
+      trades:
+        url: https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
+        method: GET
+        availability_status: AVAILABLE
+        ok: true
+        attempts:
+        - attempt: 1
+          method: GET
+          status: 200
+          availability_status: AVAILABLE
+          content_type: text/csv
+          content_length: 22046896
+          content_range: ''
+          accept_ranges: ''
+          bytes_read: 64
+          first_bytes_hex: 1f8b0800000000000203acbddbb2ad2b8ea077ef67d931e3070924ddda7e03775f3bb2aa33ec8ca84387ab3ac2fdf62dc6494230342673aeca3aac4dedf12df8
+          gzip_signature: true
+          elapsed_seconds: 0.41079758387058973
+          exception_type: ''
+          exception_message: ''
+          headers:
+            Date: Sun, 09 Aug 2026 00:27:23 GMT
+            Content-Type: text/csv
+            Content-Length: '22046896'
+            x-dataset-size: '22046896'
+            x-md5: '"b5f27c8d3f1c59214017e8403dec91f5"'
+            Server: cloudflare
+          redirect_url: ''
+          error_body: ''
   source_availability:
     l2:
       url: https://datasets.tardis.dev/v1/binance/incremental_book_L2/2024/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: null
-      content_length: null
-      error: TimeoutError
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 144163385
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbddbb26ebb6e9d779f6799f5170982a7db246f10e7dab56d2bb12a96e4f296ab92b70f8fbd8f31342709add6ae7634d6cc6776fe3c
+        gzip_signature: true
+        elapsed_seconds: 0.4209529999643564
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:19 GMT
+          Content-Type: text/csv
+          Content-Length: '144163385'
+          x-dataset-size: '144163385'
+          x-md5: '"9c6a267be7f5b73a0339cb4f0109dae2"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
     trades:
       url: https://datasets.tardis.dev/v1/binance/trades/2024/03/01/BTCUSDT.csv.gz
-      ok: false
-      status: 404
-      content_length: null
-      error: 'HTTPError: 404'
+      method: GET
+      availability_status: AVAILABLE
+      ok: true
+      attempts:
+      - attempt: 1
+        method: GET
+        status: 200
+        availability_status: AVAILABLE
+        content_type: text/csv
+        content_length: 22046896
+        content_range: ''
+        accept_ranges: ''
+        bytes_read: 64
+        first_bytes_hex: 1f8b0800000000000203acbddbb2ad2b8ea077ef67d931e3070924ddda7e03775f3bb2aa33ec8ca84387ab3ac2fdf62dc6494230342673aeca3aac4dedf12df8
+        gzip_signature: true
+        elapsed_seconds: 0.4070380839984864
+        exception_type: ''
+        exception_message: ''
+        headers:
+          Date: Sun, 09 Aug 2026 00:42:20 GMT
+          Content-Type: text/csv
+          Content-Length: '22046896'
+          x-dataset-size: '22046896'
+          x-md5: '"b5f27c8d3f1c59214017e8403dec91f5"'
+          Server: cloudflare
+        redirect_url: ''
+        error_body: ''
 - date: '2024-04-01'
   instrument: BTC-USDT
   canonical_symbol: BTC-USDT

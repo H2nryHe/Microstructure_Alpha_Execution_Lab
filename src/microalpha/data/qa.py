@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
@@ -151,6 +152,16 @@ def _event_gap_ms(previous: datetime, current: datetime) -> Decimal:
     return Decimal(str((current - previous).total_seconds() * 1000))
 
 
+def _row_fingerprint(row: dict[str, str], fieldnames: list[str]) -> bytes:
+    digest = hashlib.sha256()
+    for field in fieldnames:
+        value = row.get(field, "")
+        encoded = value.encode("utf-8")
+        digest.update(len(encoded).to_bytes(4, "big"))
+        digest.update(encoded)
+    return digest.digest()
+
+
 def validate_market_data_csv(
     path: str | Path,
     *,
@@ -162,7 +173,7 @@ def validate_market_data_csv(
 
     qa_config = config or load_qa_config()
     report = QAReport(status="PASS", can_continue=True, dataset_type=dataset_type, row_count=0)
-    seen_rows: set[tuple[tuple[str, str], ...]] = set()
+    seen_rows: set[bytes] = set()
     previous_event_time: Optional[datetime] = None
     previous_sequence: Optional[int] = None
     previous_price: Optional[Decimal] = None
@@ -179,9 +190,10 @@ def validate_market_data_csv(
 
     with Path(path).open("r", encoding="utf-8", newline="") as file:
         reader = csv.DictReader(file)
+        fieldnames = reader.fieldnames or []
         for row_number, row in enumerate(reader, start=2):
             report.row_count += 1
-            row_key = tuple(sorted((key, value) for key, value in row.items()))
+            row_key = _row_fingerprint(row, fieldnames)
             if row_key in seen_rows:
                 report.duplicate_count += 1
                 report.add_issue(
