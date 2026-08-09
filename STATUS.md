@@ -1443,11 +1443,11 @@ Known limitations / required decision before retry:
 
 ## Pre-Phase-7 Availability Checker Correction
 
-Status: CORRECTION PASS locally; Python 3.11 CI pending until pushed. The
-Pre-Phase-7 Multi-Day Expansion Gate remains BLOCKED because only the
-mechanically selected three-date pilot has been GET-rechecked and processed; the
-remaining development dates still require corrected GET verification and Phase
-1-6 processing before Phase 7 can begin.
+Status: CORRECTION PASS locally + PASS in Python 3.11 CI. The Pre-Phase-7
+Multi-Day Expansion Gate remains BLOCKED because only the mechanically selected
+three-date pilot has been GET-rechecked and processed; the remaining development
+dates still require corrected GET verification and Phase 1-6 processing before
+Phase 7 can begin.
 
 Correction to prior conclusion:
 
@@ -1657,6 +1657,18 @@ Exact local test results for this correction:
 - `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
   PASS, config hash
   `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+GitHub Actions for this correction:
+
+- Correction commit SHA:
+  `1c1261497d224ce5e2c4346411fadb40ad0f12ba`
+  (`Fix Tardis availability probing`).
+- CI Python version: GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- `tests` workflow: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31292717831`.
+- `research-smoke` workflow: PASS.
+  Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31292717888`.
 
 Next required work before Phase 7:
 
