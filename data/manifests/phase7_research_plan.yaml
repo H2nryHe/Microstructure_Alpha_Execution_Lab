@@ -1,0 +1,196 @@
+plan_version: phase7_research_plan_v1
+phase: Phase 7 - Baseline Statistical Signal Research
+frozen_snapshot:
+  path: data/manifests/pre_phase7_research_snapshot.json
+  expected_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  dataset_role: development
+  included_date_rule: mechanically selected first-of-month BTC-USDT dates
+  included_date_start: '2024-01-01'
+  included_date_end: '2025-12-01'
+  included_date_count: 24
+  holdout_policy: 2026 holdout dates must not be read for predictive analysis
+research_question: >
+  Do order-book state and order-flow variables available at time T contain
+  stable information about future BTC-USDT mid-price movements?
+primary_inference_unit: day
+primary_metric: spearman_daily_ic
+secondary_metrics:
+  - pearson_daily_ic
+  - descriptive_pooled_spearman_ic
+  - descriptive_pooled_pearson_ic
+  - equal_day_weighted_bucket_effect
+  - nonoverlap_daily_ic
+expected_direction: positive
+horizons:
+  100ms:
+    return_column: ret_fwd_100ms
+    move_bps_column: future_mid_move_bps_100ms
+    direction_column: direction_100ms
+    nonoverlap_stride: 1
+    matched_flow_features:
+      - ofi_100ms
+      - trade_imbalance_100ms
+  500ms:
+    return_column: ret_fwd_500ms
+    move_bps_column: future_mid_move_bps_500ms
+    direction_column: direction_500ms
+    nonoverlap_stride: 5
+    matched_flow_features:
+      - ofi_500ms
+      - trade_imbalance_500ms
+  1s:
+    return_column: ret_fwd_1s
+    move_bps_column: future_mid_move_bps_1s
+    direction_column: direction_1s
+    nonoverlap_stride: 10
+    matched_flow_features:
+      - ofi_1s
+      - trade_imbalance_1s
+  5s:
+    return_column: ret_fwd_5s
+    move_bps_column: future_mid_move_bps_5s
+    direction_column: direction_5s
+    nonoverlap_stride: 50
+    matched_flow_features:
+      - ofi_5s
+      - trade_imbalance_5s
+  30s:
+    return_column: ret_fwd_30s
+    move_bps_column: future_mid_move_bps_30s
+    direction_column: direction_30s
+    nonoverlap_stride: 300
+    matched_flow_features:
+      - ofi_30s
+      - trade_imbalance_30s
+primary_state_features:
+  - qi_1
+  - di_5
+  - di_10
+  - microprice_deviation_bps
+primary_matrix_rule: >
+  For each horizon, test qi_1, di_5, di_10, microprice_deviation_bps, and the
+  horizon-matched OFI and trade-imbalance features against ret_fwd_h. This
+  creates exactly 30 primary feature/horizon tests.
+secondary_exploratory_families:
+  - momentum
+  - realized_volatility
+  - spread
+  - book_update_intensity
+  - trade_count
+  - trade_volume
+  - trade_notional
+  - nonmatched_ofi_or_trade_imbalance_lookbacks
+missing_value_policy:
+  alpha_features: pairwise_valid_only
+  labels: pairwise_valid_only
+  fill_missing_alpha_features_with_zero: false
+  trade_imbalance_semantics: NaN with no trailing-window trades remains NaN
+  reporting:
+    - total candidate rows
+    - valid feature rows
+    - valid label rows
+    - valid paired rows
+    - paired coverage percentage
+daily_ic_rules:
+  spearman: primary
+  pearson: secondary_diagnostic
+  t_stat_formula: mean_daily_ic / (std_daily_ic_ddof1 / sqrt(valid_days))
+  raw_p_value: two_sided_day_level_t_test
+  fdr_family: all_30_primary_tests
+  fdr_method: benjamini_hochberg
+sign_consistency_rules:
+  expected_sign: positive
+  sign_test: exact_two_sided_binomial_against_p_0_5
+  ties: daily_ic_equal_zero_or_nan_excluded_from_positive_negative_count
+nonoverlap_rules:
+  anchor: deterministic_utc_research_day_grid_index
+  offset: 0
+  strides_by_horizon:
+    100ms: 1
+    500ms: 5
+    1s: 10
+    5s: 50
+    30s: 300
+bucket_rules:
+  bucket_count: 10
+  construction: within_each_day_rank_valid_feature_observations_using_feature_only
+  tie_policy: deterministic_rank_first_then_quantile_bucket
+  aggregation: equal_day_weighting
+  outputs:
+    - mean_future_return
+    - mean_future_move_bps
+    - median_future_move_bps
+    - observation_count
+    - top_minus_bottom_future_mid_effect
+    - bucket_monotonicity
+next_mid_move_rules:
+  primary_features:
+    - qi_1
+    - microprice_deviation_bps
+  secondary_features:
+    - di_5
+    - di_10
+    - ofi_100ms
+  unavailable_policy: exclude_unavailable_next_mid_move_outcomes
+direction_label_rules:
+  labels:
+    - direction_100ms
+    - direction_500ms
+    - direction_1s
+    - direction_5s
+    - direction_30s
+  threshold_policy: do_not_tune_existing_0_5_bps_threshold
+temporal_stability:
+  splits:
+    - '2024'
+    - '2025'
+  report:
+    - mean_daily_ic_by_year
+    - sign_consistency_by_year
+    - mean_ic_sign_agrees_across_years
+negative_control:
+  feature: qi_1
+  horizon: 1s
+  permutation_seed: 7007
+  rule: deterministically_permute_feature_within_each_day_once
+regime_diagnostics:
+  status: exploratory_only
+  threshold_source: contemporaneous_feature_side_information_only
+  candidate_regimes:
+    - spread_bps_low_high_by_daily_median
+    - realized_vol_5s_low_high_by_daily_median
+    - trade_count_1s_low_high_by_daily_median
+prespecified_figures:
+  - primary_ic_heatmap_feature_x_horizon
+  - daily_ic_heatmap_chronological_dates
+  - signal_decay_mean_daily_ic
+  - qi_1_1s_decile_curve
+  - microprice_deviation_bps_1s_decile_curve
+  - ofi_1s_1s_decile_curve
+  - trade_imbalance_1s_1s_decile_curve
+  - qi_1_next_mid_move_probability_by_decile
+  - microprice_deviation_bps_next_mid_move_probability_by_decile
+  - full_grid_vs_nonoverlap_ic_comparison
+acceptance_criteria:
+  strong_phase7_evidence_should_show:
+    - correct_expected_ic_sign
+    - nontrivial_mean_daily_ic
+    - median_daily_ic_same_sign
+    - majority_expected_sign_days
+    - similar_sign_in_2024_and_2025
+    - sensible_bucket_monotonicity
+    - meaningful_top_minus_bottom_future_mid_effect
+    - persistence_under_nonoverlap_sampling
+    - plausible_signal_decay
+  negative_results_are_valid: true
+  statistical_predictability_is_not_executable_profitability: true
+integrity_rules:
+  - do_not_change_feature_definitions_after_viewing_results
+  - do_not_change_lookbacks_after_viewing_results
+  - do_not_fill_missing_trade_imbalance_with_zero
+  - do_not_tune_label_threshold
+  - do_not_remove_bad_dates
+  - do_not_drop_negative_ic_days
+  - do_not_reverse_feature_signs_retrospectively
+  - report_all_30_primary_tests
+  - keep_exploratory_results_separate_from_primary_claims

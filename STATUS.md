@@ -1847,7 +1847,7 @@ Python 3.11 CI status:
 
 Assumptions and limitations:
 
-- Local execution used Python 3.10 and emitted the existing pandas warning that
+- Local execution used Python 3.10.9 and emitted the existing pandas warning that
   installed `bottleneck` is `1.3.5` while pandas asks for `>=1.3.6`.
 - Python 3.11 compatibility for source code is evidenced by GitHub Actions on
   the pushed source-verification commit; final artifact-state CI still needs a
@@ -1865,3 +1865,141 @@ Next steps:
 - Confirm GitHub Actions `tests` and `research-smoke` pass on the resulting
   commit under Python 3.11.
 - Do not begin Phase 7 until that final current-commit CI confirmation is green.
+
+## Phase 7 - Baseline Statistical Signal Research
+
+Status: PASS locally.
+
+Scope:
+
+- Phase 7 used only the frozen development dates from `2024-01-01` through
+  `2025-12-01`.
+- The 2026 holdout was not read or referenced by the Phase 7 runner.
+- No model training, optimization, feature-definition tuning, label-threshold
+  tuning, trading rule, backtest, execution simulation, or Phase 8 work was
+  performed.
+
+Frozen inputs and plan:
+
+- Immutable project specification remains unchanged.
+- Frozen snapshot:
+  `data/manifests/pre_phase7_research_snapshot.json`.
+- Required and verified snapshot hash:
+  `0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a`.
+- Snapshot verification confirmed 24 ordered development dates, no excluded
+  dates, no failed dates, dataset role `development`, feature version
+  `microstructure_v1`, label version `microstructure_labels_v1`, and no 2026
+  holdout dates.
+- Frozen Phase 7 research plan:
+  `data/manifests/phase7_research_plan.yaml`.
+- Phase 7 research plan hash:
+  `417f1b38895bf1cc3735cb72ce08249a2cc32ba7cfc936eec5a1875dea0e14da`.
+- Primary matrix: 30 prespecified tests, covering `qi_1`, `di_5`, `di_10`,
+  `microprice_deviation_bps`, and horizon-matched OFI/trade-imbalance features
+  against `ret_fwd_100ms`, `ret_fwd_500ms`, `ret_fwd_1s`, `ret_fwd_5s`, and
+  `ret_fwd_30s`.
+
+Implementation and outputs:
+
+- Added Phase 7 utilities in `src/microalpha/research/phase7.py`.
+- Added Phase 7 runner `scripts/run_phase7_research.py`.
+- Added unit tests in `tests/unit/test_phase7_research.py`.
+- Added tracked plan allow-list entry in `.gitignore`.
+- Generated compact Phase 7 outputs under `reports/phase7/`:
+  - `primary_ic.csv`: 30 rows.
+  - `daily_ic.csv`: 720 rows.
+  - `nonoverlap_ic.csv`: 750 rows.
+  - `bucket_results.csv`: 9000 rows.
+  - `next_move_results.csv`: 1250 rows.
+  - `direction_results.csv`: 7500 rows.
+  - `phase7_summary.json`.
+  - `README.md`.
+  - 10 prespecified figures under `reports/phase7/figures/`.
+- Deterministic Phase 7 result hash:
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- A fresh recomputation of the result hash matched the stored summary hash.
+
+Statistical summary:
+
+- All 30 primary tests had positive mean daily Spearman IC.
+- Minimum BH/FDR q-value across the 30-test primary family:
+  `1.4326671839881356e-21`.
+- Maximum absolute mean daily Spearman IC:
+  `0.4259401679798902`.
+- Strongest mean daily IC:
+  `qi_1` vs `ret_fwd_1s`, mean Spearman IC `0.425940168`, median
+  `0.4364408196`, 24 positive days, 0 negative days, t-stat
+  `39.1582477124`, FDR q-value `1.432667184e-21`.
+- Other top primary tests were `microprice_deviation_bps` vs `ret_fwd_1s`
+  with mean Spearman IC `0.4258462052`, and `di_5` vs `ret_fwd_1s` with mean
+  Spearman IC `0.4238563992`.
+- 2024/2025 split stability: all 30 primary tests had same-sign annual mean ICs.
+- Non-overlap robustness: mean absolute full-grid vs non-overlap IC difference
+  across primary summaries was `0.0009773737819616633`.
+- Negative control: deterministic within-day permutation of `qi_1` vs
+  `ret_fwd_1s` had mean Spearman IC `0.0001328308230472829`, t-stat
+  `0.7036037327952906`, raw p-value `0.48874197127979135`, 15 positive days,
+  and 9 negative days.
+
+Missing-data and inference policy:
+
+- Missing alpha features and labels were handled pairwise-valid only.
+- Missing alpha features were not filled with zero.
+- Daily Spearman IC is the primary inference metric with day as the inference
+  unit.
+- Pearson IC is reported as a secondary diagnostic.
+- Pooled cross-day IC is not used for inference.
+- Bucket studies rank valid feature observations within each day using feature
+  values only, then evaluate labels within those fixed deciles using equal
+  day weighting.
+
+Tests added:
+
+- Spearman/Pearson utility determinism.
+- Pairwise missing handling and no-zero-fill guard.
+- t-statistic, sign consistency, and sign-test behavior.
+- Benjamini-Hochberg/FDR behavior.
+- Deterministic decile buckets with ties, top-minus-bottom effect, and bucket
+  monotonicity.
+- Next-mid-move unavailable-outcome exclusion.
+- Non-overlap deterministic offset-zero mask.
+- Deterministic within-day permutation.
+- Snapshot verification, holdout rejection, chronological development-date
+  ordering, and 2024/2025 split rejection of 2026 dates.
+- Deterministic result hash excluding embedded result-hash self-reference.
+- Exact 30-test primary matrix.
+
+Exact local test results:
+
+- `python -m pytest`: PASS, `119 passed, 1 warning in 2.00s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+- `MPLCONFIGDIR=/tmp/microalpha-mpl PYTHONPATH=src python scripts/run_phase7_research.py --clean`:
+  PASS, result hash
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+
+Assumptions and limitations:
+
+- Local execution used Python 3.10 and emitted the existing pandas warning that
+  installed `bottleneck` is `1.3.5` while pandas asks for `>=1.3.6`.
+- PyArrow emitted sandbox CPU-info warnings while reading parquet; these did not
+  affect the Phase 7 gate.
+- Phase 7 evidence is statistical predictability on the frozen development
+  sample only and is not executable profitability.
+- No suspicious-audit exception was opened from Phase 7 outputs because the
+  negative control was near zero, non-overlap robustness was close to full-grid
+  IC, and 2024/2025 signs were stable. The high same-sign primary family should
+  still be treated as research evidence only, not as a trading claim.
+- Python 3.11 CI has not yet been run for the current Phase 7 artifact state.
+
+Next steps:
+
+- Commit and push the Phase 7 implementation, outputs, and status update when
+  Git operations are available.
+- Confirm GitHub Actions `tests` and `research-smoke` pass under Python 3.11 on
+  that commit.
+- Do not begin Phase 8 until Phase 7 is accepted and any required CI
+  confirmation is green.
