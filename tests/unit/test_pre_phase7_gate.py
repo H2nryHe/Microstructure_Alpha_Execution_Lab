@@ -4,7 +4,7 @@ from pathlib import Path
 from microalpha.features.engineering import FeatureConfig, build_feature_table
 from microalpha.labels.generation import LabelConfig, build_label_table
 from microalpha.pipeline.cache import artifact_manifest, cache_is_valid
-from microalpha.pipeline.multiday import process_registry
+from microalpha.pipeline.multiday import build_snapshot_manifest, process_registry
 from microalpha.pipeline.registry import (
     empty_registry_record,
     records_for_role,
@@ -288,3 +288,148 @@ def test_partial_failure_records_reason_and_continues(tmp_path: Path) -> None:
 
 def read_registry_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def complete_record(date: str, role: str = "development") -> dict:
+    record = empty_registry_record(date, role)
+    record.update(
+        {
+            "l2_checksum": f"l2-{date}",
+            "trade_checksum": f"trades-{date}",
+            "qa_status": "PASS",
+            "book_replay_status": "PASS",
+            "feature_status": "PASS",
+            "label_status": "PASS",
+            "feature_hash": f"feature-{date}",
+            "label_hash": f"label-{date}",
+            "exclusion_status": "included",
+            "artifacts": {
+                "features_parquet": f"/tmp/not-hashed/{date}/features.parquet",
+                "labels_parquet": f"/tmp/not-hashed/{date}/labels.parquet",
+            },
+        }
+    )
+    return record
+
+
+def write_registry_fixture(path: Path, dates: list[dict]) -> None:
+    write_registry(
+        path,
+        {
+            "registry_version": "research_dates_v1",
+            "cross_day_features": False,
+            "cross_day_labels": False,
+            "dates": dates,
+        },
+    )
+
+
+def test_aggregate_manifest_is_deterministic_for_identical_inputs(tmp_path: Path) -> None:
+    registry = tmp_path / "registry.yaml"
+    write_registry_fixture(
+        registry,
+        [complete_record("2024-01-01"), complete_record("2024-02-01")],
+    )
+
+    first = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "first.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+        created_at="2026-08-09T00:00:00+00:00",
+    )
+    second = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "second.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+        created_at="2026-08-09T00:01:00+00:00",
+    )
+
+    assert first["snapshot_hash"] == second["snapshot_hash"]
+    assert first["included_dates"] == ["2024-01-01", "2024-02-01"]
+
+
+def test_aggregate_manifest_hash_changes_when_dependency_changes(tmp_path: Path) -> None:
+    registry = tmp_path / "registry.yaml"
+    records = [complete_record("2024-01-01")]
+    write_registry_fixture(registry, records)
+    baseline = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "baseline.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+    )
+
+    records[0]["feature_hash"] = "changed-feature-hash"
+    write_registry_fixture(registry, records)
+    changed = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "changed.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+    )
+
+    assert baseline["snapshot_hash"] != changed["snapshot_hash"]
+
+
+def test_aggregate_manifest_ignores_absolute_artifact_paths_in_hash(tmp_path: Path) -> None:
+    registry = tmp_path / "registry.yaml"
+    record = complete_record("2024-01-01")
+    write_registry_fixture(registry, [record])
+    first = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "first.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+    )
+
+    record["artifacts"] = {
+        "features_parquet": "/different/local/path/features.parquet",
+        "labels_parquet": "/different/local/path/labels.parquet",
+    }
+    write_registry_fixture(registry, [record])
+    second = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "second.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+    )
+
+    assert first["snapshot_hash"] == second["snapshot_hash"]
+
+
+def test_aggregate_manifest_keeps_holdout_out_of_development_snapshot(tmp_path: Path) -> None:
+    registry = tmp_path / "registry.yaml"
+    write_registry_fixture(
+        registry,
+        [
+            complete_record("2024-01-01", "development"),
+            complete_record("2026-01-01", "holdout"),
+        ],
+    )
+
+    snapshot = build_snapshot_manifest(
+        registry_path=registry,
+        output_path=tmp_path / "snapshot.json",
+        repo_commit="abc123",
+        config_hashes={"features": "feature-cfg", "labels": "label-cfg"},
+        feature_version="microstructure_v1",
+        label_version="microstructure_labels_v1",
+    )
+
+    assert snapshot["dataset_role"] == "development"
+    assert snapshot["included_dates"] == ["2024-01-01"]
+    assert "2026-01-01" not in snapshot["source_checksums"]

@@ -1288,7 +1288,8 @@ Next steps:
 
 ## Pre-Phase-7 Multi-Day Data Expansion Gate
 
-Status: FAIL / BLOCKED by primary source availability. Phase 7 has not started.
+Status: SUPERSEDED by the corrected GET/metadata source verification recorded
+below. Phase 7 has not started.
 
 Phase 6 CI completion:
 
@@ -1335,7 +1336,7 @@ Frozen date registry:
   into the 2024-2025 research sample.
 - The registry records `alpha_analysis_performed_before_freeze=false`.
 
-Source availability result:
+Legacy HEAD-only source availability result (superseded):
 
 - Development registry source check:
   `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role development --timeout-seconds 6 --max-workers 12`
@@ -1346,7 +1347,9 @@ Source availability result:
   `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role holdout --timeout-seconds 6 --max-workers 8`
   checked 8 dates.
 - Holdout dates with both same-day L2 and trades available: `0`.
-- The pilot dates `2024-01-01`, `2024-02-01`, and `2024-03-01` could not be
+- These legacy diagnostics are retained as history only. They must not be used
+  as objective source unavailability evidence after the corrected GET probe.
+- The pilot dates `2024-01-01`, `2024-02-01`, and `2024-03-01` previously could not be
   processed because the required primary Tardis public URLs returned HTTP 404
   and/or timed out. Example recorded failures:
   - `2024-01-01` L2 HEAD
@@ -1415,7 +1418,7 @@ GitHub Actions after pre-gate infrastructure commit:
 - `research-smoke` workflow: PASS.
   Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31285342179`.
 
-Gate result:
+Legacy gate result (superseded):
 
 - Pilot processing was not run because the mechanically selected pilot dates do
   not have both required primary source files available from the checked public
@@ -1429,7 +1432,7 @@ Gate result:
 - No IC, feature bucket study, feature-return relationship, model training,
   threshold tuning, ablation, backtest, trading logic, or Phase 7 work was run.
 
-Known limitations / required decision before retry:
+Legacy limitations / required decision before corrected GET retry (superseded):
 
 - The requested primary unauthenticated Tardis public dataset URLs were not
   available for the frozen 2024-2025 development corpus during this run.
@@ -1443,11 +1446,17 @@ Known limitations / required decision before retry:
 
 ## Pre-Phase-7 Availability Checker Correction
 
-Status: CORRECTION PASS locally + PASS in Python 3.11 CI. The Pre-Phase-7
-Multi-Day Expansion Gate remains BLOCKED because only the mechanically selected
-three-date pilot has been GET-rechecked and processed; the remaining development
-dates still require corrected GET verification and Phase 1-6 processing before
-Phase 7 can begin.
+Status: SOURCE VERIFICATION PASS + THREE-DATE PILOT PHASE 1-6 PASS locally.
+The Pre-Phase-7 Multi-Day Expansion Gate remains BLOCKED pending full 24-day
+Phase 1-6 processing and aggregate frozen snapshot generation. Phase 7 has not
+started.
+
+Local verification note:
+
+- Local Python version for this correction update: `Python 3.10.9`.
+- Current local results are not Python 3.11 compatibility evidence.
+- No new GitHub Actions run was triggered or confirmed for the current
+  uncommitted registry update.
 
 Correction to prior conclusion:
 
@@ -1459,13 +1468,17 @@ Correction to prior conclusion:
   unavailability.
 - Legacy HEAD diagnostics are retained in
   `data/manifests/research_dates.yaml` under `source_availability_history`.
-- Frozen dates that still only have legacy HEAD diagnostics are now marked
-  `requires_recheck`, not permanently excluded.
+- All 24 development dates were rechecked with the corrected low-concurrency
+  GET + metadata path.
+- Legacy HEAD diagnostics remain under `source_availability_history` and are
+  not treated as objective source exclusions.
 - Corrected registry state:
-  - Development `included`: `3` dates, the pilot
-    `2024-01-01`, `2024-02-01`, `2024-03-01`.
-  - Development `requires_recheck`: `21` dates.
-  - Holdout `requires_recheck`: `8` dates.
+  - Development source-available / `included`: `24` dates.
+  - Development `requires_recheck`: `0` dates.
+  - Development `excluded`: `0` dates.
+  - Metadata check `ok=true`: `24` development dates.
+  - Non-pilot development dates still have Phase 1-6 processing statuses
+    `pending`; `included` here means source-available, not fully processed.
 
 Corrected source availability checker:
 
@@ -1581,10 +1594,25 @@ Pilot availability recheck:
     gzip signature `true`, `x-md5`
     `"b5f27c8d3f1c59214017e8403dec91f5"`.
 
+Full development availability recheck:
+
+- Command:
+  `PYTHONPATH=src python scripts/check_research_sources.py --registry data/manifests/research_dates.yaml --role development --timeout-seconds 20 --read-bytes 64 --max-attempts 3 --max-workers 1 --metadata-timeout-seconds 20`.
+- Result:
+  - `checked`: `24`.
+  - `available`: all first-of-month development dates from `2024-01-01`
+    through `2025-12-01`.
+  - `not_available`: none.
+  - Each development date has both `incremental_book_L2` and `trades` GET
+    status `200`, `availability_status=AVAILABLE`, `bytes_read=64`, and gzip
+    signature `true`.
+  - Each development date has Tardis metadata check `ok=true`, including
+    symbol coverage and support for both required data types.
+
 Pilot Phase 1-6 execution:
 
 - Command:
-  `PYTHONPATH=src python scripts/run_research_registry.py --registry data/manifests/research_dates.yaml --role development --date 2024-01-01 --date 2024-02-01 --date 2024-03-01 --work-root /tmp/microalpha-prephase7-pilot --source-root /tmp/microalpha-prephase7-pilot/source --stop-on-error`.
+  `PYTHONPATH=src python scripts/run_research_registry.py --registry data/manifests/research_dates.yaml --role development --date 2024-01-01 --date 2024-02-01 --date 2024-03-01 --work-root /tmp/microalpha-multiday --source-root /tmp/microalpha-multiday/source --stop-on-error`.
 - Result:
   - `processed`: `2024-01-01`, `2024-02-01`, `2024-03-01`.
   - `failed`: none.
@@ -1596,9 +1624,9 @@ Pilot per-day results:
 
 ```text
 date        l2_rows   trade_rows research_rows unavailable_research_rows feature_rows label_rows invalid_crossed feature_runtime_s label_runtime_s total_runtime_s feature_hash                                                      label_hash
-2024-01-01  12284879  1114633    863986        0                         863986       863986     0               708.818           187.177         1872.677        c0e8e2387fe6cc1107962ffc9e5d977e76ace565b9d9c352b5a561ce23c4af6f d61e2ebcb617f8534bfd74bb524f610ebdce2f68d582dccbf5268732716a4ec2
-2024-02-01  18878457  1392269    863980        0                         863980       863980     0               808.075           578.121         3062.580        bfb8be02390943e2c659d4c3ba388c7129d4d28a3950280c87c858a268a8a10f 6350b78ee606d35de4e0399f5be1a6bf79e25bb1442c79ab370bfc5b3d425782
-2024-03-01  23766560  1947370    863986        50                        863986       863986     0               1708.514          844.662         5031.152        24af17d47dee64200f23aa4d518b8fdefcb777f8a43afdaaef1ee83f25930b11 840f9ede0719b28030bff1973ee73d50ea4db7119cf56cd01d17482be5a27296
+2024-01-01  12284879  1114633    863986        0                         863986       863986     0               727.055           223.903         1850.275        c0e8e2387fe6cc1107962ffc9e5d977e76ace565b9d9c352b5a561ce23c4af6f d61e2ebcb617f8534bfd74bb524f610ebdce2f68d582dccbf5268732716a4ec2
+2024-02-01  18878457  1392269    863980        0                         863980       863980     0               1499.197          242.909         3398.841        bfb8be02390943e2c659d4c3ba388c7129d4d28a3950280c87c858a268a8a10f 6350b78ee606d35de4e0399f5be1a6bf79e25bb1442c79ab370bfc5b3d425782
+2024-03-01  23766560  1947370    863986        50                        863986       863986     0               1825.235          218.767         4676.323        24af17d47dee64200f23aa4d518b8fdefcb777f8a43afdaaef1ee83f25930b11 840f9ede0719b28030bff1973ee73d50ea4db7119cf56cd01d17482be5a27296
 ```
 
 Pilot QA results:
@@ -1624,7 +1652,7 @@ Implementation notes:
   implementation stalled during full-day 2024 QA after Phase 1; the corrected
   duplicate detector completed QA for all three pilot days.
 - The full pilot run remains slow, especially Phase 5 feature generation:
-  approximately `708.8`, `808.1`, and `1708.5` seconds for the three dates.
+  approximately `727.1`, `1499.2`, and `1825.2` seconds for the three dates.
   No causal feature logic was rewritten for speed.
 - No IC, bucket returns, feature-return relationship, threshold tuning,
   strategy, model, backtest, or Phase 7 analysis was performed.
@@ -1650,15 +1678,21 @@ Tests required by the availability correction:
 
 Exact local test results for this correction:
 
-- `python -m pytest`: PASS, `100 passed, 1 warning in 1.85s`.
+- `python -m pytest`: PASS, `100 passed, 1 warning in 2.08s`.
 - `ruff check src tests scripts`: PASS, `All checks passed!`.
-- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python -m compileall -q src scripts tests`:
+- `python -m compileall src scripts`:
   PASS.
+- `microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  initially not found on the default shell `PATH`.
 - `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
   PASS, config hash
   `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+- Equivalent source-tree entry-point command
+  `PYTHONPATH=src python -m microalpha.cli --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
 
-GitHub Actions for this correction:
+GitHub Actions for the prior committed availability correction:
 
 - Correction commit SHA:
   `1c1261497d224ce5e2c4346411fadb40ad0f12ba`
@@ -1669,13 +1703,13 @@ GitHub Actions for this correction:
   Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31292717831`.
 - `research-smoke` workflow: PASS.
   Run: `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31292717888`.
+- Current registry update has not been committed or pushed, so no GitHub
+  Actions result exists for it yet.
 
 Next required work before Phase 7:
 
-- Run corrected GET availability checks for the remaining 21 development dates
-  with low initial concurrency.
-- If available, process the remaining development dates through the same Phase
-  1-6 pipeline.
+- Process the remaining 21 source-available development dates through the same
+  Phase 1-6 pipeline.
 - Only after the full frozen development corpus is processed, or objective
   corrected-GET/metadata-backed exclusions are documented, generate the
   aggregate frozen research snapshot.
