@@ -18,7 +18,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 8 - Predictive modeling
 [x] Phase 9 - Walk-forward evaluation
 [x] Phase 10 - Signal construction
-[ ] Phase 11 - Execution simulator
+[x] Phase 11 - Execution simulator
 [ ] Phase 12 - Portfolio / inventory accounting
 [ ] Phase 13 - Cost and latency analysis
 [ ] Phase 14 - Robustness and regime analysis
@@ -2821,16 +2821,235 @@ Assumptions and limitations:
   `/tmp/microalpha-phase8-venv` with working LightGBM dependencies.
 - PyArrow emitted sandbox CPU-info warnings while reading parquet; these did
   not affect the Phase 10 gate.
-- The current Phase 10 artifact state has not yet been confirmed by GitHub
-  Actions under Python 3.11.
+- The exact Phase 10 artifact state was committed and pushed as
+  `7b4bba3483bd6a7a3ae52acfd12bc91a830f6901`.
+- GitHub Actions under Python 3.11 confirmed that exact Phase 10 commit:
+  `tests` run `31391220465` PASS and `research-smoke` run `31391220513`
+  PASS.
 - Phase 10 signals are desired directional states only, not orders or fills.
 - No 2026 holdout date was read.
-- No Phase 11 execution simulation, transaction-cost model, latency model,
-  fill model, or backtest was implemented.
+- Phase 11 consumes Phase 10 signals as desired directional states and creates
+  separate order/fill diagnostics.
 
 Next steps:
 
-- Do not begin Phase 11 until the user explicitly accepts Phase 10 and requests
-  continuation.
-- If the Phase 10 artifact commit is pushed, confirm GitHub Actions under
-  Python 3.11 for that exact commit before relying on CI portability.
+- Phase 11 execution simulation has been completed below from the recorded
+  Phase 10 CI-confirmed commit.
+
+## Phase 11 - Event-Driven Execution Simulator
+
+Status: PASS locally
+
+Pre-Phase-11 gate:
+
+- Exact accepted Phase 10 artifact commit:
+  `7b4bba3483bd6a7a3ae52acfd12bc91a830f6901`.
+- Remote `main` resolved to the same SHA before Phase 11 work began.
+- GitHub Actions under Python 3.11 confirmed that exact commit:
+  `tests` run `31391220465` PASS and `research-smoke` run `31391220513`
+  PASS.
+
+Frozen execution plan and config:
+
+- Execution config file: `configs/execution.yaml`.
+- Execution config hash:
+  `7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef`.
+- Phase 11 execution plan file:
+  `data/manifests/phase11_execution_plan.yaml`.
+- Phase 11 execution plan hash:
+  `f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4`.
+- The plan was frozen before Phase 11 real-data execution diagnostics.
+
+Execution mechanics:
+
+- Replay clock: `observation_time`.
+- Exchange timestamps are retained for audit and not used to reorder replay.
+- Same-timestamp tie policy: market states/trades at exactly the order-arrival
+  timestamp are treated as already observed before the simulated order enters.
+- Order sizing: fixed quote notional per unit signal transition,
+  `target_order_notional_usd=10000.0`.
+- Phase 10 final-signal state changes create orders; persistent signals do not
+  submit another order every second.
+- Market BUY orders consume asks from best ask upward.
+- Market SELL orders consume bids from best bid downward.
+- Displayed-depth shortfall is explicit; unavailable residual is not filled
+  using inferred hidden liquidity.
+- Passive BUY limit price is the best bid observable at order creation.
+- Passive SELL limit price is the best ask observable at order creation.
+- Passive queue approximation: displayed quantity at the limit price times
+  `queue_fraction=1.0`.
+- Book cancellations do not advance the simulated queue.
+- Passive TTL: `1000ms`.
+- Cancel latency: `100ms`.
+- Real-data fee setting: `0.0 bps`; nonzero fee calculation is covered by
+  synthetic tests.
+- Markout horizons: `100ms`, `500ms`, `1000ms`, and `5000ms`.
+
+Real-data scope:
+
+- Instrument: `BTC-USDT`.
+- Vendor symbol: Tardis/Binance `BTCUSDT`.
+- Date used for MVP real-data mechanics diagnostics: `2024-07-01`.
+- Models: `qi_direct_baseline`, `lightgbm_qi_ofi`, and `lightgbm_extended`.
+- Latency scenarios: `0ms` and `100ms`.
+- Book-state source:
+  `/tmp/microalpha-multiday/derived/date=2024-07-01/research_100ms.parquet`.
+- Passive queue-depletion trade source:
+  `/tmp/microalpha-multiday/source/2024-07-01/BTCUSDT_trades.csv.gz`.
+- Phase 10 signal source root: `/tmp/microalpha-phase10/signals`.
+- Row-level Phase 11 artifact root: `/tmp/microalpha-phase11`.
+- Row-level Phase 11 artifact size: about `38M`.
+- Tracked compact report size: about `356K` under `reports/phase11`.
+- All 54 Phase 10 signal artifact entries were checksum-verified before real
+  execution diagnostics.
+
+Artifacts and hashes:
+
+- Phase 10 signal artifact hash verified:
+  `68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6`.
+- Phase 11 execution artifact hash:
+  `893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0`.
+- Phase 11 results hash:
+  `a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0`.
+- Phase 11 result hash recomputation matched the stored hash.
+
+Compact reports:
+
+- `reports/phase11/order_summary.csv`
+- `reports/phase11/market_execution_summary.csv`
+- `reports/phase11/passive_execution_summary.csv`
+- `reports/phase11/fill_latency_summary.csv`
+- `reports/phase11/depth_consumption_summary.csv`
+- `reports/phase11/passive_fill_summary.csv`
+- `reports/phase11/adverse_selection_summary.csv`
+- `reports/phase11/runtime_summary.csv`
+- `reports/phase11/execution_manifest.json`
+- `reports/phase11/phase11_summary.json`
+- `reports/phase11/README.md`
+- Figures are under `reports/phase11/figures/`.
+
+Order traffic:
+
+- Market-order diagnostics generated `112988` orders.
+- Passive-order diagnostics generated `112988` orders.
+- Total fill child rows across market and passive diagnostics: `199392`.
+- Orders per date/model/scenario:
+  `qi_direct_baseline=14240`,
+  `lightgbm_qi_ofi=21789`,
+  `lightgbm_extended=20465`.
+- Orders per active signal hour:
+  `qi_direct_baseline=2882.2669515349153`,
+  `lightgbm_qi_ofi=4300.696310104721`,
+  `lightgbm_extended=4049.356930856326`.
+- Orders per signal transition: `1.0`.
+
+Market-order diagnostics:
+
+- Market fill rate: `1.0` for all model/latency scenarios.
+- Mean implementation shortfall versus decision mid:
+  - `qi_direct_baseline`: `6.77987427046345e-06` at `0ms`,
+    `1.0472018849959377e-05` at `100ms`.
+  - `lightgbm_qi_ofi`: `5.1850238244400755e-06` at `0ms`,
+    `8.28691755766168e-06` at `100ms`.
+  - `lightgbm_extended`: `5.607924162474779e-06` at `0ms`,
+    `9.781072581593323e-06` at `100ms`.
+- Average levels consumed:
+  `qi_direct_baseline=1.4127106741573034` at `0ms` and
+  `1.365308988764045` at `100ms`;
+  `lightgbm_qi_ofi=1.2925788241773373` at `0ms` and
+  `1.2779384092890909` at `100ms`;
+  `lightgbm_extended=1.322697288052773` at `0ms` and
+  `1.30701197165893` at `100ms`.
+- Market-order partial-fill counts from displayed depth:
+  `qi_direct_baseline=61/61`,
+  `lightgbm_qi_ofi=64/71`,
+  `lightgbm_extended=65/74` for `0ms/100ms`.
+
+Passive-order diagnostics:
+
+- Passive fill rate:
+  - `qi_direct_baseline`: `0.014747191011235955` at `0ms`,
+    `0.02359550561797753` at `100ms`.
+  - `lightgbm_qi_ofi`: `0.03639451099178485` at `0ms`,
+    `0.04534398090779751` at `100ms`.
+  - `lightgbm_extended`: `0.030930857561690693` at `0ms`,
+    `0.03801612509161984` at `100ms`.
+- Mean passive fill fraction:
+  `qi_direct_baseline=0.013128770964257372/0.02116323707953792`,
+  `lightgbm_qi_ofi=0.028111386227098304/0.03686223902300702`,
+  `lightgbm_extended=0.023682415223913997/0.03036492513370315`
+  for `0ms/100ms`.
+- Median time-to-first-fill in milliseconds:
+  `qi_direct_baseline=465.33950000000004/242.7215`,
+  `lightgbm_qi_ofi=444.73699999999997/317.95799999999997`,
+  `lightgbm_extended=445.35400000000004/346.01300000000003`
+  for `0ms/100ms`.
+
+Adverse-selection / markout diagnostics:
+
+- Market-order average signed markouts at `100ms` were small negative across
+  models, then positive at longer horizons in this diagnostic date.
+- Passive-order average signed markouts were negative at all configured
+  horizons in this diagnostic date.
+- Full `100ms`, `500ms`, `1000ms`, and `5000ms` markouts are recorded in
+  `reports/phase11/adverse_selection_summary.csv`.
+
+Synthetic tests added:
+
+- No fill before order arrival.
+- Market BUY fills against asks, not bids.
+- Market SELL fills against bids, not asks.
+- Multi-level BUY and SELL depth consumption.
+- Insufficient displayed depth leaves explicit residual.
+- Passive queue depletion before simulated fill.
+- Passive partial fill state.
+- Expiration without forced fill.
+- Cancel cannot remove causally earlier fills and prevents later fills after
+  cancel effective time.
+- Same-timestamp deterministic passive-fill tie rule.
+- Exact fee calculation.
+- BUY/SELL markout sign convention.
+- Deterministic replay hash and future-mutation isolation.
+
+Exact local verification:
+
+- `python -m pytest`: PASS, `163 passed, 49 warnings in 3.20s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- `python -m json.tool reports/phase11/phase11_summary.json`: PASS.
+- `python -m json.tool reports/phase11/execution_manifest.json`: PASS.
+- Phase 11 result hash recomputation: PASS, matched
+  `a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0`.
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/run_phase11_execution.py --clean`:
+  PASS, with execution artifact hash
+  `893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0`
+  and results hash
+  `a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0`.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 11 has not yet been committed, pushed, or confirmed in Python 3.11
+  GitHub Actions.
+- Real-data diagnostics are intentionally bounded to one development date,
+  `2024-07-01`, for the Phase 11 MVP.
+- Real-data book interaction uses existing `research_100ms.parquet` depth
+  snapshots rather than replaying every incremental L2 update inside the
+  execution loop.
+- Passive queue depletion uses raw Tardis trade prints after order arrival, but
+  exact exchange queue priority is unavailable.
+- Real-data fee rate is set to `0.0 bps` to isolate execution mechanics; this
+  is not a venue fee assumption.
+- No 2026 holdout data was accessed.
+- No portfolio cash balance, portfolio equity curve, Sharpe ratio, drawdown,
+  cost grid, or accounting layer was implemented.
+
+Next steps:
+
+- Stop before Phase 12.
+- Commit and push the exact Phase 11 artifact state only after user acceptance,
+  then confirm Python 3.11 GitHub Actions on that exact commit before relying
+  on CI portability.

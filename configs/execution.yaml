@@ -1,8 +1,60 @@
-execution_version: v0
-fees_bps: 1.0
-latency_ms:
-  market_data: 0
-  decision: 0
-  order: 0
-max_position: 1.0
-max_order_size: 1.0
+execution_version: phase11_execution_v1
+instrument: BTC-USDT
+vendor_symbol: BTCUSDT
+
+timing:
+  replay_clock: observation_time
+  exchange_timestamp_role: retained_for_audit_not_replay_order
+  phase10_signal_market_data_latency_ms: 0
+  decision_latency_ms: 0
+  market_order_latency_scenarios_ms:
+    - 0
+    - 100
+  passive_order_latency_scenarios_ms:
+    - 0
+    - 100
+  cancel_latency_ms: 100
+  same_timestamp_tie_policy: process_market_state_at_equal_observation_time_before_simulated_order
+
+order_sizing:
+  convention: fixed_quote_notional_per_unit_signal_transition
+  target_order_notional_usd: 10000.0
+  max_target_units: 1
+
+market_orders:
+  insufficient_depth_policy: partial_fill_available_displayed_depth_only
+  max_book_depth_levels: 10
+
+passive_orders:
+  limit_price_source: touch_at_order_creation
+  queue_fraction: 1.0
+  limit_ttl_ms: 1000
+  cancellation_policy: signal_change_requests_cancel_with_cancel_latency
+  cancellation_depletes_queue: false
+  marketable_on_arrival_policy: execute_against_contra_depth_subject_to_limit_price
+
+fees:
+  primary_real_data_fee_bps: 0.0
+  supported_fee_bps_for_tests: 1.0
+
+markouts:
+  horizons_ms:
+    - 100
+    - 500
+    - 1000
+    - 5000
+
+real_data_diagnostic:
+  dates:
+    - "2024-07-01"
+  models:
+    - qi_direct_baseline
+    - lightgbm_qi_ofi
+    - lightgbm_extended
+  signal_root: /tmp/microalpha-phase10/signals
+  derived_root: /tmp/microalpha-multiday/derived
+  source_root: /tmp/microalpha-multiday/source
+  artifact_root: /tmp/microalpha-phase11
+  order_on_signal_state_change_only: true
+  book_state_source: research_100ms.parquet_depth_snapshot
+  passive_trade_source: tardis_trades_raw_gzip

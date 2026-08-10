@@ -1,0 +1,171 @@
+plan_version: phase11_execution_plan_v1
+created_under_policy: frozen_before_phase11_real_execution_diagnostics
+
+upstream_artifacts:
+  phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase8_modeling_plan_hash: 823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe
+  phase8_results_hash: d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d
+  phase9_plan_hash: 4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4
+  phase9_results_hash: 0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee
+  phase10_plan_hash: 0ae8590cef7e7ea313c80889c74cc7db592a948f119e3982a2f2269df0c2a2bb
+  phase10_signal_artifact_hash: 68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6
+  phase10_results_hash: 604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71
+  phase10_commit_sha: 7b4bba3483bd6a7a3ae52acfd12bc91a830f6901
+
+development_policy:
+  allowed_dates: 2024-2025 development corpus only
+  forbidden_dates:
+    - "2026"
+  real_data_diagnostic_dates:
+    - "2024-07-01"
+  rationale: bounded correctness-first Phase 11 MVP using the first Phase 10 validation date
+
+execution_architecture:
+  replay_clock: observation_time
+  timestamp_fields:
+    - event_time
+    - observation_time
+    - signal_time
+    - order_create_time
+    - order_arrival_time
+    - fill_time
+  exchange_timestamp_semantics: retained for audit and never used to reorder replay
+  causal_order: market state is updated before observations, then signal decisions create orders, then configured latency determines order arrival
+  same_timestamp_tie_policy: market states/trades at exactly the order-arrival timestamp are treated as already observed before the simulated order enters
+
+input_artifacts:
+  phase10_signal_manifest: reports/phase10/signal_manifest.json
+  phase10_signal_root: /tmp/microalpha-phase10/signals
+  book_state_source: /tmp/microalpha-multiday/derived/date={date}/research_100ms.parquet
+  trade_source: /tmp/microalpha-multiday/source/{date}/BTCUSDT_trades.csv.gz
+  real_data_book_depth_levels: 10
+  real_data_trade_timestamp: local_timestamp converted from microseconds to UTC observation_time
+
+signal_to_order:
+  target_units:
+    SHORT: -1
+    FLAT: 0
+    LONG: 1
+  order_trigger: final_signal target-state changes only
+  order_delta_units: new_target_units_minus_previous_target_units
+  side_mapping:
+    positive_delta: BUY
+    negative_delta: SELL
+  sizing_convention: fixed_quote_notional_per_unit_signal_transition
+  target_order_notional_usd: 10000.0
+  quantity_conversion: absolute_delta_units_times_notional_divided_by_decision_mid_observable_at_order_creation
+
+latency:
+  supported_ms:
+    - 0
+    - 10
+    - 50
+    - 100
+    - 250
+  phase11_market_order_scenarios_ms:
+    - 0
+    - 100
+  phase11_passive_order_scenarios_ms:
+    - 0
+    - 100
+  phase10_signal_market_data_latency_ms: 0
+  decision_latency_ms: 0
+  cancel_latency_ms: 100
+
+market_order_behavior:
+  buy_consumes: ask side from best ask upward
+  sell_consumes: bid side from best bid downward
+  multi_level_depth_consumption: enabled
+  insufficient_depth_policy: consume displayed depth only and record residual unfilled quantity
+  fill_time: order_arrival_time
+
+limit_order_behavior:
+  buy_price: best bid observable at order creation
+  sell_price: best ask observable at order creation
+  price_repricing_after_creation: forbidden
+  marketable_on_arrival: execute immediately against contra displayed depth subject to limit price
+  resting_queue_fraction: 1.0
+  queue_depletion_source: aggressive trades strictly after order arrival
+  cancellation_advances_queue: false
+  ttl_ms: 1000
+  expiration_policy: unfilled remaining quantity expires at ttl
+  cancellation_policy: signal-state change may request cancel; cancel takes effect after cancel_latency_ms
+
+fees:
+  real_data_fee_bps: 0.0
+  fee_fields_required:
+    - liquidity_role
+    - fee_rate_bps
+    - fee_quote
+  nonzero_fee_calculation_test_required: true
+
+markouts:
+  horizons_ms:
+    - 100
+    - 500
+    - 1000
+    - 5000
+  formula: side_sign_times_mid_after_h_minus_fill_price_divided_by_fill_price
+  buy_side_sign: 1
+  sell_side_sign: -1
+  role: evaluation_only_not_fill_decision
+
+output_policy:
+  local_artifact_root: /tmp/microalpha-phase11
+  tracked_report_dir: reports/phase11
+  large_row_level_artifacts_committed: false
+  deterministic_hash_excludes:
+    - runtime
+    - creation_timestamp
+    - absolute_local_paths
+
+required_reports:
+  - order_summary.csv
+  - market_execution_summary.csv
+  - passive_execution_summary.csv
+  - fill_latency_summary.csv
+  - depth_consumption_summary.csv
+  - passive_fill_summary.csv
+  - adverse_selection_summary.csv
+  - execution_manifest.json
+  - phase11_summary.json
+  - README.md
+
+required_figures:
+  - market_order_implementation_shortfall_distribution.png
+  - market_order_shortfall_by_latency.png
+  - depth_consumption_distribution.png
+  - passive_fill_rate_by_model_date.png
+  - passive_time_to_fill_distribution.png
+  - passive_fill_fraction_distribution.png
+  - post_fill_markouts.png
+  - market_vs_passive_markout_comparison.png
+  - order_traffic_by_model.png
+  - model_execution_diagnostics.png
+
+acceptance_criteria:
+  - exact Phase 10 commit green under Python 3.11 CI before implementation
+  - Phase 11 execution plan frozen before real diagnostics
+  - 2026 holdout not accessed
+  - order arrival timestamps explicit
+  - no fill before order arrival
+  - market BUY consumes asks
+  - market SELL consumes bids
+  - multi-level depth consumption works
+  - insufficient displayed depth is explicit
+  - passive price fixed at creation
+  - passive queue approximation documented
+  - passive partial fills supported
+  - expiration and cancellation causal
+  - same-timestamp ordering deterministic
+  - latency configurable
+  - maker/taker fee fields and calculations supported
+  - fill generation isolated from future markouts
+  - Phase 10 signals reconcile exactly
+  - synthetic execution tests pass
+  - deterministic execution artifact hash exists
+  - real-data market and passive diagnostics exist
+  - no portfolio accounting is calculated
+  - no 2026 holdout touched
