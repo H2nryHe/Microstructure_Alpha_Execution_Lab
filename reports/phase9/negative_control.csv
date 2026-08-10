@@ -1,0 +1,4 @@
+control,window,fold_id,validation_date,model,feature_set,spearman_ic,effective_spearman_ic,pearson_ic,prediction_std,target_unique_count,status,row_count
+deterministic_permuted_train_target_walkforward,expanding,1,2024-07-01,lightgbm_qi_ofi,qi_ofi,,0,-4.66670004218e-18,1.98523347013e-23,14528,no_rank_signal_constant_prediction,86398
+deterministic_permuted_train_target_walkforward,expanding,9,2025-03-01,lightgbm_qi_ofi,qi_ofi,,0,,0,24089,no_rank_signal_constant_prediction,86396
+deterministic_permuted_train_target_walkforward,expanding,18,2025-12-01,lightgbm_qi_ofi,qi_ofi,,0,-1.44781880968e-17,6.61744490042e-24,32445,no_rank_signal_constant_prediction,86399

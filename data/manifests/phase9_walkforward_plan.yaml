@@ -1,0 +1,210 @@
+plan_version: phase9_walkforward_plan_v1
+phase: Phase 9 - Walk-Forward Temporal Robustness
+frozen_inputs:
+  pre_phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase8_modeling_plan_hash: 823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe
+  phase8_results_hash: d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d
+  phase8_artifact_commit: 0cff6ce05980ac226ec47f0d602045a6dadf9993
+  dataset_role: development
+  holdout_policy: 2026 holdout dates must not be read in Phase 9
+research_question: >
+  Determine whether the modest incremental predictive lift observed in Phase 8
+  survives realistic temporal retraining.
+eligible_dates:
+  - '2024-01-01'
+  - '2024-02-01'
+  - '2024-03-01'
+  - '2024-04-01'
+  - '2024-05-01'
+  - '2024-06-01'
+  - '2024-07-01'
+  - '2024-08-01'
+  - '2024-09-01'
+  - '2024-10-01'
+  - '2024-11-01'
+  - '2024-12-01'
+  - '2025-01-01'
+  - '2025-02-01'
+  - '2025-03-01'
+  - '2025-04-01'
+  - '2025-05-01'
+  - '2025-06-01'
+  - '2025-07-01'
+  - '2025-08-01'
+  - '2025-09-01'
+  - '2025-10-01'
+  - '2025-11-01'
+  - '2025-12-01'
+date_policy:
+  development_only: true
+  forbidden_years:
+    - 2026
+  validation_note: Phase 9 remains development robustness analysis
+target:
+  primary_regression_target: ret_fwd_1s
+anchor_rule:
+  source_grid: 100ms research grid
+  primary_sample: deterministic non-overlapping 1s anchors
+  row_rule: row_index % 10 == 0
+  offset: 0
+minimum_training_history_dates: 6
+primary_expanding_window:
+  fold_count: 18
+  rule: train on all eligible dates strictly before validation after the first 6 dates
+  first_validation_date: '2024-07-01'
+  final_validation_date: '2025-12-01'
+secondary_rolling6_window:
+  fold_count: 18
+  rule: train on the most recent 6 eligible dates strictly before validation
+feature_sets:
+  qi_only:
+    - qi_1
+  qi_ofi:
+    - qi_1
+    - ofi_1s
+  extended_book_flow:
+    - qi_1
+    - di_5
+    - di_10
+    - ofi_1s
+    - trade_imbalance_1s
+    - spread_bps
+    - realized_vol_5s
+    - mom_1s
+    - book_update_count_1s
+    - trade_count_1s
+models:
+  qi_direct_baseline:
+    model_type: fold_local_linear_qi_baseline
+    feature_set: qi_only
+    standardized_features: true
+    preprocessing: fold-local median imputation and scaling fitted on training dates only
+  lightgbm_qi_ofi:
+    model_type: lightgbm_lgbmregressor
+    feature_set: qi_ofi
+    params:
+      n_estimators: 120
+      learning_rate: 0.05
+      num_leaves: 15
+      max_depth: 4
+      min_child_samples: 200
+      subsample: 0.8
+      colsample_bytree: 0.9
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      random_state: 8008
+      deterministic: true
+      force_col_wise: true
+      n_jobs: 1
+  lightgbm_extended:
+    model_type: lightgbm_lgbmregressor
+    feature_set: extended_book_flow
+    params:
+      n_estimators: 120
+      learning_rate: 0.05
+      num_leaves: 15
+      max_depth: 4
+      min_child_samples: 200
+      subsample: 0.8
+      colsample_bytree: 0.9
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      random_state: 8008
+      deterministic: true
+      force_col_wise: true
+      n_jobs: 1
+preprocessing:
+  fold_local_only: true
+  qi_direct_baseline:
+    scaler: StandardScaler fitted on each fold's training dates only
+    imputation: training median per fold
+  lightgbm:
+    imputation: native NaN handling where supported
+    missing_indicators: none
+metrics:
+  per_fold:
+    - Spearman IC
+    - Pearson IC
+    - MAE
+    - RMSE
+    - R2
+    - sign accuracy on non-zero future returns
+    - prediction mean/std
+    - target mean/std
+    - row count
+  primary_metric: validation-date Spearman IC
+  incremental_lift:
+    - IC(lightgbm_qi_ofi) - IC(qi_direct_baseline)
+    - IC(lightgbm_extended) - IC(qi_direct_baseline)
+    - IC(lightgbm_extended) - IC(lightgbm_qi_ofi)
+  inference_unit: validation date
+  statistical_summaries:
+    - fold-level t-stat for delta IC
+    - exact two-sided sign test for positive vs negative delta folds
+  calendar_periods:
+    - 2024 H2
+    - 2025 H1
+    - 2025 H2
+prediction_similarity:
+  rank_correlations:
+    - extended prediction vs qi_1
+    - qi_ofi prediction vs qi_1
+    - extended prediction vs qi_ofi prediction
+feature_importance:
+  lightgbm:
+    - gain importance by fold
+    - split importance by fold
+negative_control:
+  name: deterministic_permuted_train_target_walkforward
+  folds:
+    - 1
+    - 9
+    - 18
+  window: primary_expanding
+  model: lightgbm_qi_ofi
+  feature_set: qi_ofi
+  seed: 8008
+  expected: no persistent positive validation IC
+outputs:
+  directory: reports/phase9
+  tables:
+    - walkforward_metrics.csv
+    - incremental_lift.csv
+    - window_comparison.csv
+    - prediction_correlations.csv
+    - feature_importance_by_fold.csv
+    - negative_control.csv
+    - phase9_summary.json
+    - README.md
+  figures:
+    - walkforward_ic_by_validation_date.png
+    - delta_ic_vs_qi_by_date.png
+    - cumulative_average_delta_ic.png
+    - expanding_vs_rolling6_delta_comparison.png
+    - qi_ofi_incremental_contribution_by_date.png
+    - extended_beyond_qi_ofi_contribution_by_date.png
+    - prediction_qi_rank_correlation_by_fold.png
+    - feature_importance_stability.png
+determinism:
+  result_hash: phase9_results_hash over compact outputs excluding paths/timestamps
+  exclude_from_hash:
+    - runtime
+    - timestamps
+    - absolute local paths
+acceptance_criteria:
+  - exact Phase 8 commit is green under Python 3.11 CI
+  - Phase 9 plan is frozen before results
+  - only 2024-2025 development dates are accessed
+  - 18 expanding-window folds are evaluated
+  - every training date strictly precedes its validation date
+  - models and hyperparameters are frozen from Phase 8
+  - QI baseline is retained
+  - QI+OFI and Extended LightGBM models are compared against QI
+  - fold-level incremental lift is reported
+  - expanding and rolling diagnostics are reported
+  - weak and negative folds are retained
+  - no 2026 holdout is accessed
+  - negative control behaves sensibly
+  - deterministic result hash exists

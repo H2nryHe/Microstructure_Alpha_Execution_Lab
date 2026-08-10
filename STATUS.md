@@ -16,7 +16,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 6 - Label generation
 [x] Phase 7 - Baseline statistical research
 [x] Phase 8 - Predictive modeling
-[ ] Phase 9 - Walk-forward evaluation
+[x] Phase 9 - Walk-forward evaluation
 [ ] Phase 10 - Signal construction
 [ ] Phase 11 - Execution simulator
 [ ] Phase 12 - Portfolio / inventory accounting
@@ -2389,8 +2389,9 @@ Assumptions and limitations:
   `/tmp/microalpha-phase8-venv` with working LightGBM dependencies.
 - PyArrow emitted sandbox CPU-info warnings while reading parquet; they did not
   affect the Phase 8 gate.
-- The current Phase 8 artifact state has not yet been confirmed by GitHub
-  Actions under Python 3.11.
+- The accepted Phase 8 artifact state was later confirmed by GitHub Actions
+  under Python 3.11 on commit
+  `0cff6ce05980ac226ec47f0d602045a6dadf9993`.
 - 2025 is development validation because Phase 7 already examined 2025.
 - No 2026 holdout date was read.
 - No Phase 9 walk-forward evaluation, trading signal, execution threshold,
@@ -2398,7 +2399,217 @@ Assumptions and limitations:
 
 Next steps:
 
-- Do not begin Phase 9 until the user explicitly accepts Phase 8 and requests
+- Pre-Phase-9 GitHub Actions gate was cleared on exact Phase 8 commit
+  `0cff6ce05980ac226ec47f0d602045a6dadf9993`.
+- GitHub Actions `tests`: PASS, run `31351466257`.
+- GitHub Actions `research-smoke`: PASS, run `31351466255`.
+- Do not begin Phase 10 until the user explicitly accepts Phase 9 and requests
   continuation.
-- If the Phase 8 artifact commit is pushed, confirm GitHub Actions under Python
+
+## Phase 9 - Walk-Forward Temporal Robustness
+
+Status: PASS locally
+
+Pre-Phase-9 CI gate:
+
+- Exact accepted Phase 8 artifact commit:
+  `0cff6ce05980ac226ec47f0d602045a6dadf9993`.
+- Remote `main` resolved to the same SHA before Phase 9 work began.
+- GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- GitHub Actions `tests` workflow: PASS.
+  Run: `31351466257`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31351466257`.
+  Head SHA:
+  `0cff6ce05980ac226ec47f0d602045a6dadf9993`.
+- GitHub Actions `research-smoke` workflow: PASS.
+  Run: `31351466255`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31351466255`.
+  Head SHA:
+  `0cff6ce05980ac226ec47f0d602045a6dadf9993`.
+
+Frozen inputs and plan:
+
+- Phase 7 snapshot hash:
+  `0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a`.
+- Phase 7 result hash:
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- Phase 7 audit hash:
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- Phase 8 modeling plan hash:
+  `823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe`.
+- Phase 8 results hash:
+  `d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d`.
+- Phase 9 plan file: `data/manifests/phase9_walkforward_plan.yaml`.
+- Phase 9 plan hash:
+  `4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4`.
+- The Phase 9 plan was created before Phase 9 result generation.
+- Phase 9 result hash:
+  `0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee`.
+
+Fold definitions:
+
+- Eligible dates: the 24 first-of-month development dates from `2024-01-01`
+  through `2025-12-01`.
+- 2026 holdout access: `false`.
+- Primary expanding window: 18 folds.
+  Fold 1 trains `2024-01-01` through `2024-06-01`, validates
+  `2024-07-01`.
+  Final fold trains `2024-01-01` through `2025-11-01`, validates
+  `2025-12-01`.
+- Secondary rolling-6 diagnostic: 18 folds using the most recent 6 development
+  dates strictly before each validation date.
+- Every fold enforces `train_date < validation_date`.
+- Deterministic anchor rule: `row_index % 10 == 0`, offset `0`.
+
+Frozen models and features:
+
+- QI direct baseline: fold-local linear baseline on `qi_1` with training-only
+  median imputation and standardization.
+- `lightgbm_qi_ofi`: LightGBM on `qi_1`, `ofi_1s`.
+- `lightgbm_extended`: LightGBM on `qi_1`, `di_5`, `di_10`, `ofi_1s`,
+  `trade_imbalance_1s`, `spread_bps`, `realized_vol_5s`, `mom_1s`,
+  `book_update_count_1s`, `trade_count_1s`.
+- LightGBM parameters were frozen from Phase 8:
+  `n_estimators=120`, `learning_rate=0.05`, `num_leaves=15`, `max_depth=4`,
+  `min_child_samples=200`, `subsample=0.8`, `colsample_bytree=0.9`,
+  `reg_alpha=0.1`, `reg_lambda=1.0`, `random_state=8008`,
+  `deterministic=true`, `force_col_wise=true`, `n_jobs=1`.
+- No Phase 5 features, Phase 6 labels, model family, or hyperparameter was
+  changed in response to Phase 9 results.
+
+Primary expanding-window results:
+
+- QI IC across 18 validation dates:
+  mean `0.43185335860288265`, median `0.43736534099871366`, std
+  `0.04983684910402971`, min `0.33959757606157515`, max
+  `0.5083387678325725`, positive dates `18`, negative dates `0`.
+- QI+OFI incremental IC vs QI:
+  mean `0.006685448414447604`, median `0.006467151150689715`, std
+  `0.004062299982712839`, min `-0.0005637752138100693`, max
+  `0.014386104824419987`, positive folds `17`, negative folds `1`,
+  zero folds `0`, fold-level t-stat `6.982240498110832`, exact sign-test
+  p-value `0.00014495849609375`.
+- Extended incremental IC vs QI:
+  mean `0.010743286769766911`, median `0.010545310449919493`, std
+  `0.004812944658168465`, min `0.004449872594214754`, max
+  `0.021135799769847585`, positive folds `18`, negative folds `0`,
+  zero folds `0`, fold-level t-stat `9.470274187642238`, exact sign-test
+  p-value `7.62939453125e-06`.
+- Extended incremental IC beyond QI+OFI:
+  mean `0.004057838355319306`, median `0.0036061402317791036`, std
+  `0.0024405027534758297`, min `0.0005799588117063048`, max
+  `0.00984647371674685`, positive folds `18`, negative folds `0`,
+  zero folds `0`, fold-level t-stat `7.054263750987976`, exact sign-test
+  p-value `7.62939453125e-06`.
+
+Calendar-period stability:
+
+- 2024 H2 mean IC: QI `0.4510444425547074`, QI+OFI
+  `0.4603107909440598`, Extended `0.46349081328996616`.
+  Mean deltas: QI+OFI `0.009266348389352272`, Extended
+  `0.012446370735258708`; positive-lift fraction `1.0` for both.
+- 2025 H1 mean IC: QI `0.4234229895781818`, QI+OFI
+  `0.4283998168539891`, Extended `0.43163868200094013`.
+  Mean deltas: QI+OFI `0.004976827275807329`, Extended
+  `0.0082156924227584`; positive-lift fraction `1.0` for both.
+- 2025 H2 mean IC: QI `0.4210926436757589`, QI+OFI
+  `0.42690581325394206`, Extended `0.43266044082704247`.
+  Mean deltas: QI+OFI `0.005813169578183212`, Extended
+  `0.011567797151283624`; positive-lift fraction `0.8333333333333334`
+  for QI+OFI and `1.0` for Extended.
+
+Expanding vs rolling-6 diagnostic:
+
+- QI+OFI mean delta IC: expanding `0.006685448414447604`, rolling-6
+  `0.006713687269404491`.
+- Extended mean delta IC: expanding `0.010743286769766911`, rolling-6
+  `0.00815920765565316`.
+- Rolling-6 QI+OFI: positive folds `17`, negative folds `1`, t-stat
+  `6.878562775893029`, sign-test p-value `0.00014495849609375`.
+- Rolling-6 Extended: positive folds `18`, negative folds `0`, t-stat
+  `7.259212276168416`, sign-test p-value `7.62939453125e-06`.
+- Interpretation: QI+OFI lift is similar under rolling retraining, while
+  Extended lift remains positive but smaller under rolling-6 than expanding.
+
+Prediction similarity and model drift:
+
+- Expanding Extended prediction vs QI rank correlation:
+  mean `0.9537434074803967`, median `0.9545478244067476`, min
+  `0.9336693815928105`, max `0.973759202036313`.
+- Expanding QI+OFI prediction vs QI rank correlation:
+  mean `0.9651497484494895`, median `0.9649553029245865`, min
+  `0.954894841087616`, max `0.9778720768047318`.
+- Expanding Extended prediction vs QI+OFI prediction rank correlation:
+  mean `0.9855006994427798`, median `0.9866517006107787`, min
+  `0.973340910709284`, max `0.9926761492878023`.
+- Average expanding Extended LightGBM gain importance was led by `di_5`,
+  `qi_1`, `trade_count_1s`, and `ofi_1s`.
+- Correlated-feature importances are recorded for drift diagnostics only and
+  are not interpreted causally.
+
+Negative control:
+
+- Control: deterministic permuted train target using the same expanding
+  walk-forward machinery on folds `1`, `9`, and `18`, model
+  `lightgbm_qi_ofi`.
+- All three controls produced no rank signal with effectively constant
+  predictions.
+- Effective Spearman IC values: `0.0`, `0.0`, `0.0`.
+- Mean effective Spearman IC: `0.0`.
+
+Implementation and outputs:
+
+- Added `src/microalpha/research/phase9.py`.
+- Added `scripts/run_phase9_walkforward.py`.
+- Added `tests/unit/test_phase9_walkforward.py`.
+- Created compact tracked outputs under `reports/phase9/`:
+  `walkforward_metrics.csv`, `incremental_lift.csv`,
+  `window_comparison.csv`, `prediction_correlations.csv`,
+  `feature_importance_by_fold.csv`, `negative_control.csv`,
+  `phase9_summary.json`, `README.md`, and required figures.
+- No row-level prediction files were written.
+
+Exact local test results:
+
+- `MPLCONFIGDIR=/tmp/microalpha-mpl PYTHONPATH=src /tmp/microalpha-phase8-venv/bin/python scripts/run_phase9_walkforward.py --clean`:
+  PASS, result hash
+  `0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee`.
+- Phase 9 result hash recomputation:
+  PASS, matched stored hash
+  `0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee`.
+- `python -m json.tool reports/phase9/phase9_summary.json`: PASS.
+- `python -m pytest`: PASS, `135 passed, 49 warnings in 3.92s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+- Forbidden economic-word scan over Phase 9 artifacts and code: PASS, no
+  matches.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 9 LightGBM execution used the temporary environment at
+  `/tmp/microalpha-phase8-venv` with working LightGBM dependencies.
+- PyArrow emitted sandbox CPU-info warnings while reading parquet; these did
+  not affect the Phase 9 gate.
+- NumPy emitted warnings when negative-control predictions had no rank
+  variation; those rows are explicitly marked
+  `no_rank_signal_constant_prediction`.
+- The current Phase 9 artifact state has not yet been confirmed by GitHub
+  Actions under Python 3.11.
+- Phase 9 remains development-only temporal robustness analysis.
+- No 2026 holdout date was read.
+- No Phase 10 signal construction, execution simulation, cost analysis, or
+  trading rule was implemented.
+
+Next steps:
+
+- Do not begin Phase 10 until the user explicitly accepts Phase 9 and requests
+  continuation.
+- If the Phase 9 artifact commit is pushed, confirm GitHub Actions under Python
   3.11 for that exact commit before relying on CI portability.
