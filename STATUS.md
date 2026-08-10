@@ -2003,3 +2003,186 @@ Next steps:
   that commit.
 - Do not begin Phase 8 until Phase 7 is accepted and any required CI
   confirmation is green.
+
+## Phase 7 Suspicious-Result / Robustness Audit
+
+Status: PASS locally.
+
+Scope:
+
+- This was a narrowly scoped audit of the unusually strong Phase 7 baseline
+  results.
+- Original Phase 7 baseline outputs were preserved and not overwritten:
+  `primary_ic.csv`, `bucket_results.csv`, `nonoverlap_ic.csv`,
+  `phase7_summary.json`, existing figures, the Phase 7 research plan, and the
+  Phase 7 result hash remain unchanged.
+- Fresh recomputation confirmed the original Phase 7 result hash remains:
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- No 2026 holdout data was accessed.
+- No Phase 8 work, model training, optimization, trading rule, backtest, or
+  execution simulation was performed.
+
+Audit implementation and outputs:
+
+- Added `scripts/run_phase7_audit.py`.
+- Created audit outputs under `reports/phase7/audit/` only:
+  - `audit_summary.json`.
+  - `changed_state_ic.csv`.
+  - `unique_state_ic.csv`.
+  - `manual_lineage_audit.csv`.
+  - `independent_label_check.csv`.
+  - `independent_bucket_check.csv`.
+  - `feature_redundancy.csv`.
+  - `return_discreteness.csv`.
+  - `spread_diagnostics.csv`.
+  - `README.md`.
+- Audit output size: approximately `352K`.
+- Audit result hash:
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- Fresh recomputation of the audit hash matched the stored
+  `audit_summary.json` hash.
+
+Non-overlap reporting clarification:
+
+- The prior Phase 7 summary value was confirmed to be the aggregate-row
+  diagnostic over `date == ALL` rows.
+- `aggregate_pair_mean_abs_difference`:
+  `0.0009773737819900022`.
+- `daily_pair_mean_abs_difference` across 24 x 30 daily comparisons:
+  `0.003750858043641231`.
+- Median daily absolute difference:
+  `0.0015011638109999892`.
+- P95 daily absolute difference:
+  `0.01842234572084997`.
+- Maximum daily absolute difference:
+  `0.03277160954699998`.
+
+Changed-state and unique-state robustness:
+
+- Changed-state definition used deterministic consecutive BBO-state changes:
+  `best_bid`, `bid_sz_1`, `best_ask`, and `ask_sz_1`.
+- Top-10 book levels are available in the research table, but the audit used
+  BBO identity to test the minimum explicitly required observable state.
+- Changed-state retained median fraction of fixed-clock rows:
+  `0.7462537598881`.
+- Changed-state state-signal tests with positive mean IC:
+  `20 / 20`.
+- Minimum changed-state mean IC across state-signal/horizon summaries:
+  `0.2164018712435578`.
+- Unique consecutive BBO-state run collapse retained median fraction:
+  `0.7462549173146528`.
+- Unique-state state-signal tests with positive mean IC:
+  `20 / 20`.
+- Minimum unique-state mean IC across state-signal/horizon summaries:
+  `0.21640109056283144`.
+- A material magnitude decline would not have failed the audit; the observed
+  changed/unique-state diagnostics remained directionally consistent.
+
+Manual timestamp / lineage and independent labels:
+
+- Manual lineage audit rows: `20`, selected deterministically across 2024 early,
+  2024 late, 2025 early, and 2025 late, spanning very negative, moderately
+  negative, near-zero, moderately positive, and very positive `qi_1`.
+- All selected rows satisfied:
+  - feature source observation time <= feature cutoff `T`;
+  - target time > `T`;
+  - actual label time >= target time;
+  - actual label delay <= configured 100ms tolerance;
+  - future mid came from a later/future state, not the feature state.
+- Independent label recomputation rows: `80`, covering `100ms`, `1s`, `5s`,
+  and `30s` horizons for the selected observations.
+- Independent label recomputation failures: `0`.
+- Maximum absolute label difference:
+  `9.573505183047004e-17` with tolerance `1e-12`.
+- The independent label check directly located future mids from the research
+  table and did not call the production label-generation helper.
+
+Independent bucket and aggregation audit:
+
+- Independent `qi_1` / `1s` decile reconstruction was run for:
+  `2024-01-01`, `2024-06-01`, `2024-12-01`, `2025-06-01`, and `2025-12-01`.
+- Bucket failures: `0`.
+- Maximum independent-vs-production mean return absolute difference:
+  `3.581255300991182e-17`.
+- Maximum independent-vs-production mean future-move bps absolute difference:
+  `4.642120021713936e-13`.
+- Bucket numbering was verified as low feature to high feature.
+- Labels were not used for bucket assignment.
+- No future-return sorting was used in the independent reconstruction.
+- Equal-day aggregation was checked over 300 production aggregate bucket rows.
+- Maximum equal-day mean-return aggregation difference:
+  `5.083417410969848e-16`.
+- Maximum equal-day mean-move aggregation difference:
+  `4.958256027975949e-12`.
+
+Feature redundancy and incremental diagnostics:
+
+- The mathematical relationship was documented:
+  `microprice - mid = spread * qi_1 / 2`, therefore
+  `microprice_deviation_bps = spread_bps * qi_1 / 2`.
+- Mean daily rank correlation between `qi_1` and
+  `microprice_deviation_bps` was `0.999265480102078`.
+- `qi_1` and `microprice_deviation_bps` should be treated as highly redundant
+  transformations under the observed spread regime, not independent alpha
+  discoveries.
+- `feature_redundancy.csv` also records daily feature-feature correlations and
+  descriptive rank-residual IC diagnostics for `di_5`, `di_10`, and `ofi_1s`
+  residualized against `qi_1`.
+
+Return discreteness, spread, and temporal controls:
+
+- `return_discreteness.csv` reports per-date/horizon zero-return fraction,
+  unique forward-return count, unchanged-mid fraction, and by-`qi_1`-decile
+  zero/up/down fractions.
+- `spread_diagnostics.csv` reports per-date spread summaries and `qi_1` IC
+  separately for minimum-spread and wider-spread states.
+- The deterministic temporal negative control was chosen before running:
+  `qi_1` lagged by 5 minutes on the 100ms fixed grid.
+- Temporal control mean Spearman IC:
+  `0.004108648248610643`, much weaker than the primary aligned `qi_1` / `1s`
+  mean IC of about `0.42594`.
+- Temporal control t-stat:
+  `4.207552744782699`, raw p-value `0.00033565848441401787`, with 21 positive
+  and 3 negative days. This indicates residual temporal autocorrelation, but a
+  large attenuation versus the aligned signal.
+
+Exact local verification:
+
+- `PYTHONPATH=src python scripts/run_phase7_audit.py --clean`:
+  PASS, audit hash
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- Phase 7 baseline hash recomputation:
+  PASS, unchanged at
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- Audit hash recomputation:
+  PASS, matched stored hash
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- `python -m pytest`: PASS, `119 passed, 1 warning in 2.58s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+Assumptions and limitations:
+
+- Local execution used Python 3.10.9 and emitted the existing pandas warning
+  that installed `bottleneck` is `1.3.5` while pandas asks for `>=1.3.6`.
+- PyArrow emitted sandbox CPU-info warnings while reading parquet; these did not
+  affect the audit gate.
+- The changed-state and unique-state diagnostics used consecutive BBO identity.
+  They intentionally did not use future labels.
+- The audit did not reinterpret Phase 7 as profitability. It only tested
+  timestamp lineage, label construction, repeated-state weighting, bucket
+  mechanics, feature redundancy, discreteness, spread mechanics, and temporal
+  alignment sensitivity.
+- Python 3.11 CI has not yet been run for the current audit artifact state.
+
+Next steps:
+
+- Commit and push the audit implementation, audit outputs, and status update
+  when Git operations are available.
+- Confirm GitHub Actions `tests` and `research-smoke` pass under Python 3.11 on
+  that commit.
+- Do not begin Phase 8 until the audit is accepted and any required CI
+  confirmation is green.

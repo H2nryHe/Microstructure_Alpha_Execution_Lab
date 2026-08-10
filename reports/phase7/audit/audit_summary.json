@@ -1,0 +1,95 @@
+{
+  "acceptance_notes": [
+    "Original Phase 7 primary results were not overwritten.",
+    "Changed-state and unique-state diagnostics are robustness checks, not replacement primary results.",
+    "Independent label recomputation does not call the production label helper.",
+    "Independent bucket reconstruction does not use the production bucket helper.",
+    "No Phase 8, model training, or backtest was performed."
+  ],
+  "audit_result_hash": "b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1",
+  "audit_status": "PASS",
+  "changed_state": {
+    "directionally_consistent_tests": 20,
+    "median_retained_fraction": 0.7462537598881,
+    "minimum_changed_state_mean_ic": 0.2164018712435578,
+    "summary_rows": 20
+  },
+  "feature_redundancy": {
+    "qi_1_microprice_rank_spearman_mean": 0.999265480102078,
+    "relationship": "microprice - mid = spread * qi_1 / 2, so microprice_deviation_bps = spread_bps * qi_1 / 2."
+  },
+  "holdout_accessed": false,
+  "independent_bucket_check": {
+    "dates": [
+      "2024-01-01",
+      "2024-06-01",
+      "2024-12-01",
+      "2025-06-01",
+      "2025-12-01"
+    ],
+    "equal_day_aggregation": {
+      "checked_rows": 300,
+      "max_mean_move_abs_diff": 4.958256027975949e-12,
+      "max_mean_return_abs_diff": 5.083417410969848e-16,
+      "method": "ALL_EQUAL_DAY rows equal the arithmetic mean of daily bucket means."
+    },
+    "equal_day_aggregation_checked_against_daily_bucket_rows": true,
+    "failures": 0,
+    "labels_used_for_bucket_assignment": false,
+    "max_mean_move_abs_diff": 4.642120021713936e-13,
+    "max_mean_return_abs_diff": 3.581255300991182e-17,
+    "rows": 50
+  },
+  "independent_label_check": {
+    "failures": 0,
+    "max_absolute_difference": 9.573505183047004e-17,
+    "rows": 80,
+    "tolerance": 1e-12
+  },
+  "manual_lineage": {
+    "actual_label_time_gte_target_all": true,
+    "feature_source_leq_T_all": true,
+    "label_delay_within_tolerance_all": true,
+    "mid_future_from_future_state_all": true,
+    "rows": 20,
+    "target_time_gt_T_all": true
+  },
+  "nonoverlap_diagnostics": {
+    "aggregate_pair_count": 30,
+    "aggregate_pair_mean_abs_difference": 0.0009773737819900022,
+    "daily_pair_count": 720,
+    "daily_pair_mean_abs_difference": 0.003750858043641231,
+    "max_daily_absolute_difference": 0.03277160954699998,
+    "median_daily_absolute_difference": 0.0015011638109999892,
+    "p95_daily_absolute_difference": 0.01842234572084997,
+    "previous_phase7_summary_value_interpretation": "The Phase 7 summary value equals aggregate_pair_mean_abs_difference computed from the 30 date == ALL rows."
+  },
+  "phase": "Phase 7 Suspicious-Result / Robustness Audit",
+  "phase7_research_plan_hash": "417f1b38895bf1cc3735cb72ce08249a2cc32ba7cfc936eec5a1875dea0e14da",
+  "phase7_results_preserved": true,
+  "return_discreteness_rows": 1320,
+  "snapshot_hash": "0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a",
+  "snapshot_verification": {
+    "computed_snapshot_hash": "0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a",
+    "first_date": "2024-01-01",
+    "included_date_count": 24,
+    "last_date": "2025-12-01",
+    "snapshot_hash": "0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a"
+  },
+  "spread_diagnostic_rows": 240,
+  "temporal_negative_control": {
+    "control": "qi_1_lagged_5_minutes",
+    "mean_spearman_ic": 0.004108648248610643,
+    "median_spearman_ic": 0.0055380937360868,
+    "negative_days": 3,
+    "positive_days": 21,
+    "raw_p_value": 0.00033565848441401787,
+    "t_stat": 4.207552744782699
+  },
+  "unique_state": {
+    "directionally_consistent_tests": 20,
+    "median_retained_fraction": 0.7462549173146528,
+    "minimum_unique_state_mean_ic": 0.21640109056283144,
+    "summary_rows": 20
+  }
+}
