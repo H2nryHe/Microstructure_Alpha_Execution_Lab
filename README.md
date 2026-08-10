@@ -14,9 +14,8 @@ microstructure predictability survives the mechanics required to trade it.
 
 ## Key Findings
 
-- Queue imbalance showed strong, stable 1s predictive rank signal: 0.43 mean
-  daily Spearman IC, with 24/24 development dates positive across ~20.7M
-  observations.
+- Queue imbalance showed strong, stable 1s predictive rank signal: 0.43 mean daily
+  Spearman IC, with 24/24 development dates positive across ~20.7M observations.
 - OFI added incremental information beyond QI; LightGBM improved predictive IC
   modestly and consistently, including +0.0107 Extended delta across 18
   expanding folds.
@@ -148,10 +147,11 @@ microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml
 Final report artifacts:
 
 - [Final research report](reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md)
-- [Resume bullets](reports/final/RESUME_BULLETS.md)
-- [Interview stories](reports/final/INTERVIEW_STORIES.md)
 - [Final metrics registry](reports/final/FINAL_METRICS.json)
 - [Final artifact index](reports/final/FINAL_ARTIFACT_INDEX.md)
+
+Private career-material drafts are intentionally excluded from the public
+repository and from Phase 15 validation/hash scope.
 
 Accepted Phase 14 commit:
 `7290d86afa18b67fdf0c46b2eeea22253dab7bc1`. GitHub Actions on that commit:

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from microalpha.research.phase15 import (
@@ -54,7 +52,7 @@ def test_phase15_metric_claims_are_traceable() -> None:
         }.issubset(metric)
     errors = metric_claim_errors(
         metrics,
-        [README, FINAL_REPORT, Path("reports/final/RESUME_BULLETS.md")],
+        [README, FINAL_REPORT],
     )
     assert errors == []
 

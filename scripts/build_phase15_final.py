@@ -230,7 +230,7 @@ def collect_metrics() -> list[dict[str, Any]]:
             "Phase 7",
             "reports/phase7/primary_ic.csv",
             "Mean daily Spearman IC for QI versus 1s forward return.",
-            ["0.426 mean daily Spearman IC", "0.43 mean daily Spearman IC"],
+            ["0.426 mean daily Spearman IC"],
         ),
         metric(
             "phase7_qi_1s_positive_days",
@@ -776,6 +776,8 @@ def write_artifact_index() -> None:
             "The final report hash covers only the canonical final research report.",
             "The Phase 15 results hash covers README, final markdown documents,",
             "`FINAL_METRICS.json`, and SHA-256 identities of the curated figure files.",
+            "Private resume and interview-preparation materials are excluded from",
+            "repository validation and public hash scope.",
             "Runtime, timestamps, and absolute paths are excluded.",
             "",
         ]

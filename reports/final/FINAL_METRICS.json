@@ -387,8 +387,7 @@
   },
   {
     "claim_strings": [
-      "0.426 mean daily Spearman IC",
-      "0.43 mean daily Spearman IC"
+      "0.426 mean daily Spearman IC"
     ],
     "description": "Mean daily Spearman IC for QI versus 1s forward return.",
     "metric_name": "phase7_qi_1s_mean_daily_spearman_ic",

@@ -53,8 +53,6 @@ reports/tables/*
 reports/final/*
 !reports/final/.gitkeep
 !reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md
-!reports/final/RESUME_BULLETS.md
-!reports/final/INTERVIEW_STORIES.md
 !reports/final/FINAL_METRICS.json
 !reports/final/FINAL_ARTIFACT_INDEX.md
 !reports/final/figures/

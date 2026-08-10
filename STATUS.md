@@ -3784,10 +3784,6 @@ Final artifacts:
 
 - Canonical report:
   `reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md`.
-- Resume bullets:
-  `reports/final/RESUME_BULLETS.md`.
-- Interview story bank:
-  `reports/final/INTERVIEW_STORIES.md`.
 - Final metrics registry:
   `reports/final/FINAL_METRICS.json`.
 - Final artifact index:
@@ -3809,7 +3805,7 @@ Phase 15 hashes:
 - `phase15_final_report_hash`:
   `b49dd9edf51a0b1d2fb4564c89f87497446819689fc9153aef1a428aacdb2740`.
 - `phase15_results_hash`:
-  `a8049081a61e6122978051149b0cf55e96a012f9060556a6224abe5299919cdc`.
+  `963e6f673f1f5c377c97c1dda95e04ff6586aba64fbae364705dd30564e1ef9c`.
 - Hash scope:
   final report hash covers the canonical final report; results hash covers
   README, final markdown artifacts, `FINAL_METRICS.json`, and curated figure
@@ -3830,7 +3826,7 @@ Metrics registry status:
   claims.
 - Each registry entry includes `metric_name`, `value`, `unit`, `source_phase`,
   `source_file`, `description`, and claim strings where the value appears in
-  README, final report, or resume bullets.
+  public README or final-report artifacts.
 - Headline metrics are validated by
   `tests/unit/test_phase15_final_report.py`.
 
@@ -3849,19 +3845,15 @@ Final report synthesis:
 - It states that 2026 remains an untouched temporal holdout and does not imply
   final confirmatory validation has occurred.
 
-Resume and interview artifacts:
+Private career artifacts:
 
-- `reports/final/RESUME_BULLETS.md` contains three variants:
-  Quant Research, Quant Developer / Research Tooling, and Market Data /
-  Execution Research.
-- Each variant has two primary bullets and one optional third bullet.
-- The bullets use verified numbers only and avoid overclaiming economic
-  results.
-- `reports/final/INTERVIEW_STORIES.md` contains ten structured stories,
-  including exchange timestamp vs observation timestamp, event-level OFI,
-  HEAD/GET source verification, YAML `null` CI failure, pre-registered dates,
-  suspicious-result audit, modest LightGBM value, QI vs Extended economics,
-  passive limit-order limitations, and the sealed 2026 holdout.
+- Resume bullets and interview-preparation materials are intentionally private
+  career artifacts and excluded from repository validation and public hash
+  scope.
+- `reports/final/RESUME_BULLETS.md` and
+  `reports/final/INTERVIEW_STORIES.md` remain in `.gitignore`.
+- The public Phase 15 build and tests must pass when neither private file
+  exists in `reports/final`.
 
 No-2026 and language guardrails:
 
@@ -3879,8 +3871,8 @@ Exact local verification:
   PASS, generated final metrics, curated figures, final artifact index, and
   deterministic hashes.
 - `python -m pytest tests/unit/test_phase15_final_report.py`:
-  PASS, `6 passed in 0.03s`.
-- `python -m pytest`: PASS, `210 passed, 49 warnings in 4.06s`.
+  PASS, `6 passed in 0.02s`.
+- `python -m pytest`: PASS, `210 passed, 49 warnings in 4.03s`.
 - `ruff check src tests scripts`: PASS, `All checks passed!`.
 - `python -m compileall -q src scripts tests`: PASS.
 - `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
