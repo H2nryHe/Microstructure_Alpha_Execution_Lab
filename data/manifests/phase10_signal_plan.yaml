@@ -1,0 +1,217 @@
+plan_version: phase10_signal_plan_v1
+phase: Phase 10 - Signal Construction
+frozen_inputs:
+  phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase8_modeling_plan_hash: 823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe
+  phase8_results_hash: d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d
+  phase9_walkforward_plan_hash: 4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4
+  phase9_results_hash: 0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee
+  phase9_artifact_commit: 840465559903abf25857bf24a899202c2bbc9f47
+  dataset_role: development
+  holdout_policy: 2026 holdout dates must not be read in Phase 10
+objective: >
+  Convert frozen Phase 9 expanding-window out-of-sample predictions into
+  deterministic desired directional state signals while keeping signal
+  generation separate from label-joined diagnostics.
+eligible_dates:
+  - '2024-07-01'
+  - '2024-08-01'
+  - '2024-09-01'
+  - '2024-10-01'
+  - '2024-11-01'
+  - '2024-12-01'
+  - '2025-01-01'
+  - '2025-02-01'
+  - '2025-03-01'
+  - '2025-04-01'
+  - '2025-05-01'
+  - '2025-06-01'
+  - '2025-07-01'
+  - '2025-08-01'
+  - '2025-09-01'
+  - '2025-10-01'
+  - '2025-11-01'
+  - '2025-12-01'
+prediction_source:
+  source: regenerated Phase 9 expanding-window out-of-sample predictions
+  reconciliation: compare regenerated Spearman IC, row count, prediction mean, and prediction std to reports/phase9/walkforward_metrics.csv
+  tolerance:
+    spearman_ic_abs: 1.0e-12
+    prediction_mean_abs: 1.0e-12
+    prediction_std_abs: 1.0e-12
+    row_count: exact
+anchor_rule:
+  source_grid: 100ms research grid
+  primary_sample: deterministic non-overlapping 1s anchors
+  row_rule: row_index % 10 == 0
+  offset: 0
+model_candidates:
+  qi_direct_baseline:
+    feature_set: qi_only
+    role: structural benchmark
+  lightgbm_qi_ofi:
+    feature_set: qi_ofi
+    role: compact comparator
+  lightgbm_extended:
+    feature_set: extended_book_flow
+    role: primary predictive model
+feature_sets:
+  qi_only:
+    - qi_1
+  qi_ofi:
+    - qi_1
+    - ofi_1s
+  extended_book_flow:
+    - qi_1
+    - di_5
+    - di_10
+    - ofi_1s
+    - trade_imbalance_1s
+    - spread_bps
+    - realized_vol_5s
+    - mom_1s
+    - book_update_count_1s
+    - trade_count_1s
+lightgbm_params:
+  n_estimators: 120
+  learning_rate: 0.05
+  num_leaves: 15
+  max_depth: 4
+  min_child_samples: 200
+  subsample: 0.8
+  colsample_bytree: 0.9
+  reg_alpha: 0.1
+  reg_lambda: 1.0
+  random_state: 8008
+  deterministic: true
+  force_col_wise: true
+  n_jobs: 1
+primary_signal_rule:
+  name: train_q10_q90
+  threshold_source: fold training predictions only
+  short_threshold: 10th percentile
+  long_threshold: 90th percentile
+  short_boundary: prediction <= short_threshold
+  long_boundary: prediction >= long_threshold
+  flat_rule: otherwise
+  development_note: >
+    The 10th/90th percentile rule is development-informed because Phase 7
+    studied deciles. It is frozen before Phase 10 signal evaluation and is not
+    optimized against signal outcomes.
+secondary_sensitivity_rules:
+  train_q05_q95:
+    threshold_source: fold training predictions only
+    short_boundary: prediction <= q05
+    long_boundary: prediction >= q95
+    diagnostic_only: true
+  prediction_sign:
+    short_boundary: prediction < 0
+    flat_boundary: prediction == 0
+    long_boundary: prediction > 0
+    diagnostic_only: true
+probability_signal_utility:
+  rule: LONG if P(up) >= long_probability_threshold; SHORT if P(up) <= short_probability_threshold; FLAT otherwise
+  phase10_usage: utility only; no new classification experiment
+risk_validity_rules:
+  - non-finite prediction becomes FLAT
+  - invalid or stale observation becomes FLAT
+  - final signal limited to {-1, 0, 1}
+  - no cross-development-day signal carry
+  - each research day begins FLAT
+  - each research day terminates FLAT for downstream execution
+signal_generation_inputs_allowed:
+  - timestamp
+  - identifiers
+  - prediction
+  - frozen thresholds
+  - current validity fields
+signal_generation_forbidden_columns:
+  - ret_fwd_*
+  - future_mid_move_*
+  - future_move_in_spreads_*
+  - direction_*
+  - next_mid_change_direction
+  - time_to_next_mid_change_ms
+  - target_time_*
+  - actual_label_time_*
+  - label_delay_ms_*
+lineage_fields:
+  - date
+  - signal_timestamp
+  - observation_time
+  - research_row_id
+  - fold_id
+  - training_start_date
+  - training_end_date
+  - validation_date
+  - model
+  - feature_set
+  - model_config_hash
+  - phase9_results_hash
+  - phase10_signal_plan_hash
+  - source_research_snapshot_hash
+  - prediction
+  - short_threshold
+  - long_threshold
+  - raw_signal
+  - final_signal
+  - signal_reason
+row_level_artifact_policy:
+  root: /tmp/microalpha-phase10/signals
+  format: parquet
+  tracked_outputs: compact path-independent manifests, summaries, and audit samples only
+evaluation_policy:
+  signal_generation_label_free: true
+  labels_joined_after_signal_artifact_freeze: true
+  diagnostic_label: ret_fwd_1s
+  diagnostic_name: conditional future-mid signal effect
+outputs:
+  directory: reports/phase10
+  tables:
+    - signal_summary.csv
+    - signal_by_fold.csv
+    - signal_transitions.csv
+    - signal_persistence.csv
+    - thresholds_by_fold.csv
+    - model_signal_disagreement.csv
+    - signal_future_mid_diagnostics.csv
+    - signal_manifest.json
+    - signal_trace_sample.csv
+    - prediction_reconciliation.csv
+    - phase10_summary.json
+    - README.md
+  figures:
+    - active_signal_coverage_by_date_model.png
+    - long_short_future_mid_separation_by_date.png
+    - mean_signed_future_mid_effect_by_date.png
+    - signal_transition_rate_by_date.png
+    - long_short_run_length_distribution.png
+    - threshold_drift_q10_q90.png
+    - qi_vs_extended_signal_disagreement_rate.png
+    - qi_ofi_vs_extended_signal_disagreement_rate.png
+    - conditional_future_mid_return_by_signal.png
+    - primary_vs_secondary_signal_sparsity.png
+hashes:
+  signal_artifact_hash: canonical path-independent signal manifest hash
+  results_hash: compact Phase 10 output hash excluding runtime, timestamps, and absolute local paths
+acceptance_criteria:
+  - exact Phase 9 commit is green under Python 3.11 CI
+  - Phase 10 plan is frozen before signal evaluation
+  - 2026 holdout is not accessed
+  - frozen Phase 9 model specifications are used
+  - signal generation is separated from training and label-joined diagnostics
+  - threshold estimation uses training predictions only
+  - primary 10/90 rule is fixed and not optimized
+  - signal generation cannot access future labels
+  - label-mutation isolation test passes
+  - every signal has complete lineage
+  - invalid and non-finite states become FLAT deterministically
+  - signal transitions are tested
+  - row-level signal artifacts have deterministic hashes
+  - QI, QI+OFI, and Extended are compared under identical signal rules
+  - no fill assumption is made
+  - no transaction cost is applied
+  - no latency is modeled
+  - no PnL or backtest is performed

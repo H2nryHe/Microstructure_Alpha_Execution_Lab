@@ -1,0 +1,101 @@
+{
+  "active_coverage_mean_by_model": {
+    "lightgbm_extended": 0.17317768411090395,
+    "lightgbm_qi_ofi": 0.20213113613652564,
+    "qi_direct_baseline": 0.21705725829589728
+  },
+  "disagreement_mean_fraction": {
+    "lightgbm_qi_ofi_vs_lightgbm_extended": 0.06632017530842774,
+    "qi_direct_baseline_vs_lightgbm_extended": 0.1330478193097956
+  },
+  "eligible_dates": [
+    "2024-07-01",
+    "2024-08-01",
+    "2024-09-01",
+    "2024-10-01",
+    "2024-11-01",
+    "2024-12-01",
+    "2025-01-01",
+    "2025-02-01",
+    "2025-03-01",
+    "2025-04-01",
+    "2025-05-01",
+    "2025-06-01",
+    "2025-07-01",
+    "2025-08-01",
+    "2025-09-01",
+    "2025-10-01",
+    "2025-11-01",
+    "2025-12-01"
+  ],
+  "holdout_accessed": false,
+  "limitations": [
+    "Phase 10 used only 2024-2025 development validation dates.",
+    "2026 holdout was not accessed.",
+    "Signals are desired directional states, not orders or fills.",
+    "No transaction cost, latency, execution, or economic outcome model was applied."
+  ],
+  "long_short_separation_mean_by_model": {
+    "lightgbm_extended": 7.558446367242457e-05,
+    "lightgbm_qi_ofi": 6.587916126813072e-05,
+    "qi_direct_baseline": 6.312122164443975e-05
+  },
+  "persistence_average_run_anchors": {
+    "('lightgbm_extended', 'LONG')": 1.5488590518222731,
+    "('lightgbm_extended', 'SHORT')": 1.559732257926976,
+    "('lightgbm_qi_ofi', 'LONG')": 1.5967943501789448,
+    "('lightgbm_qi_ofi', 'SHORT')": 1.6359806214472254,
+    "('qi_direct_baseline', 'LONG')": 2.4828190838699595,
+    "('qi_direct_baseline', 'SHORT')": 2.624652298438945
+  },
+  "phase": "Phase 10 - Signal Construction",
+  "phase10_results_hash": "604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71",
+  "phase10_signal_artifact_hash": "68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6",
+  "phase10_signal_plan_hash": "0ae8590cef7e7ea313c80889c74cc7db592a948f119e3982a2f2269df0c2a2bb",
+  "phase10_status": "PASS",
+  "phase7_audit_hash": "b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1",
+  "phase7_results_hash": "b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04",
+  "phase7_snapshot_hash": "0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a",
+  "phase8_modeling_plan_hash": "823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe",
+  "phase8_results_hash": "d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d",
+  "phase9_artifact_commit": "840465559903abf25857bf24a899202c2bbc9f47",
+  "phase9_ci": {
+    "research_smoke": {
+      "conclusion": "success",
+      "run_id": 31353512319
+    },
+    "tests": {
+      "conclusion": "success",
+      "run_id": 31353512353
+    }
+  },
+  "phase9_results_hash": "0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee",
+  "phase9_walkforward_plan_hash": "4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4",
+  "prediction_reconciliation_status": "PASS",
+  "primary_rule": {
+    "long_boundary": "prediction >= training q90",
+    "name": "train_q10_q90",
+    "short_boundary": "prediction <= training q10"
+  },
+  "row_level_signal_artifact_count": 54,
+  "signed_future_mid_effect_mean_by_model": {
+    "lightgbm_extended": 3.779223183621228e-05,
+    "lightgbm_qi_ofi": 3.293958063406536e-05,
+    "qi_direct_baseline": 3.156061082221988e-05
+  },
+  "threshold_q10_mean_by_model": {
+    "lightgbm_extended": -2.2823068899197757e-05,
+    "lightgbm_qi_ofi": -2.3438808013423187e-05,
+    "qi_direct_baseline": -2.2818582753209408e-05
+  },
+  "threshold_q90_mean_by_model": {
+    "lightgbm_extended": 2.2985208346034528e-05,
+    "lightgbm_qi_ofi": 2.357973672056846e-05,
+    "qi_direct_baseline": 2.2888278677689708e-05
+  },
+  "transition_rate_mean_by_model": {
+    "lightgbm_extended": 0.20987958358443803,
+    "lightgbm_qi_ofi": 0.2449082571068742,
+    "qi_direct_baseline": 0.1770324626465384
+  }
+}

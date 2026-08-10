@@ -17,7 +17,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 7 - Baseline statistical research
 [x] Phase 8 - Predictive modeling
 [x] Phase 9 - Walk-forward evaluation
-[ ] Phase 10 - Signal construction
+[x] Phase 10 - Signal construction
 [ ] Phase 11 - Execution simulator
 [ ] Phase 12 - Portfolio / inventory accounting
 [ ] Phase 13 - Cost and latency analysis
@@ -2600,8 +2600,9 @@ Assumptions and limitations:
 - NumPy emitted warnings when negative-control predictions had no rank
   variation; those rows are explicitly marked
   `no_rank_signal_constant_prediction`.
-- The current Phase 9 artifact state has not yet been confirmed by GitHub
-  Actions under Python 3.11.
+- The accepted Phase 9 artifact state was later confirmed by GitHub Actions
+  under Python 3.11 on commit
+  `840465559903abf25857bf24a899202c2bbc9f47`.
 - Phase 9 remains development-only temporal robustness analysis.
 - No 2026 holdout date was read.
 - No Phase 10 signal construction, execution simulation, cost analysis, or
@@ -2609,7 +2610,227 @@ Assumptions and limitations:
 
 Next steps:
 
-- Do not begin Phase 10 until the user explicitly accepts Phase 9 and requests
+- Pre-Phase-10 GitHub Actions gate was cleared on exact Phase 9 commit
+  `840465559903abf25857bf24a899202c2bbc9f47`.
+- GitHub Actions `tests`: PASS, run `31353512353`.
+- GitHub Actions `research-smoke`: PASS, run `31353512319`.
+- Do not begin Phase 11 until the user explicitly accepts Phase 10 and requests
   continuation.
-- If the Phase 9 artifact commit is pushed, confirm GitHub Actions under Python
-  3.11 for that exact commit before relying on CI portability.
+
+## Phase 10 - Signal Construction
+
+Status: PASS locally
+
+Pre-Phase-10 CI gate:
+
+- Exact accepted Phase 9 artifact commit:
+  `840465559903abf25857bf24a899202c2bbc9f47`.
+- Remote `main` resolved to the same SHA before Phase 10 work began.
+- GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- GitHub Actions `tests` workflow: PASS.
+  Run: `31353512353`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31353512353`.
+  Head SHA:
+  `840465559903abf25857bf24a899202c2bbc9f47`.
+- GitHub Actions `research-smoke` workflow: PASS.
+  Run: `31353512319`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31353512319`.
+  Head SHA:
+  `840465559903abf25857bf24a899202c2bbc9f47`.
+
+Frozen inputs and plan:
+
+- Phase 7 snapshot hash:
+  `0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a`.
+- Phase 7 result hash:
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- Phase 7 audit hash:
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- Phase 8 modeling plan hash:
+  `823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe`.
+- Phase 8 result hash:
+  `d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d`.
+- Phase 9 walk-forward plan hash:
+  `4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4`.
+- Phase 9 result hash:
+  `0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee`.
+- Phase 10 signal plan file: `data/manifests/phase10_signal_plan.yaml`.
+- Phase 10 signal plan hash:
+  `0ae8590cef7e7ea313c80889c74cc7db592a948f119e3982a2f2269df0c2a2bb`.
+- The Phase 10 signal plan was created before signal evaluation.
+- Phase 10 signal artifact hash:
+  `68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6`.
+- Phase 10 results hash:
+  `604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71`.
+
+Signal rules:
+
+- Eligible validation dates: `2024-07-01` through `2025-12-01`, matching the
+  18 Phase 9 expanding-window validation folds.
+- 2026 holdout access: `false`.
+- Prediction source: regenerated Phase 9 expanding-window out-of-sample
+  predictions.
+- Model candidates: `qi_direct_baseline`, `lightgbm_qi_ofi`, and
+  `lightgbm_extended`.
+- Primary rule: `train_q10_q90`.
+  Thresholds are estimated from each fold's training predictions only.
+- Boundary behavior:
+  LONG if `prediction >= training q90`;
+  SHORT if `prediction <= training q10`;
+  FLAT otherwise.
+- Secondary diagnostics: `train_q05_q95` and `prediction_sign`.
+- Non-finite predictions, invalid observations, stale observations, first row
+  of each day, and last row of each day become FLAT deterministically.
+- Generated signal values are limited to `-1`, `0`, and `1`.
+
+Signal artifacts:
+
+- Row-level signals were written outside Git under
+  `/tmp/microalpha-phase10/signals`.
+- Row-level signal artifact count: `54` Parquet files
+  (`18` dates x `3` models).
+- Row-level signal artifact size: approximately `133M`.
+- Compact path-independent tracked manifest:
+  `reports/phase10/signal_manifest.json`.
+- Compact tracked outputs under `reports/phase10/`:
+  `signal_summary.csv`, `signal_by_fold.csv`, `signal_transitions.csv`,
+  `signal_persistence.csv`, `thresholds_by_fold.csv`,
+  `model_signal_disagreement.csv`, `signal_future_mid_diagnostics.csv`,
+  `signal_manifest.json`, `signal_trace_sample.csv`,
+  `prediction_reconciliation.csv`, `phase10_summary.json`, `README.md`, and
+  required figures.
+- No row-level signal stream is committed to Git.
+
+Prediction reconciliation and label isolation:
+
+- Regenerated predictions reconciled against frozen Phase 9 compact metrics for
+  all `54` fold/model rows.
+- Reconciliation max absolute differences:
+  Spearman IC `4.763412e-13`, prediction mean `4.852440e-18`,
+  prediction std `4.996817e-17`.
+- Reconciliation status: PASS.
+- Label-mutation isolation test: PASS.
+  Mutating future-return, future-move, and direction-label columns cannot
+  change thresholds, raw signals, final signals, or signal artifact hash.
+- Signal generation rejects future-derived columns before generating signals.
+
+Threshold statistics:
+
+- Mean q10 thresholds:
+  `qi_direct_baseline=-2.2818582753209408e-05`,
+  `lightgbm_qi_ofi=-2.3438808013423187e-05`,
+  `lightgbm_extended=-2.2823068899197757e-05`.
+- Mean q90 thresholds:
+  `qi_direct_baseline=2.2888278677689708e-05`,
+  `lightgbm_qi_ofi=2.357973672056846e-05`,
+  `lightgbm_extended=2.2985208346034528e-05`.
+- q05/q95 threshold drift is recorded in `thresholds_by_fold.csv` and figures.
+
+Signal coverage:
+
+- Primary 10/90 active coverage:
+  `qi_direct_baseline=0.21705725829589728`,
+  `lightgbm_qi_ofi=0.20213113613652564`,
+  `lightgbm_extended=0.17317768411090395`.
+- Primary long/short coverage:
+  `qi_direct_baseline`: long `0.107837`, short `0.109221`;
+  `lightgbm_qi_ofi`: long `0.100306`, short `0.101825`;
+  `lightgbm_extended`: long `0.086459`, short `0.086719`.
+- Secondary 5/95 active coverage:
+  `qi_direct_baseline=0.118952`,
+  `lightgbm_qi_ofi=0.108833`,
+  `lightgbm_extended=0.086176`.
+- Prediction-sign active coverage is effectively all non-boundary anchors for
+  all three models and is diagnostic only.
+
+Transition and churn statistics:
+
+- Mean final-signal transition rate:
+  `qi_direct_baseline=0.1770324626465384`,
+  `lightgbm_qi_ofi=0.2449082571068742`,
+  `lightgbm_extended=0.20987958358443803`.
+- Mean direct reversal rate:
+  `qi_direct_baseline=0.002918`,
+  `lightgbm_qi_ofi=0.005511`,
+  `lightgbm_extended=0.006195`.
+- Mean raw/final signal changes are recorded in
+  `reports/phase10/signal_transitions.csv`.
+
+Persistence:
+
+- Mean LONG run length in one-second anchors:
+  `qi_direct_baseline=2.4828190838699595`,
+  `lightgbm_qi_ofi=1.5967943501789448`,
+  `lightgbm_extended=1.5488590518222731`.
+- Mean SHORT run length in one-second anchors:
+  `qi_direct_baseline=2.624652298438945`,
+  `lightgbm_qi_ofi=1.6359806214472254`,
+  `lightgbm_extended=1.559732257926976`.
+- Median, p95, and maximum run lengths are recorded in
+  `reports/phase10/signal_persistence.csv`.
+
+Conditional future-mid diagnostics:
+
+- Mean LONG-minus-SHORT future-mid return:
+  `qi_direct_baseline=6.312122164443975e-05`,
+  `lightgbm_qi_ofi=6.587916126813072e-05`,
+  `lightgbm_extended=7.558446367242457e-05`.
+- Mean signed future-mid effect:
+  `qi_direct_baseline=3.156061082221988e-05`,
+  `lightgbm_qi_ofi=3.293958063406536e-05`,
+  `lightgbm_extended=3.779223183621228e-05`.
+- Conditional LONG, FLAT, SHORT diagnostics are reported in
+  `signal_future_mid_diagnostics.csv`.
+- These are predictive signal-separation diagnostics only.
+
+Model signal disagreement:
+
+- Mean `qi_direct_baseline` vs `lightgbm_extended` disagreement fraction:
+  `0.1330478193097956`.
+- Mean `lightgbm_qi_ofi` vs `lightgbm_extended` disagreement fraction:
+  `0.06632017530842774`.
+- Directional disagreement breakdowns and descriptive future-mid outcomes are
+  recorded in `model_signal_disagreement.csv`.
+
+Exact local test results:
+
+- `MPLCONFIGDIR=/tmp/microalpha-mpl PYTHONPATH=src /tmp/microalpha-phase8-venv/bin/python scripts/run_phase10_signals.py --clean`:
+  PASS, signal artifact hash
+  `68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6`,
+  result hash
+  `604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71`.
+- Phase 10 result hash recomputation:
+  PASS, matched stored hash
+  `604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71`.
+- `python -m json.tool reports/phase10/phase10_summary.json`: PASS.
+- `python -m json.tool reports/phase10/signal_manifest.json`: PASS.
+- `python -m pytest`: PASS, `148 passed, 49 warnings in 4.17s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 10 LightGBM execution used the temporary environment at
+  `/tmp/microalpha-phase8-venv` with working LightGBM dependencies.
+- PyArrow emitted sandbox CPU-info warnings while reading parquet; these did
+  not affect the Phase 10 gate.
+- The current Phase 10 artifact state has not yet been confirmed by GitHub
+  Actions under Python 3.11.
+- Phase 10 signals are desired directional states only, not orders or fills.
+- No 2026 holdout date was read.
+- No Phase 11 execution simulation, transaction-cost model, latency model,
+  fill model, or backtest was implemented.
+
+Next steps:
+
+- Do not begin Phase 11 until the user explicitly accepts Phase 10 and requests
+  continuation.
+- If the Phase 10 artifact commit is pushed, confirm GitHub Actions under
+  Python 3.11 for that exact commit before relying on CI portability.
