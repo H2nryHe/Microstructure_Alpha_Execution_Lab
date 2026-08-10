@@ -62,5 +62,6 @@ reports/final/*
 !reports/figures/.gitkeep
 !reports/tables/.gitkeep
 
-# Persional report and resume bulletpoints are not shared.
+# Private career materials
 reports/final/RESUME_BULLETS.md
+reports/final/INTERVIEW_STORIES.md
