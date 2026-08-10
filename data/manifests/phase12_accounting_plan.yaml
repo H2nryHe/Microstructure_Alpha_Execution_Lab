@@ -1,0 +1,197 @@
+plan_version: phase12_accounting_plan_v1
+created_under_policy: frozen_before_phase12_real_accounting_analysis
+
+upstream_artifacts:
+  phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase8_modeling_plan_hash: 823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe
+  phase8_results_hash: d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d
+  phase9_plan_hash: 4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4
+  phase9_results_hash: 0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee
+  phase10_plan_hash: 0ae8590cef7e7ea313c80889c74cc7db592a948f119e3982a2f2269df0c2a2bb
+  phase10_signal_artifact_hash: 68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6
+  phase10_results_hash: 604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71
+  phase11_execution_plan_hash: f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4
+  phase11_execution_config_hash: 7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef
+  phase11_execution_artifact_hash: 893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0
+  phase11_results_hash: a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0
+  phase11_commit_sha: 0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e
+
+ci_gate:
+  phase11_commit_sha: 0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e
+  tests_run_id: 31395063031
+  research_smoke_run_id: 31395063336
+  python_311_github_actions_required: true
+
+development_policy:
+  allowed_dates:
+    - "2024-07-01"
+  forbidden_dates:
+    - "2026"
+  instrument: BTC-USDT
+  vendor_symbol: BTCUSDT
+  models:
+    - qi_direct_baseline
+    - lightgbm_qi_ofi
+    - lightgbm_extended
+  execution_modes:
+    - market
+    - passive
+  latency_scenarios_ms:
+    - 0
+    - 100
+  source_artifact_root: /tmp/microalpha-phase11
+  accounting_artifact_root: /tmp/microalpha-phase12
+
+accounting_conventions:
+  independent_scenario_keys:
+    - date
+    - model
+    - execution_mode
+    - latency_ms
+  initial_cash: 0.0
+  initial_position: 0.0
+  base_quantity_unit: BTC
+  quote_currency: USDT
+  signed_quantity:
+    buy: positive
+    sell: negative
+  position_update: position_previous_plus_signed_quantity
+  gross_cash: excludes recorded fill fees
+  net_cash: includes recorded fill fees
+  buy_cash_change:
+    gross: minus_fill_price_times_quantity
+    net: minus_fill_price_times_quantity_minus_fee_quote
+  sell_cash_change:
+    gross: plus_fill_price_times_quantity
+    net: plus_fill_price_times_quantity_minus_fee_quote
+  negative_cash_allowed: true
+  hidden_capital_injection_allowed: false
+
+realized_pnl:
+  method: average_cost_inventory
+  long_close_formula: exit_price_minus_average_entry_price_times_closed_quantity
+  short_close_formula: average_entry_price_minus_exit_price_times_closed_quantity
+  reversal_policy: close_existing_inventory_first_then_open_residual_opposite_inventory
+  fee_treatment: fees_tracked_separately_from_gross_realized_pnl
+
+marking:
+  mark_price: mid
+  mark_source: /tmp/microalpha-multiday/derived/date={date}/research_100ms.parquet
+  mark_time_rule: most_recent_causally_observable_valid_mid_at_or_before_valuation_timestamp
+  unavailable_mark_policy: valuation_unavailable_do_not_invent_price
+  valuation_grid: existing_100ms_research_grid
+  terminal_inventory_policy: report_remaining_inventory_without_forced_liquidation
+  forced_end_of_day_liquidation: forbidden
+
+ledger_schema:
+  required_columns:
+    - timestamp
+    - cash
+    - gross_cash
+    - net_cash
+    - position
+    - average_entry_price
+    - mark_mid
+    - inventory_market_value
+    - gross_equity
+    - net_equity
+    - gross_pnl
+    - net_pnl
+    - realized_pnl
+    - unrealized_pnl
+    - fees_paid
+    - turnover
+
+turnover:
+  fill_notional: abs_fill_price_times_signed_quantity
+  total_turnover: sum_fill_notional
+  buy_notional: sum_buy_fill_notional
+  sell_notional: sum_sell_fill_notional
+  gross_traded_quantity: sum_abs_signed_quantity
+  parent_order_count_source: frozen_phase11_orders
+  fill_count_source: frozen_phase11_child_fills
+
+pnl_normalization:
+  gross_pnl_bps_of_turnover: gross_pnl_div_total_turnover_times_10000
+  net_pnl_bps_of_turnover: net_pnl_div_total_turnover_times_10000
+  pnl_per_parent_order: pnl_div_parent_order_count
+  pnl_per_fill: pnl_div_fill_count
+  annualization: forbidden
+  sharpe_ratio: forbidden
+
+reconciliation:
+  parent_child_quantity: sum_child_fill_quantities_equals_parent_filled_quantity
+  fill_conservation: final_position_equals_sum_signed_fill_quantities
+  cash_conservation: final_cash_equals_sum_fill_cash_changes
+  equity_identity: cash_plus_position_times_mark_mid_equals_equity
+  fee_identity: gross_pnl_minus_net_pnl_equals_cumulative_fees_paid
+  duplicate_fill_policy: reject_duplicate_fill_ids
+  scenario_isolation: reset_cash_position_cost_basis_and_fees_per_scenario
+  deterministic_ordering: fill_time_then_order_id_then_child_fill_index
+
+position_target_mismatch:
+  desired_state_source: /tmp/microalpha-phase10/signals/date={date}/model={model}/signals.parquet
+  desired_units: final_signal
+  actual_units: position_divided_by_target_order_quantity_at_first_transition_not_used_for_orders
+  metrics:
+    - desired_active_actual_zero_fraction
+    - direction_mismatch_fraction
+    - partially_attained_fraction
+  corrective_orders: forbidden
+
+output_policy:
+  local_ledger_root: /tmp/microalpha-phase12
+  tracked_report_dir: reports/phase12
+  large_time_series_committed: false
+  deterministic_hash_excludes:
+    - runtime
+    - creation_timestamp
+    - absolute_local_paths
+
+required_reports:
+  - accounting_summary.csv
+  - pnl_by_scenario.csv
+  - inventory_summary.csv
+  - turnover_summary.csv
+  - realized_unrealized_summary.csv
+  - execution_pnl_decomposition.csv
+  - accounting_manifest.json
+  - phase12_summary.json
+  - README.md
+
+required_figures:
+  - market_0ms_gross_equity_by_model.png
+  - market_latency_pnl_path.png
+  - passive_pnl_path.png
+  - position_path.png
+  - absolute_inventory_exposure.png
+  - gross_vs_net_pnl.png
+  - realized_vs_unrealized_terminal_pnl.png
+  - turnover_by_scenario.png
+  - passive_desired_vs_actual_mismatch.png
+  - market_vs_passive_accounting_comparison.png
+
+acceptance_criteria:
+  - exact Phase 11 commit green under Python 3.11 CI
+  - Phase 12 accounting plan frozen before real PnL analysis
+  - 2026 holdout not accessed
+  - exact frozen Phase 11 fills consumed
+  - scenario ledgers isolated
+  - signed quantity convention explicit
+  - cash conservation passes
+  - inventory conservation passes
+  - parent-child fill reconciliation passes
+  - duplicate fills rejected
+  - realized PnL long_short_reversal_cases pass
+  - unrealized PnL open_inventory_cases pass
+  - cash_plus_marked_inventory_equals_equity
+  - gross_net_difference_reconciles_to_recorded_fees
+  - terminal inventory reported without synthetic liquidation
+  - passive low_fill_effects_visible
+  - no realistic cost grid introduced
+  - no Sharpe_or_annualization_reported
+  - deterministic accounting artifact hash exists
+  - deterministic Phase 12 results hash exists
+  - compact reports and required figures exist

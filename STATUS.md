@@ -19,7 +19,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 9 - Walk-forward evaluation
 [x] Phase 10 - Signal construction
 [x] Phase 11 - Execution simulator
-[ ] Phase 12 - Portfolio / inventory accounting
+[x] Phase 12 - Portfolio / inventory accounting
 [ ] Phase 13 - Cost and latency analysis
 [ ] Phase 14 - Robustness and regime analysis
 [ ] Phase 15 - Research report
@@ -2838,7 +2838,7 @@ Next steps:
 
 ## Phase 11 - Event-Driven Execution Simulator
 
-Status: PASS locally
+Status: PASS locally and accepted
 
 Pre-Phase-11 gate:
 
@@ -2848,6 +2848,11 @@ Pre-Phase-11 gate:
 - GitHub Actions under Python 3.11 confirmed that exact commit:
   `tests` run `31391220465` PASS and `research-smoke` run `31391220513`
   PASS.
+- Exact accepted Phase 11 commit:
+  `0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e`.
+- GitHub Actions under Python 3.11 confirmed the accepted Phase 11 commit:
+  `tests` run `31395063031` PASS and `research-smoke` run
+  `31395063336` PASS.
 
 Frozen execution plan and config:
 
@@ -3032,8 +3037,10 @@ Exact local verification:
 Assumptions and limitations:
 
 - Local default `python` is Python 3.10.9, not Python 3.11.
-- Phase 11 has not yet been committed, pushed, or confirmed in Python 3.11
-  GitHub Actions.
+- Exact Phase 11 artifact state was committed and pushed as
+  `0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e`.
+- Python 3.11 GitHub Actions confirmed that exact Phase 11 commit with `tests`
+  run `31395063031` PASS and `research-smoke` run `31395063336` PASS.
 - Real-data diagnostics are intentionally bounded to one development date,
   `2024-07-01`, for the Phase 11 MVP.
 - Real-data book interaction uses existing `research_100ms.parquet` depth
@@ -3049,7 +3056,228 @@ Assumptions and limitations:
 
 Next steps:
 
-- Stop before Phase 12.
-- Commit and push the exact Phase 11 artifact state only after user acceptance,
+- Phase 12 portfolio and inventory accounting has been completed below from
+  the accepted Phase 11 commit.
+
+## Phase 12 - Portfolio / Inventory Accounting and PnL Ledger
+
+Status: PASS locally
+
+Pre-Phase-12 gate:
+
+- Exact accepted Phase 11 commit:
+  `0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e`.
+- GitHub Actions under Python 3.11 confirmed that exact Phase 11 commit:
+  `tests` run `31395063031` PASS and `research-smoke` run
+  `31395063336` PASS.
+- Phase 11 execution artifact hash verified:
+  `893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0`.
+- Phase 11 results hash verified:
+  `a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0`.
+
+Frozen accounting plan:
+
+- Plan file: `data/manifests/phase12_accounting_plan.yaml`.
+- Plan hash:
+  `a43f49a5d99393cc26b76e86628e67c4459a215f2eb5ad3a241dd339ee3094a9`.
+- The plan was frozen before Phase 12 real-data accounting was run.
+
+Accounting scope:
+
+- Instrument: `BTC-USDT`.
+- Vendor symbol: Tardis/Binance `BTCUSDT`.
+- Date: `2024-07-01`.
+- Models: `qi_direct_baseline`, `lightgbm_qi_ofi`, and
+  `lightgbm_extended`.
+- Execution modes: `market` and `passive`.
+- Latency scenarios: `0ms` and `100ms`.
+- Parent-order source: Phase 11 orders under `/tmp/microalpha-phase11`.
+- Fill source: Phase 11 fills under `/tmp/microalpha-phase11`.
+- Mark source: Phase 11 markouts under `/tmp/microalpha-phase11`.
+- Row-level Phase 12 ledger root: `/tmp/microalpha-phase12`.
+- Row-level Phase 12 ledger size: about `90M`.
+- Tracked compact report size: about `732K` under `reports/phase12`.
+- All 12 Phase 11 scenario manifest entries and their order/fill/markout
+  SHA-256 digests were verified before ledger construction.
+
+Accounting conventions:
+
+- BUY fills increase signed base inventory; SELL fills decrease signed base
+  inventory.
+- Cash is self-financing: BUY decreases cash by price times quantity; SELL
+  increases cash by price times quantity.
+- Gross PnL equals realized PnL plus terminal unrealized PnL.
+- Net PnL equals gross PnL minus recorded fill fees.
+- Realized PnL uses average-cost inventory accounting and supports partial
+  closes and long/short reversals.
+- Terminal unrealized PnL marks remaining inventory to the final available
+  `100ms` mark mid at or before the terminal ledger time.
+- Terminal positions are intentionally not forcibly liquidated.
+- Fees are consumed from Phase 11 fill records only. Phase 11 real-data fees
+  were configured as `0.0 bps`, so gross and net PnL are identical in this
+  Phase 12 MVP.
+- No annualization, Sharpe ratio, drawdown analysis, cost grid, or latency
+  sweep was implemented.
+
+Artifacts and hashes:
+
+- Phase 12 accounting artifact hash:
+  `560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b`.
+- Phase 12 results hash:
+  `c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012`.
+- Phase 12 result hash recomputation matched the stored hash.
+
+Compact reports:
+
+- `reports/phase12/accounting_summary.csv`
+- `reports/phase12/pnl_by_scenario.csv`
+- `reports/phase12/inventory_summary.csv`
+- `reports/phase12/turnover_summary.csv`
+- `reports/phase12/realized_unrealized_summary.csv`
+- `reports/phase12/execution_pnl_decomposition.csv`
+- `reports/phase12/accounting_manifest.json`
+- `reports/phase12/phase12_summary.json`
+- `reports/phase12/README.md`
+- Figures are under `reports/phase12/figures/`.
+
+Scenario-level accounting results:
+
+- Scenario count: `12`.
+- Parent orders reconciled: `225976`.
+- Fill rows processed: `199392`.
+- Total turnover: `1168524315.7222328`.
+- Market, `lightgbm_extended`, `0ms`: gross/net PnL
+  `5720.895120207824`, turnover `206518401.8921641`, realized PnL
+  `5716.878252395109`, terminal unrealized PnL `4.016867813528558`,
+  terminal position `-0.6942487613772562`, max absolute position
+  `1.3794587327395869`.
+- Market, `lightgbm_extended`, `100ms`: gross/net PnL
+  `5264.311049242642`, turnover `206446116.54784513`, realized PnL
+  `5265.172457282935`, terminal unrealized PnL `-0.861408039753997`,
+  terminal position `0.377227744490664`, max absolute position
+  `1.122375204048606`.
+- Market, `lightgbm_qi_ofi`, `0ms`: gross/net PnL
+  `5550.258410920898`, turnover `219850080.70557386`, realized PnL
+  `5544.346333716735`, terminal unrealized PnL `5.912077204784866`,
+  terminal position `-0.725700247928128`, max absolute position
+  `1.329395406760148`.
+- Market, `lightgbm_qi_ofi`, `100ms`: gross/net PnL
+  `5323.436535794204`, turnover `219792552.9203605`, realized PnL
+  `5324.145332422236`, terminal unrealized PnL `-0.7087966283417695`,
+  terminal position `0.27474928740704657`, max absolute position
+  `1.0910820224602424`.
+- Market, `qi_direct_baseline`, `0ms`: gross/net PnL
+  `5374.277072860903`, turnover `142876210.0156418`, realized PnL
+  `5375.860285026886`, terminal unrealized PnL `-1.5832121654803022`,
+  terminal position `-1.339746468426229`, max absolute position
+  `1.870617457951455`.
+- Market, `qi_direct_baseline`, `100ms`: gross/net PnL
+  `5177.823381225753`, turnover `142879876.99890685`, realized PnL
+  `5176.968076487272`, terminal unrealized PnL `0.8553047394386138`,
+  terminal position `-1.0555631291189436`, max absolute position
+  `1.4173807561822744`.
+- Passive, `lightgbm_extended`, `0ms`: gross/net PnL
+  `-3630.264330080594`, turnover `4866605.998529209`, realized PnL
+  `-863.697169875399`, terminal unrealized PnL `-2766.5671602123907`,
+  terminal position `11.957668360736466`, max absolute position
+  `11.957668360736466`.
+- Passive, `lightgbm_extended`, `100ms`: gross/net PnL
+  `-2571.828693028423`, turnover `6234185.619222174`, realized PnL
+  `-639.9838329147991`, terminal unrealized PnL `-1931.8448601150326`,
+  terminal position `7.732312207016806`, max absolute position
+  `7.821530552968911`.
+- Passive, `lightgbm_qi_ofi`, `0ms`: gross/net PnL
+  `-3080.5074360552244`, turnover `6125189.791964068`, realized PnL
+  `-805.4692192090347`, terminal unrealized PnL `-2275.038216851113`,
+  terminal position `9.130302156076135`, max absolute position
+  `10.06877227302567`.
+- Passive, `lightgbm_qi_ofi`, `100ms`: gross/net PnL
+  `-2178.263225474686`, turnover `8031909.703807328`, realized PnL
+  `-880.0457814257971`, terminal unrealized PnL `-1298.2174440461508`,
+  terminal position `5.819067941774399`, max absolute position
+  `7.021528248729046`.
+- Passive, `qi_direct_baseline`, `0ms`: gross/net PnL
+  `-1035.9125899009377`, turnover `1879536.6388541388`, realized PnL
+  `-329.60068186357563`, terminal unrealized PnL `-706.3119080364783`,
+  terminal position `1.943989932014357`, max absolute position
+  `3.6595463441971856`.
+- Passive, `qi_direct_baseline`, `100ms`: gross/net PnL
+  `151.5554936050612`, turnover `3023648.8893636637`, realized PnL
+  `1075.537259030324`, terminal unrealized PnL `-923.9817654234315`,
+  terminal position `3.204774389905958`, max absolute position
+  `3.7069910927698375`.
+
+Reconciliation and integrity checks:
+
+- Duplicate fill IDs are rejected.
+- Parent-child fill reconciliation is enforced per scenario.
+- Filled quantity and notional are reconciled back to Phase 11 parent-order
+  summaries.
+- Inventory, cash, fee, gross PnL, and net PnL conservation identities are
+  checked.
+- Scenario ledgers are independent; inventory and cash do not bleed across
+  model, mode, latency, or date boundaries.
+- Replay hash is deterministic and sensitive to fill mutations.
+- Future-label isolation is covered by synthetic tests; the ledger consumes
+  Phase 11 fills and terminal marks only, and does not read labels or future
+  returns.
+
+Synthetic tests added:
+
+- Long round-trip gain and loss.
+- Short round-trip gain and loss.
+- Partial close.
+- Weighted average entry cost.
+- Long-to-short reversal.
+- Short-to-long reversal.
+- Fee reconciliation.
+- Open terminal long and open terminal short marking.
+- Scenario reset.
+- Duplicate fill rejection.
+- Parent-child reconciliation.
+- Conservation identities.
+- Deterministic replay hash and future-label isolation.
+- Fill mutation sensitivity.
+
+Exact local verification:
+
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/run_phase12_accounting.py --clean`:
+  PASS, with accounting artifact hash
+  `560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b`
+  and results hash
+  `c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012`.
+- Phase 12 result hash recomputation:
+  PASS, matched stored hash
+  `c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012`.
+- `python -m pytest`: PASS, `180 passed, 49 warnings in 3.52s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `python -m json.tool reports/phase12/phase12_summary.json`: PASS.
+- `python -m json.tool reports/phase12/accounting_manifest.json`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 12 has not yet been committed, pushed, or confirmed in Python 3.11
+  GitHub Actions.
+- Real-data accounting is intentionally bounded to one development date,
+  `2024-07-01`, for the Phase 12 MVP.
+- Phase 12 consumes the frozen Phase 11 orders, fills, and markouts unchanged.
+- Gross and net PnL are identical in the real-data reports because Phase 11
+  real-data fees were configured as `0.0 bps`.
+- Passive execution often leaves terminal inventory because Phase 12 does not
+  force liquidation at the end of the diagnostic day.
+- Accounting PnL is a ledger result for this bounded diagnostic run only and is
+  not evidence of live economic viability.
+- No 2026 holdout data was accessed.
+- No Phase 13 cost or latency analysis was started.
+
+Next steps:
+
+- Stop before Phase 13.
+- Commit and push the exact Phase 12 artifact state only after user acceptance,
   then confirm Python 3.11 GitHub Actions on that exact commit before relying
   on CI portability.

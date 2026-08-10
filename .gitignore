@@ -41,6 +41,7 @@ data/manifests/*
 !data/manifests/phase9_walkforward_plan.yaml
 !data/manifests/phase10_signal_plan.yaml
 !data/manifests/phase11_execution_plan.yaml
+!data/manifests/phase12_accounting_plan.yaml
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*

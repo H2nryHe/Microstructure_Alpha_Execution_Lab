@@ -1,0 +1,118 @@
+{
+  "dates": [
+    "2024-07-01"
+  ],
+  "gross_pnl_by_scenario": [
+    {
+      "gross_pnl": 5720.895120207824,
+      "latency_ms": 0,
+      "mode": "market",
+      "model": "lightgbm_extended",
+      "net_pnl": 5720.895120207824
+    },
+    {
+      "gross_pnl": 5264.311049242642,
+      "latency_ms": 100,
+      "mode": "market",
+      "model": "lightgbm_extended",
+      "net_pnl": 5264.311049242642
+    },
+    {
+      "gross_pnl": 5550.258410920898,
+      "latency_ms": 0,
+      "mode": "market",
+      "model": "lightgbm_qi_ofi",
+      "net_pnl": 5550.258410920898
+    },
+    {
+      "gross_pnl": 5323.436535794204,
+      "latency_ms": 100,
+      "mode": "market",
+      "model": "lightgbm_qi_ofi",
+      "net_pnl": 5323.436535794204
+    },
+    {
+      "gross_pnl": 5374.277072860903,
+      "latency_ms": 0,
+      "mode": "market",
+      "model": "qi_direct_baseline",
+      "net_pnl": 5374.277072860903
+    },
+    {
+      "gross_pnl": 5177.823381225753,
+      "latency_ms": 100,
+      "mode": "market",
+      "model": "qi_direct_baseline",
+      "net_pnl": 5177.823381225753
+    },
+    {
+      "gross_pnl": -3630.264330080594,
+      "latency_ms": 0,
+      "mode": "passive",
+      "model": "lightgbm_extended",
+      "net_pnl": -3630.264330080594
+    },
+    {
+      "gross_pnl": -2571.828693028423,
+      "latency_ms": 100,
+      "mode": "passive",
+      "model": "lightgbm_extended",
+      "net_pnl": -2571.828693028423
+    },
+    {
+      "gross_pnl": -3080.5074360552244,
+      "latency_ms": 0,
+      "mode": "passive",
+      "model": "lightgbm_qi_ofi",
+      "net_pnl": -3080.5074360552244
+    },
+    {
+      "gross_pnl": -2178.263225474686,
+      "latency_ms": 100,
+      "mode": "passive",
+      "model": "lightgbm_qi_ofi",
+      "net_pnl": -2178.263225474686
+    },
+    {
+      "gross_pnl": -1035.9125899009377,
+      "latency_ms": 0,
+      "mode": "passive",
+      "model": "qi_direct_baseline",
+      "net_pnl": -1035.9125899009377
+    },
+    {
+      "gross_pnl": 151.5554936050612,
+      "latency_ms": 100,
+      "mode": "passive",
+      "model": "qi_direct_baseline",
+      "net_pnl": 151.5554936050612
+    }
+  ],
+  "latency_scenarios_ms": [
+    0,
+    100
+  ],
+  "models": [
+    "lightgbm_extended",
+    "lightgbm_qi_ofi",
+    "qi_direct_baseline"
+  ],
+  "modes": [
+    "market",
+    "passive"
+  ],
+  "phase11_commit_sha": "0a4ef8c2c6d5b98a3709aa0f95400f21a4e8c44e",
+  "phase11_execution_artifact_hash": "893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0",
+  "phase11_manifest_entries_verified": 12,
+  "phase11_research_smoke_run_id": 31395063336,
+  "phase11_results_hash": "a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0",
+  "phase11_tests_run_id": 31395063031,
+  "phase12_accounting_artifact_hash": "560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b",
+  "phase12_accounting_plan_hash": "a43f49a5d99393cc26b76e86628e67c4459a215f2eb5ad3a241dd339ee3094a9",
+  "phase12_results_hash": "c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012",
+  "phase12_status": "PASS",
+  "scenario_count": 12,
+  "total_fills": 199392,
+  "total_parent_orders": 225976,
+  "total_turnover": 1168524315.7222328
+}
