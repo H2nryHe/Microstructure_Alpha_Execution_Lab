@@ -1,0 +1,510 @@
+[
+  {
+    "claim_strings": [
+      "816K completed event states"
+    ],
+    "description": "Completed event-state rows for the 2019 validation day.",
+    "metric_name": "completed_event_states_2019_validation_day",
+    "source_file": "STATUS.md",
+    "source_phase": "Phase 4",
+    "unit": "rows",
+    "value": 815980
+  },
+  {
+    "claim_strings": [
+      "24 development dates"
+    ],
+    "description": "Pre-registered 2024-2025 development dates.",
+    "metric_name": "development_date_count",
+    "source_file": "reports/phase7/phase7_summary.json",
+    "source_phase": "Phase 7",
+    "unit": "dates",
+    "value": 24
+  },
+  {
+    "claim_strings": [
+      "91 leakage-controlled features",
+      "91 features"
+    ],
+    "description": "Leakage-controlled feature columns generated for the research table.",
+    "metric_name": "feature_count",
+    "source_file": "STATUS.md",
+    "source_phase": "Phase 5",
+    "unit": "features",
+    "value": 91
+  },
+  {
+    "claim_strings": [
+      "864K fixed 100ms observations"
+    ],
+    "description": "Fixed 100ms research observations for the 2019 validation day.",
+    "metric_name": "fixed_100ms_observations_2019_validation_day",
+    "source_file": "STATUS.md",
+    "source_phase": "Phase 4",
+    "unit": "rows",
+    "value": 863949
+  },
+  {
+    "claim_strings": [
+      "6.49M L2 rows"
+    ],
+    "description": "Full-day Tardis L2 input rows for the 2019 validation day.",
+    "metric_name": "l2_rows_2019_validation_day",
+    "source_file": "STATUS.md",
+    "source_phase": "Phase 3",
+    "unit": "rows",
+    "value": 6486542
+  },
+  {
+    "claim_strings": [
+      "17.3% Extended active coverage"
+    ],
+    "description": "Extended primary q10/q90 active signal coverage.",
+    "metric_name": "phase10_extended_active_coverage",
+    "source_file": "reports/phase10/phase10_summary.json",
+    "source_phase": "Phase 10",
+    "unit": "fraction",
+    "value": 0.17317768411090395
+  },
+  {
+    "claim_strings": [
+      "21.7% QI active coverage"
+    ],
+    "description": "QI primary q10/q90 active signal coverage.",
+    "metric_name": "phase10_qi_active_coverage",
+    "source_file": "reports/phase10/phase10_summary.json",
+    "source_phase": "Phase 10",
+    "unit": "fraction",
+    "value": 0.21705725829589728
+  },
+  {
+    "claim_strings": [
+      "20.2% QI+OFI active coverage"
+    ],
+    "description": "QI+OFI primary q10/q90 active signal coverage.",
+    "metric_name": "phase10_qi_ofi_active_coverage",
+    "source_file": "reports/phase10/phase10_summary.json",
+    "source_phase": "Phase 10",
+    "unit": "fraction",
+    "value": 0.20213113613652564
+  },
+  {
+    "claim_strings": [
+      "1.5% to 4.5% passive fill-rate range"
+    ],
+    "description": "Maximum reference-day passive fill rate across model/latency scenarios.",
+    "metric_name": "phase11_passive_fill_rate_max",
+    "source_file": "reports/phase11/phase11_summary.json",
+    "source_phase": "Phase 11",
+    "unit": "fraction",
+    "value": 0.04534398090779751
+  },
+  {
+    "claim_strings": [
+      "1.5% to 4.5% passive fill-rate range"
+    ],
+    "description": "Minimum reference-day passive fill rate across model/latency scenarios.",
+    "metric_name": "phase11_passive_fill_rate_min",
+    "source_file": "reports/phase11/phase11_summary.json",
+    "source_phase": "Phase 11",
+    "unit": "fraction",
+    "value": 0.014747191011235955
+  },
+  {
+    "claim_strings": [
+      "0.277 bps Extended market 0ms"
+    ],
+    "description": "Reference-day Extended market 0ms gross PnL per turnover.",
+    "metric_name": "phase12_extended_market_0ms_gross_bps",
+    "source_file": "reports/phase12/pnl_by_scenario.csv",
+    "source_phase": "Phase 12",
+    "unit": "bps_of_turnover",
+    "value": 0.2770162400924956
+  },
+  {
+    "claim_strings": [
+      "0.376 bps QI market 0ms"
+    ],
+    "description": "Reference-day QI market 0ms gross PnL per turnover.",
+    "metric_name": "phase12_qi_market_0ms_gross_bps",
+    "source_file": "reports/phase12/pnl_by_scenario.csv",
+    "source_phase": "Phase 12",
+    "unit": "bps_of_turnover",
+    "value": 0.3761491904266314
+  },
+  {
+    "claim_strings": [
+      "0.252 bps QI+OFI market 0ms"
+    ],
+    "description": "Reference-day QI+OFI market 0ms gross PnL per turnover.",
+    "metric_name": "phase12_qi_ofi_market_0ms_gross_bps",
+    "source_file": "reports/phase12/pnl_by_scenario.csv",
+    "source_phase": "Phase 12",
+    "unit": "bps_of_turnover",
+    "value": 0.2524565100503137
+  },
+  {
+    "claim_strings": [
+      "0.277 bps Extended reference breakeven"
+    ],
+    "description": "Reference-day Extended market 0ms breakeven fee.",
+    "metric_name": "phase13_extended_reference_breakeven_bps",
+    "source_file": "reports/phase13/breakeven_costs.csv",
+    "source_phase": "Phase 13",
+    "unit": "fee_bps",
+    "value": 0.2770162400924956
+  },
+  {
+    "claim_strings": [
+      "0.253 bps QI+OFI reference breakeven"
+    ],
+    "description": "Reference-day QI+OFI market 0ms breakeven fee.",
+    "metric_name": "phase13_qi_ofi_reference_breakeven_bps",
+    "source_file": "reports/phase13/breakeven_costs.csv",
+    "source_phase": "Phase 13",
+    "unit": "fee_bps",
+    "value": 0.2524565100503137
+  },
+  {
+    "claim_strings": [
+      "0.376 bps QI reference breakeven"
+    ],
+    "description": "Reference-day QI market 0ms breakeven fee.",
+    "metric_name": "phase13_qi_reference_breakeven_bps",
+    "source_file": "reports/phase13/breakeven_costs.csv",
+    "source_phase": "Phase 13",
+    "unit": "fee_bps",
+    "value": 0.3761491904266314
+  },
+  {
+    "claim_strings": [
+      "7290d86afa18b67fdf0c46b2eeea22253dab7bc1"
+    ],
+    "description": "Exact accepted Phase 14 commit.",
+    "metric_name": "phase14_commit_sha",
+    "source_file": "user acceptance / git rev-parse HEAD",
+    "source_phase": "Phase 14",
+    "unit": "git_sha",
+    "value": "7290d86afa18b67fdf0c46b2eeea22253dab7bc1"
+  },
+  {
+    "claim_strings": [
+      "0.652 bps Extended mean breakeven at 0ms"
+    ],
+    "description": "Extended mean breakeven fee across six dates at 0ms.",
+    "metric_name": "phase14_extended_mean_breakeven_0ms",
+    "source_file": "reports/phase14/market_breakeven_by_date.csv",
+    "source_phase": "Phase 14",
+    "unit": "fee_bps",
+    "value": 0.652276655567783
+  },
+  {
+    "claim_strings": [
+      "-2443.68 mean Extended-minus-QI net delta"
+    ],
+    "description": "Extended minus QI mean net PnL delta at 0.25 bps and 0ms.",
+    "metric_name": "phase14_extended_minus_qi_mean_delta_net_025bps_0ms",
+    "source_file": "reports/phase14/incremental_economics_by_date.csv",
+    "source_phase": "Phase 14",
+    "unit": "quote_currency",
+    "value": -2443.675307810165
+  },
+  {
+    "claim_strings": [
+      "4.70% Extended passive mean fill rate"
+    ],
+    "description": "Extended passive mean fill rate across robustness dates at 0ms.",
+    "metric_name": "phase14_passive_extended_mean_fill_rate_0ms",
+    "source_file": "reports/phase14/passive_multiday_results.csv",
+    "source_phase": "Phase 14",
+    "unit": "fraction",
+    "value": 0.046999366012810205
+  },
+  {
+    "claim_strings": [
+      "4.79 mean Extended terminal position"
+    ],
+    "description": "Extended passive mean terminal position across robustness dates at 0ms.",
+    "metric_name": "phase14_passive_extended_mean_terminal_position_0ms",
+    "source_file": "reports/phase14/passive_multiday_results.csv",
+    "source_phase": "Phase 14",
+    "unit": "base_units",
+    "value": 4.794221094962894
+  },
+  {
+    "claim_strings": [
+      "1.56% QI passive mean fill rate"
+    ],
+    "description": "QI passive mean fill rate across robustness dates at 0ms.",
+    "metric_name": "phase14_passive_qi_mean_fill_rate_0ms",
+    "source_file": "reports/phase14/passive_multiday_results.csv",
+    "source_phase": "Phase 14",
+    "unit": "fraction",
+    "value": 0.0155846782810425
+  },
+  {
+    "claim_strings": [
+      "a0315262cb252c9e8b0bb0d63891e92cdfe5d16d0d7924cc570dc49b64107317"
+    ],
+    "description": "Frozen Phase 14 plan hash.",
+    "metric_name": "phase14_plan_hash",
+    "source_file": "reports/phase14/phase14_summary.json",
+    "source_phase": "Phase 14",
+    "unit": "hash",
+    "value": "a0315262cb252c9e8b0bb0d63891e92cdfe5d16d0d7924cc570dc49b64107317"
+  },
+  {
+    "claim_strings": [
+      "six primary dates"
+    ],
+    "description": "Primary cross-date market robustness sample size.",
+    "metric_name": "phase14_primary_market_dates",
+    "source_file": "reports/phase14/phase14_summary.json",
+    "source_phase": "Phase 14",
+    "unit": "dates",
+    "value": 6
+  },
+  {
+    "claim_strings": [
+      "8 first-place efficiency contexts"
+    ],
+    "description": "QI first-place count on gross bps per turnover.",
+    "metric_name": "phase14_qi_efficiency_first_place_count",
+    "source_file": "reports/phase14/model_ranking_stability.csv",
+    "source_phase": "Phase 14",
+    "unit": "rank_contexts",
+    "value": 8
+  },
+  {
+    "claim_strings": [
+      "0.687 bps QI mean breakeven at 0ms"
+    ],
+    "description": "QI mean breakeven fee across six dates at 0ms.",
+    "metric_name": "phase14_qi_mean_breakeven_0ms",
+    "source_file": "reports/phase14/market_breakeven_by_date.csv",
+    "source_phase": "Phase 14",
+    "unit": "fee_bps",
+    "value": 0.6871838809921099
+  },
+  {
+    "claim_strings": [
+      "0.440 bps QI median breakeven at 0ms"
+    ],
+    "description": "QI median breakeven fee across six dates at 0ms.",
+    "metric_name": "phase14_qi_median_breakeven_0ms",
+    "source_file": "reports/phase14/market_breakeven_by_date.csv",
+    "source_phase": "Phase 14",
+    "unit": "fee_bps",
+    "value": 0.4396471430507534
+  },
+  {
+    "claim_strings": [
+      "3/6 QI net-positive days at 0.25 bps"
+    ],
+    "description": "QI net-positive days at 0.25 bps and 0ms.",
+    "metric_name": "phase14_qi_net_positive_days_025bps_0ms",
+    "source_file": "reports/phase14/market_date_level_summary.csv",
+    "source_phase": "Phase 14",
+    "unit": "dates",
+    "value": 3
+  },
+  {
+    "claim_strings": [
+      "2/6 QI net-positive days at 0.50 bps"
+    ],
+    "description": "QI net-positive days at 0.50 bps and 0ms.",
+    "metric_name": "phase14_qi_net_positive_days_050bps_0ms",
+    "source_file": "reports/phase14/market_date_level_summary.csv",
+    "source_phase": "Phase 14",
+    "unit": "dates",
+    "value": 2
+  },
+  {
+    "claim_strings": [
+      "31413111431"
+    ],
+    "description": "GitHub Actions research-smoke run for the accepted Phase 14 commit.",
+    "metric_name": "phase14_research_smoke_run_id",
+    "source_file": "user acceptance",
+    "source_phase": "Phase 14",
+    "unit": "github_actions_run_id",
+    "value": 31413111431
+  },
+  {
+    "claim_strings": [
+      "6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a"
+    ],
+    "description": "Frozen Phase 14 results hash.",
+    "metric_name": "phase14_results_hash",
+    "source_file": "reports/phase14/phase14_summary.json",
+    "source_phase": "Phase 14",
+    "unit": "hash",
+    "value": "6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a"
+  },
+  {
+    "claim_strings": [
+      "31413110254"
+    ],
+    "description": "GitHub Actions tests run for the accepted Phase 14 commit.",
+    "metric_name": "phase14_tests_run_id",
+    "source_file": "user acceptance",
+    "source_phase": "Phase 14",
+    "unit": "github_actions_run_id",
+    "value": 31413110254
+  },
+  {
+    "claim_strings": [
+      "0.447 changed-state IC"
+    ],
+    "description": "Mean changed-state QI 1s IC.",
+    "metric_name": "phase7_changed_state_qi_ic",
+    "source_file": "reports/phase7/audit/changed_state_ic.csv",
+    "source_phase": "Phase 7 audit",
+    "unit": "spearman_ic",
+    "value": 0.446883
+  },
+  {
+    "claim_strings": [
+      "0.425 non-overlap IC"
+    ],
+    "description": "Mean non-overlap QI 1s IC.",
+    "metric_name": "phase7_nonoverlap_qi_ic",
+    "source_file": "reports/phase7/nonoverlap_ic.csv",
+    "source_phase": "Phase 7 audit",
+    "unit": "spearman_ic",
+    "value": 0.425474
+  },
+  {
+    "claim_strings": [
+      "~20.7M observations"
+    ],
+    "description": "Primary QI 1s paired state observations across development dates.",
+    "metric_name": "phase7_primary_observations",
+    "source_file": "reports/phase7/primary_ic.csv",
+    "source_phase": "Phase 7",
+    "unit": "paired_observations",
+    "value": 20735105
+  },
+  {
+    "claim_strings": [
+      "0.426 mean daily Spearman IC",
+      "0.43 mean daily Spearman IC"
+    ],
+    "description": "Mean daily Spearman IC for QI versus 1s forward return.",
+    "metric_name": "phase7_qi_1s_mean_daily_spearman_ic",
+    "source_file": "reports/phase7/primary_ic.csv",
+    "source_phase": "Phase 7",
+    "unit": "spearman_ic",
+    "value": 0.425940168
+  },
+  {
+    "claim_strings": [
+      "24/24 development dates positive"
+    ],
+    "description": "Development dates with positive QI 1s IC.",
+    "metric_name": "phase7_qi_1s_positive_days",
+    "source_file": "reports/phase7/primary_ic.csv",
+    "source_phase": "Phase 7",
+    "unit": "dates",
+    "value": 24
+  },
+  {
+    "claim_strings": [
+      "0.004 temporal mismatch IC"
+    ],
+    "description": "QI lagged by five minutes temporal mismatch control.",
+    "metric_name": "phase7_temporal_mismatch_control_ic",
+    "source_file": "reports/phase7/audit/audit_summary.json",
+    "source_phase": "Phase 7 audit",
+    "unit": "spearman_ic",
+    "value": 0.004108648248610643
+  },
+  {
+    "claim_strings": [
+      "+0.008 Extended LightGBM lift"
+    ],
+    "description": "Extended LightGBM mean daily IC lift over QI baseline.",
+    "metric_name": "phase8_extended_lightgbm_delta_ic",
+    "source_file": "reports/phase8/phase8_summary.json",
+    "source_phase": "Phase 8",
+    "unit": "delta_spearman_ic",
+    "value": 0.0079132481
+  },
+  {
+    "claim_strings": [
+      "12/12 validation months"
+    ],
+    "description": "Validation months where Extended LightGBM improved over QI.",
+    "metric_name": "phase8_extended_positive_lift_months",
+    "source_file": "reports/phase8/phase8_summary.json",
+    "source_phase": "Phase 8",
+    "unit": "months",
+    "value": 12
+  },
+  {
+    "claim_strings": [
+      "0.422 QI baseline mean daily IC"
+    ],
+    "description": "QI baseline mean daily IC in Phase 8 validation.",
+    "metric_name": "phase8_qi_baseline_mean_daily_ic",
+    "source_file": "reports/phase8/phase8_summary.json",
+    "source_phase": "Phase 8",
+    "unit": "spearman_ic",
+    "value": 0.4222578166269703
+  },
+  {
+    "claim_strings": [
+      "18 expanding folds"
+    ],
+    "description": "Expanding walk-forward validation folds.",
+    "metric_name": "phase9_expanding_fold_count",
+    "source_file": "reports/phase9/phase9_summary.json",
+    "source_phase": "Phase 9",
+    "unit": "folds",
+    "value": 18
+  },
+  {
+    "claim_strings": [
+      "+0.0107 Extended delta"
+    ],
+    "description": "Extended model mean IC lift over QI across expanding folds.",
+    "metric_name": "phase9_extended_delta_ic",
+    "source_file": "reports/phase9/phase9_summary.json",
+    "source_phase": "Phase 9",
+    "unit": "delta_spearman_ic",
+    "value": 0.010743286769766911
+  },
+  {
+    "claim_strings": [
+      "0.432 QI mean IC"
+    ],
+    "description": "QI mean IC across expanding walk-forward folds.",
+    "metric_name": "phase9_qi_mean_ic",
+    "source_file": "reports/phase9/phase9_summary.json",
+    "source_phase": "Phase 9",
+    "unit": "spearman_ic",
+    "value": 0.43185335860288265
+  },
+  {
+    "claim_strings": [
+      "+0.0067 QI+OFI delta"
+    ],
+    "description": "QI+OFI mean IC lift over QI across expanding folds.",
+    "metric_name": "phase9_qi_ofi_delta_ic",
+    "source_file": "reports/phase9/phase9_summary.json",
+    "source_phase": "Phase 9",
+    "unit": "delta_spearman_ic",
+    "value": 0.006685448414447604
+  },
+  {
+    "claim_strings": [
+      "+0.0082 rolling-6 Extended delta"
+    ],
+    "description": "Extended model rolling-6 mean IC lift over QI.",
+    "metric_name": "phase9_rolling6_extended_delta_ic",
+    "source_file": "reports/phase9/phase9_summary.json",
+    "source_phase": "Phase 9",
+    "unit": "delta_spearman_ic",
+    "value": 0.00815920765565316
+  }
+]

@@ -22,7 +22,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 12 - Portfolio / inventory accounting
 [x] Phase 13 - Cost and latency analysis
 [x] Phase 14 - Robustness and regime analysis
-[ ] Phase 15 - Research report
+[x] Phase 15 - Research report
 [ ] Phase 16 - Performance engineering
 [ ] Phase 17 - Final packaging
 ```
@@ -3742,8 +3742,12 @@ Exact local verification:
 Assumptions and limitations:
 
 - Local default `python` is Python 3.10.9, not Python 3.11.
-- Phase 14 is locally verified but not yet committed, pushed, or confirmed in
-  GitHub Actions.
+- Exact accepted Phase 14 commit
+  `7290d86afa18b67fdf0c46b2eeea22253dab7bc1` is on `origin/main`.
+- Python 3.11 GitHub Actions for exact Phase 14 commit
+  `7290d86afa18b67fdf0c46b2eeea22253dab7bc1` are green:
+  `tests` run `31413110254` PASS and `research-smoke` run `31413111431`
+  PASS.
 - Cost scenarios are generic research fee overlays, not exchange-specific fee
   schedules.
 - Displayed-book size sensitivity omits hidden liquidity, impact from repeated
@@ -3755,6 +3759,154 @@ Assumptions and limitations:
 
 Next steps:
 
-- Stop before Phase 15.
-- Commit and push Phase 14 only after user acceptance, then confirm GitHub
-  Actions on the exact Phase 14 commit before relying on CI portability.
+- Phase 14 is formally accepted. Phase 15 may proceed as synthesis only, with
+  no upstream research changes and no 2026 holdout access.
+
+## Phase 15 - Final Research Report and Recruiter-Facing Synthesis
+
+Status: PASS locally
+
+Pre-Phase-15 gate:
+
+- Exact accepted Phase 14 commit:
+  `7290d86afa18b67fdf0c46b2eeea22253dab7bc1`.
+- GitHub Actions on that exact SHA:
+  `tests` run `31413110254` PASS and `research-smoke` run `31413111431`
+  PASS.
+- Frozen Phase 14 plan hash:
+  `a0315262cb252c9e8b0bb0d63891e92cdfe5d16d0d7924cc570dc49b64107317`.
+- Frozen Phase 14 robustness artifact hash:
+  `af685ef974b6cc5fd21a0c3ffe24fff6ff088f185ae8b32a337d25942c058379`.
+- Frozen Phase 14 results hash:
+  `6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a`.
+
+Final artifacts:
+
+- Canonical report:
+  `reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md`.
+- Resume bullets:
+  `reports/final/RESUME_BULLETS.md`.
+- Interview story bank:
+  `reports/final/INTERVIEW_STORIES.md`.
+- Final metrics registry:
+  `reports/final/FINAL_METRICS.json`.
+- Final artifact index:
+  `reports/final/FINAL_ARTIFACT_INDEX.md`.
+- Curated final figures:
+  `reports/final/figures/architecture_diagram.png`,
+  `reports/final/figures/qi_decile_future_1s_move.png`,
+  `reports/final/figures/daily_ic_stability.png`,
+  `reports/final/figures/qi_vs_extended_walkforward_ic.png`,
+  `reports/final/figures/signal_coverage_and_separation.png`,
+  `reports/final/figures/market_gross_vs_net_economics.png`,
+  `reports/final/figures/pnl_turnover_vs_fee.png`,
+  `reports/final/figures/phase14_breakeven_distribution.png`,
+  `reports/final/figures/qi_vs_extended_economic_efficiency.png`,
+  and `reports/final/figures/passive_fill_inventory_tradeoff.png`.
+
+Phase 15 hashes:
+
+- `phase15_final_report_hash`:
+  `b49dd9edf51a0b1d2fb4564c89f87497446819689fc9153aef1a428aacdb2740`.
+- `phase15_results_hash`:
+  `a8049081a61e6122978051149b0cf55e96a012f9060556a6224abe5299919cdc`.
+- Hash scope:
+  final report hash covers the canonical final report; results hash covers
+  README, final markdown artifacts, `FINAL_METRICS.json`, and curated figure
+  SHA-256 identities. Runtime, timestamps, and absolute paths are excluded.
+
+README status:
+
+- Root `README.md` was rewritten as a recruiter-facing narrative, not a
+  phase-by-phase history.
+- Top-level sections include Research Question, Key Findings, Architecture,
+  Data Integrity, Signal Research, Predictive Modeling, Execution Reality,
+  Cost / Robustness, Reproduce, and Limitations.
+- Detailed phase history remains in `STATUS.md`.
+
+Metrics registry status:
+
+- `reports/final/FINAL_METRICS.json` contains `46` source-traceable numeric
+  claims.
+- Each registry entry includes `metric_name`, `value`, `unit`, `source_phase`,
+  `source_file`, `description`, and claim strings where the value appears in
+  README, final report, or resume bullets.
+- Headline metrics are validated by
+  `tests/unit/test_phase15_final_report.py`.
+
+Final report synthesis:
+
+- The report synthesizes Phases 1-14 without recomputing upstream research or
+  modifying upstream conclusions.
+- It explicitly separates statistical predictability, predictive modeling,
+  desired trading states, executable fills, accounting, transaction-cost
+  overlays, and net economic robustness.
+- It includes required sections for data trust, causal order-book
+  reconstruction, feature engineering, leakage controls, statistical research,
+  predictive modeling, walk-forward stability, signal construction, execution,
+  accounting, costs/latency, cross-date robustness, what worked, what failed,
+  limitations, next research questions, and reproducibility.
+- It states that 2026 remains an untouched temporal holdout and does not imply
+  final confirmatory validation has occurred.
+
+Resume and interview artifacts:
+
+- `reports/final/RESUME_BULLETS.md` contains three variants:
+  Quant Research, Quant Developer / Research Tooling, and Market Data /
+  Execution Research.
+- Each variant has two primary bullets and one optional third bullet.
+- The bullets use verified numbers only and avoid overclaiming economic
+  results.
+- `reports/final/INTERVIEW_STORIES.md` contains ten structured stories,
+  including exchange timestamp vs observation timestamp, event-level OFI,
+  HEAD/GET source verification, YAML `null` CI failure, pre-registered dates,
+  suspicious-result audit, modest LightGBM value, QI vs Extended economics,
+  passive limit-order limitations, and the sealed 2026 holdout.
+
+No-2026 and language guardrails:
+
+- No 2026 holdout data was accessed.
+- Guardrail scan found no forbidden holdout path/date-prefix references in
+  Phase 15 final markdown, final reports, final helper, build script, or tests.
+- Final markdown includes the exact statement:
+  "2026 remains an untouched temporal holdout."
+- No unsupported "profitable" claim appears.
+- No unsupported annualization or Sharpe claim appears.
+
+Exact local verification:
+
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/build_phase15_final.py`:
+  PASS, generated final metrics, curated figures, final artifact index, and
+  deterministic hashes.
+- `python -m pytest tests/unit/test_phase15_final_report.py`:
+  PASS, `6 passed in 0.03s`.
+- `python -m pytest`: PASS, `210 passed, 49 warnings in 4.06s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- `python -m json.tool reports/final/FINAL_METRICS.json`: PASS.
+- Final markdown link validation: PASS.
+- Required final figure existence validation: PASS.
+- Phase 15 final report hash recomputation: PASS.
+- Phase 15 results hash recomputation: PASS.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 15 is locally verified but not yet committed, pushed, or confirmed in
+  GitHub Actions.
+- Phase 15 is synthesis only. It does not add new alpha, change models,
+  change features, retune thresholds, introduce new strategy variants, or
+  rerun execution optimization.
+- The final report remains limited by the Phase 1-14 research scope:
+  BTC-USDT only, displayed book only, generic fee overlays, approximate passive
+  queue diagnostics, no hidden liquidity, no self-impact, and no opened 2026
+  confirmatory holdout.
+
+Next steps:
+
+- Stop before Phase 16.
+- Commit and push Phase 15 only after user acceptance, then confirm GitHub
+  Actions on the exact Phase 15 commit before relying on CI portability.
