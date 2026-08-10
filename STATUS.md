@@ -3887,8 +3887,12 @@ Exact local verification:
 Assumptions and limitations:
 
 - Local default `python` is Python 3.10.9, not Python 3.11.
-- Phase 15 is locally verified but not yet committed, pushed, or confirmed in
-  GitHub Actions.
+- Phase 15 privacy hardening correction commit
+  `54a1961844e71cf4d80e7c6be3b5007b7716b41e` was pushed to `origin/main`.
+- Python 3.11 GitHub Actions for exact correction commit
+  `54a1961844e71cf4d80e7c6be3b5007b7716b41e` are green:
+  `tests` run `31416979704` PASS and `research-smoke` run `31416979809`
+  PASS.
 - Phase 15 is synthesis only. It does not add new alpha, change models,
   change features, retune thresholds, introduce new strategy variants, or
   rerun execution optimization.
@@ -3900,5 +3904,5 @@ Assumptions and limitations:
 Next steps:
 
 - Stop before Phase 16.
-- Commit and push Phase 15 only after user acceptance, then confirm GitHub
-  Actions on the exact Phase 15 commit before relying on CI portability.
+- Do not begin Phase 16 until the user explicitly accepts the Phase 15 privacy
+  hardening correction.
