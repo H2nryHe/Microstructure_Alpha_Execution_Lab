@@ -1,0 +1,187 @@
+plan_version: phase13_cost_latency_plan_v1
+created_under_policy: frozen_before_phase13_cost_latency_results
+
+upstream_artifacts:
+  phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase8_modeling_plan_hash: 823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe
+  phase8_results_hash: d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d
+  phase9_plan_hash: 4b1f0f0dd9f638ff4b5f40af04e17e8fc7753c4a500cac650d2537d3d40fb2c4
+  phase9_results_hash: 0e6567e9f67954df4ec5c74233f4e1d34759e4f6b7bf1f562be2e63997a44aee
+  phase10_plan_hash: 0ae8590cef7e7ea313c80889c74cc7db592a948f119e3982a2f2269df0c2a2bb
+  phase10_signal_artifact_hash: 68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6
+  phase10_results_hash: 604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71
+  phase11_execution_plan_hash: f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4
+  phase11_execution_config_hash: 7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef
+  phase11_execution_artifact_hash: 893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0
+  phase11_results_hash: a157c0eb1fb27043f19d6072b215645017d9cbc395b35047dd9b072d9d8ec2e0
+  phase12_accounting_plan_hash: a43f49a5d99393cc26b76e86628e67c4459a215f2eb5ad3a241dd339ee3094a9
+  phase12_accounting_artifact_hash: 560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b
+  phase12_results_hash: c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012
+  phase12_commit_sha: 78f396b47cd52ea40c5ba8b9e7dfb0551aad4302
+
+ci_gate:
+  phase12_commit_sha: 78f396b47cd52ea40c5ba8b9e7dfb0551aad4302
+  tests_run_id: 31397870924
+  research_smoke_run_id: 31397869299
+  python_311_github_actions_required: true
+
+development_policy:
+  allowed_dates:
+    - "2024-07-01"
+  forbidden_dates:
+    - "2026"
+  instrument: BTC-USDT
+  vendor_symbol: BTCUSDT
+  models:
+    - qi_direct_baseline
+    - lightgbm_qi_ofi
+    - lightgbm_extended
+  execution_modes:
+    - market
+    - passive
+  no_model_changes: true
+  no_signal_changes: true
+  no_order_sizing_optimization: true
+  no_forced_terminal_liquidation_in_primary_analysis: true
+  no_current_exchange_fee_claims: true
+  no_sharpe_or_annualization: true
+
+latency_grid:
+  market_data_latency_ms: 0
+  decision_latency_ms: 0
+  order_arrival_latency_ms:
+    - 0
+    - 10
+    - 50
+    - 100
+    - 250
+  convention: scenario_latency_is_downstream_order_arrival_latency
+  regeneration_required: true
+  existing_fills_may_not_be_timestamp_shifted: true
+
+fee_grids:
+  market_taker_fee_bps:
+    - 0.00
+    - 0.10
+    - 0.25
+    - 0.50
+    - 1.00
+    - 2.00
+    - 5.00
+    - 10.00
+  passive_role_specific_scenarios:
+    - scenario: P0
+      maker_fee_bps: 0.00
+      taker_fee_bps: 0.00
+    - scenario: P1
+      maker_fee_bps: -0.50
+      taker_fee_bps: 0.50
+    - scenario: P2
+      maker_fee_bps: 0.00
+      taker_fee_bps: 0.50
+    - scenario: P3
+      maker_fee_bps: 0.00
+      taker_fee_bps: 1.00
+    - scenario: P4
+      maker_fee_bps: 0.25
+      taker_fee_bps: 1.00
+    - scenario: P5
+      maker_fee_bps: 0.50
+      taker_fee_bps: 2.00
+    - scenario: P6
+      maker_fee_bps: 1.00
+      taker_fee_bps: 5.00
+  semantics: generic_research_stress_scenarios_only
+  fee_application: applied_once_to_fill_notional_after_execution
+  spread_or_shortfall_double_count_forbidden: true
+
+breakeven_formulas:
+  market_breakeven_taker_fee_bps: gross_pnl_div_turnover_times_10000_when_gross_pnl_positive
+  market_already_negative_status: ALREADY_NEGATIVE
+  passive_zero_net_condition: gross_pnl_minus_maker_fee_rate_times_maker_turnover_minus_taker_fee_rate_times_taker_turnover_equals_zero
+  passive_fixed_taker_breakeven_maker_fee_bps: gross_pnl_minus_taker_fee_rate_times_taker_turnover_div_maker_turnover_times_10000
+  passive_fixed_maker_breakeven_taker_fee_bps: gross_pnl_minus_maker_fee_rate_times_maker_turnover_div_taker_turnover_times_10000
+  negative_required_fee_interpreted_as_required_rebate: true
+
+terminal_inventory_stress:
+  primary_accounting_keeps_terminal_inventory: true
+  synthetic_liquidation_trade_forbidden: true
+  deterministic_mark_shock_bps:
+    - -10
+    - -5
+    - 0
+    - 5
+    - 10
+  shock_applies_to_terminal_inventory_only: true
+
+metrics:
+  - gross_pnl
+  - fees
+  - net_pnl
+  - turnover
+  - net_pnl_bps_of_turnover
+  - breakeven_fee
+  - fill_rate
+  - fill_count
+  - parent_orders
+  - implementation_shortfall
+  - maker_turnover
+  - taker_turnover
+  - terminal_position
+  - max_inventory
+  - residual_inventory_stress
+  - turnover_per_parent_order
+  - turnover_per_active_signal_transition
+
+required_reports:
+  - market_fee_sensitivity.csv
+  - passive_fee_sensitivity.csv
+  - latency_sensitivity.csv
+  - breakeven_costs.csv
+  - cost_survival.csv
+  - incremental_economics.csv
+  - passive_latency_diagnostic.csv
+  - terminal_inventory_stress.csv
+  - cost_decomposition.csv
+  - phase13_summary.json
+  - README.md
+
+required_figures:
+  - market_net_pnl_vs_fee_bps_by_model.png
+  - market_breakeven_fee_by_model_latency.png
+  - gross_pnl_vs_latency.png
+  - gross_pnl_bps_vs_latency.png
+  - extended_vs_qi_net_pnl_difference_by_fee.png
+  - turnover_by_model.png
+  - passive_net_pnl_by_role_fee_scenario.png
+  - passive_fill_rate_vs_latency.png
+  - passive_terminal_inventory_vs_latency.png
+  - terminal_inventory_mark_shock_sensitivity.png
+
+determinism:
+  execution_grid_artifact_hash_name: phase13_execution_grid_artifact_hash
+  results_hash_name: phase13_results_hash
+  exclude_from_hash:
+    - absolute_paths
+    - runtime
+    - creation_timestamps
+
+acceptance_criteria:
+  - exact Phase 12 commit green under Python 3.11 CI
+  - Phase 13 plan frozen before results
+  - 2026 holdout not accessed
+  - Phase 10 signals remained frozen
+  - new latency scenarios causally regenerated
+  - 0ms and 100ms zero-fee cases reconcile to Phase 12
+  - fees applied exactly once
+  - spread and shortfall not double counted
+  - market breakeven fee calculated analytically
+  - passive maker/taker roles respected
+  - fee sensitivity monotonic for fixed fills
+  - all latency scenarios retained
+  - passive inventory and fill-rate effects visible
+  - negative cost-adjusted results retained
+  - no Sharpe or annualization reported
+  - deterministic execution grid and result hashes exist

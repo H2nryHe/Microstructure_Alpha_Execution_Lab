@@ -1,0 +1,179 @@
+{
+  "dates": [
+    "2024-07-01"
+  ],
+  "fee_overlay_scenario_count": 225,
+  "latency_grid_ms": [
+    0,
+    10,
+    50,
+    100,
+    250
+  ],
+  "market_breakeven_costs": [
+    {
+      "breakeven_fee_bps": 0.27701624009249565,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 0,
+      "model": "lightgbm_extended"
+    },
+    {
+      "breakeven_fee_bps": 0.27701624009249565,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 10,
+      "model": "lightgbm_extended"
+    },
+    {
+      "breakeven_fee_bps": 0.2549968552216678,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 100,
+      "model": "lightgbm_extended"
+    },
+    {
+      "breakeven_fee_bps": 0.209536799801644,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 250,
+      "model": "lightgbm_extended"
+    },
+    {
+      "breakeven_fee_bps": 0.27701624009249565,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 50,
+      "model": "lightgbm_extended"
+    },
+    {
+      "breakeven_fee_bps": 0.2524565100503137,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 0,
+      "model": "lightgbm_qi_ofi"
+    },
+    {
+      "breakeven_fee_bps": 0.2524565100503137,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 10,
+      "model": "lightgbm_qi_ofi"
+    },
+    {
+      "breakeven_fee_bps": 0.24220277097937412,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 100,
+      "model": "lightgbm_qi_ofi"
+    },
+    {
+      "breakeven_fee_bps": 0.2016144987463031,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 250,
+      "model": "lightgbm_qi_ofi"
+    },
+    {
+      "breakeven_fee_bps": 0.2524565100503137,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 50,
+      "model": "lightgbm_qi_ofi"
+    },
+    {
+      "breakeven_fee_bps": 0.3761491904266314,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 0,
+      "model": "qi_direct_baseline"
+    },
+    {
+      "breakeven_fee_bps": 0.3761491904266314,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 10,
+      "model": "qi_direct_baseline"
+    },
+    {
+      "breakeven_fee_bps": 0.3623899663117268,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 100,
+      "model": "qi_direct_baseline"
+    },
+    {
+      "breakeven_fee_bps": 0.2985150759056961,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 250,
+      "model": "qi_direct_baseline"
+    },
+    {
+      "breakeven_fee_bps": 0.3761491904266314,
+      "breakeven_fee_status": "DEFINED",
+      "latency_ms": 50,
+      "model": "qi_direct_baseline"
+    }
+  ],
+  "market_fee_grid_bps": [
+    0.0,
+    0.1,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0
+  ],
+  "models": [
+    "qi_direct_baseline",
+    "lightgbm_qi_ofi",
+    "lightgbm_extended"
+  ],
+  "modes": [
+    "market",
+    "passive"
+  ],
+  "passive_fee_scenarios": [
+    {
+      "fee_scenario": "P0",
+      "maker_fee_bps": 0.0,
+      "taker_fee_bps": 0.0
+    },
+    {
+      "fee_scenario": "P1",
+      "maker_fee_bps": -0.5,
+      "taker_fee_bps": 0.5
+    },
+    {
+      "fee_scenario": "P2",
+      "maker_fee_bps": 0.0,
+      "taker_fee_bps": 0.5
+    },
+    {
+      "fee_scenario": "P3",
+      "maker_fee_bps": 0.0,
+      "taker_fee_bps": 1.0
+    },
+    {
+      "fee_scenario": "P4",
+      "maker_fee_bps": 0.25,
+      "taker_fee_bps": 1.0
+    },
+    {
+      "fee_scenario": "P5",
+      "maker_fee_bps": 0.5,
+      "taker_fee_bps": 2.0
+    },
+    {
+      "fee_scenario": "P6",
+      "maker_fee_bps": 1.0,
+      "taker_fee_bps": 5.0
+    }
+  ],
+  "phase10_commit_sha": "7b4bba3483bd6a7a3ae52acfd12bc91a830f6901",
+  "phase10_results_hash": "604a7b8a83990b9052c8fd329d93e93759a58d4b98960c2362f104a2d4b14f71",
+  "phase10_signal_artifact_hash": "68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6",
+  "phase10_signal_entries_verified": 54,
+  "phase11_execution_config_hash": "7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef",
+  "phase11_execution_plan_hash": "f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4",
+  "phase12_accounting_artifact_hash": "560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b",
+  "phase12_accounting_plan_hash": "a43f49a5d99393cc26b76e86628e67c4459a215f2eb5ad3a241dd339ee3094a9",
+  "phase12_commit_sha": "78f396b47cd52ea40c5ba8b9e7dfb0551aad4302",
+  "phase12_research_smoke_run_id": 31397869299,
+  "phase12_results_hash": "c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012",
+  "phase12_tests_run_id": 31397870924,
+  "phase13_execution_grid_artifact_hash": "45ada7b581b9e5240661b2fc5bdb3e137f8a5e86674fa9563685104f10eda5cb",
+  "phase13_plan_hash": "fadafb1a634f9661d5c664f3a716a8ead8c24e4abf61a221e94668bab9f0a5f1",
+  "phase13_results_hash": "3798edf860c8a493d17fcbbe201b6fd5a2e61a10ab955d504ee160bfdffef990",
+  "phase13_status": "PASS",
+  "scenario_count": 30,
+  "zero_fee_reconciliation": "PASS"
+}

@@ -20,7 +20,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 10 - Signal construction
 [x] Phase 11 - Execution simulator
 [x] Phase 12 - Portfolio / inventory accounting
-[ ] Phase 13 - Cost and latency analysis
+[x] Phase 13 - Cost and latency analysis
 [ ] Phase 14 - Robustness and regime analysis
 [ ] Phase 15 - Research report
 [ ] Phase 16 - Performance engineering
@@ -2202,7 +2202,7 @@ Next steps:
 
 ## Phase 8 - Baseline Predictive Modeling
 
-Status: PASS locally
+Status: PASS locally and accepted
 
 Pre-Phase-8 CI gate:
 
@@ -3070,6 +3070,11 @@ Pre-Phase-12 gate:
 - GitHub Actions under Python 3.11 confirmed that exact Phase 11 commit:
   `tests` run `31395063031` PASS and `research-smoke` run
   `31395063336` PASS.
+- Exact accepted Phase 12 commit:
+  `78f396b47cd52ea40c5ba8b9e7dfb0551aad4302`.
+- GitHub Actions under Python 3.11 confirmed that exact Phase 12 commit:
+  `tests` run `31397870924` PASS and `research-smoke` run
+  `31397869299` PASS.
 - Phase 11 execution artifact hash verified:
   `893c5196be53a00bcd5fb94362b60dece3da28aea2e264fe1f50bf6bbce415c0`.
 - Phase 11 results hash verified:
@@ -3261,8 +3266,10 @@ Exact local verification:
 Assumptions and limitations:
 
 - Local default `python` is Python 3.10.9, not Python 3.11.
-- Phase 12 has not yet been committed, pushed, or confirmed in Python 3.11
-  GitHub Actions.
+- Exact Phase 12 artifact state was committed and pushed as
+  `78f396b47cd52ea40c5ba8b9e7dfb0551aad4302`.
+- Python 3.11 GitHub Actions confirmed that exact Phase 12 commit with `tests`
+  run `31397870924` PASS and `research-smoke` run `31397869299` PASS.
 - Real-data accounting is intentionally bounded to one development date,
   `2024-07-01`, for the Phase 12 MVP.
 - Phase 12 consumes the frozen Phase 11 orders, fills, and markouts unchanged.
@@ -3273,11 +3280,253 @@ Assumptions and limitations:
 - Accounting PnL is a ledger result for this bounded diagnostic run only and is
   not evidence of live economic viability.
 - No 2026 holdout data was accessed.
-- No Phase 13 cost or latency analysis was started.
+- Phase 13 cost and latency analysis has been completed below.
 
 Next steps:
 
-- Stop before Phase 13.
-- Commit and push the exact Phase 12 artifact state only after user acceptance,
+- Phase 13 transaction-cost, latency, and breakeven analysis has been completed
+  below from the accepted Phase 12 commit.
+
+## Phase 13 - Transaction Cost, Latency, and Breakeven Analysis
+
+Status: PASS locally
+
+Pre-Phase-13 gate:
+
+- Exact accepted Phase 12 commit:
+  `78f396b47cd52ea40c5ba8b9e7dfb0551aad4302`.
+- GitHub Actions under Python 3.11 confirmed that exact Phase 12 commit:
+  `tests` run `31397870924` PASS and `research-smoke` run
+  `31397869299` PASS.
+- Phase 12 accounting plan hash:
+  `a43f49a5d99393cc26b76e86628e67c4459a215f2eb5ad3a241dd339ee3094a9`.
+- Phase 12 accounting artifact hash:
+  `560d48d2656cde46865bc26dd9cd3c853ef6717ed54e2a911ad8a80588c4cc0b`.
+- Phase 12 results hash:
+  `c8fb3c53e09ed36c5d41d72370c3bbc624c37ae0a9a910f0da3460784ce8a012`.
+- Phase 10 signal artifact hash verified:
+  `68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6`.
+
+Frozen Phase 13 plan:
+
+- Plan file: `data/manifests/phase13_cost_latency_plan.yaml`.
+- Plan hash:
+  `fadafb1a634f9661d5c664f3a716a8ead8c24e4abf61a221e94668bab9f0a5f1`.
+- The plan was frozen before Phase 13 cost and latency results were run.
+
+Analysis scope:
+
+- Instrument: `BTC-USDT`.
+- Vendor symbol: Tardis/Binance `BTCUSDT`.
+- Date: `2024-07-01`.
+- Models: `qi_direct_baseline`, `lightgbm_qi_ofi`, and
+  `lightgbm_extended`.
+- Execution modes: `market` and `passive`.
+- Latency grid in milliseconds: `0`, `10`, `50`, `100`, `250`.
+- Market fee grid in bps: `0.00`, `0.10`, `0.25`, `0.50`, `1.00`,
+  `2.00`, `5.00`, `10.00`.
+- Passive fee scenarios:
+  `P0=(maker 0.00, taker 0.00)`,
+  `P1=(maker -0.50, taker 0.50)`,
+  `P2=(maker 0.00, taker 0.50)`,
+  `P3=(maker 0.00, taker 1.00)`,
+  `P4=(maker 0.25, taker 1.00)`,
+  `P5=(maker 0.50, taker 2.00)`,
+  `P6=(maker 1.00, taker 5.00)`.
+- Fee grids are generic research stresses only and are not current exchange
+  fee schedules.
+- Market-data latency remains `0ms`; scenario latency is downstream
+  order-arrival latency.
+- New latency scenarios were causally regenerated with Phase 11 mechanics.
+- Existing Phase 11 and Phase 12 outputs were not overwritten.
+
+Artifacts and hashes:
+
+- Phase 13 execution root: `/tmp/microalpha-phase13-execution`.
+- Phase 13 zero-fee ledger root: `/tmp/microalpha-phase13-ledgers`.
+- Compact report directory: `reports/phase13`.
+- Execution root size: about `96M`.
+- Zero-fee ledger root size: about `224M`.
+- Compact report size: about `852K`.
+- Phase 13 execution-grid artifact hash:
+  `45ada7b581b9e5240661b2fc5bdb3e137f8a5e86674fa9563685104f10eda5cb`.
+- Phase 13 results hash:
+  `3798edf860c8a493d17fcbbe201b6fd5a2e61a10ab955d504ee160bfdffef990`.
+- Phase 13 result hash recomputation matched the stored hash.
+
+Compact reports:
+
+- `reports/phase13/market_fee_sensitivity.csv`
+- `reports/phase13/passive_fee_sensitivity.csv`
+- `reports/phase13/latency_sensitivity.csv`
+- `reports/phase13/breakeven_costs.csv`
+- `reports/phase13/cost_survival.csv`
+- `reports/phase13/incremental_economics.csv`
+- `reports/phase13/passive_latency_diagnostic.csv`
+- `reports/phase13/terminal_inventory_stress.csv`
+- `reports/phase13/cost_decomposition.csv`
+- `reports/phase13/execution_grid_manifest.json`
+- `reports/phase13/phase13_summary.json`
+- `reports/phase13/README.md`
+- Figures are under `reports/phase13/figures`.
+
+Market breakeven costs:
+
+- QI market breakeven fee bps:
+  `0ms=0.3761491904266314`,
+  `10ms=0.3761491904266314`,
+  `50ms=0.3761491904266314`,
+  `100ms=0.3623899663117268`,
+  `250ms=0.2985150759056961`.
+- QI+OFI market breakeven fee bps:
+  `0ms=0.2524565100503137`,
+  `10ms=0.2524565100503137`,
+  `50ms=0.2524565100503137`,
+  `100ms=0.24220277097937412`,
+  `250ms=0.2016144987463031`.
+- Extended market breakeven fee bps:
+  `0ms=0.27701624009249565`,
+  `10ms=0.27701624009249565`,
+  `50ms=0.27701624009249565`,
+  `100ms=0.2549968552216678`,
+  `250ms=0.209536799801644`.
+- Analytical market breakeven values match the fee-grid interpolation.
+
+Fee survival:
+
+- Market scenarios remain net positive at `0.10 bps`.
+- Most market scenarios remain net positive at `0.25 bps`; exceptions are
+  QI+OFI at `100ms` and `250ms`, and Extended at `250ms`.
+- No market scenario remains net positive at `0.50 bps` or higher.
+- Passive scenarios are net negative for all role-specific scenarios except QI
+  at `100ms`, which remains net positive from `P0` through `P4` and turns net
+  negative at `P5` and `P6`.
+
+Latency diagnostics:
+
+- Market fill rate remains `1.0` for all models and latencies.
+- Market 10ms and 50ms results match 0ms because the execution book state is
+  based on the existing 100ms research grid and the as-of book snapshot does
+  not change for those sub-grid latencies on this date.
+- Market gross PnL loss versus 0ms at 100ms:
+  QI `196.4536916351499`,
+  QI+OFI `226.8218751266937`,
+  Extended `456.5840709651818`.
+- Market gross PnL loss versus 0ms at 250ms:
+  QI `1106.943002297076`,
+  QI+OFI `1117.5527928109633`,
+  Extended `1393.1052092698503`.
+- Passive latency response is not interpreted causally. Fill selection,
+  fill rate, maker/taker mix, residual inventory, and markouts all change.
+
+Turnover and incremental economics:
+
+- At 0ms market execution, Extended minus QI gross PnL increment is
+  `346.6180473469203`, but turnover increment is about `63.642M` and turnover
+  efficiency increment is `-0.09913295033413575 bps`.
+- At 0ms market execution, QI+OFI minus QI gross PnL increment is
+  `175.98133805999516`, but turnover increment is about `76.974M` and turnover
+  efficiency increment is `-0.12369268037631769 bps`.
+- At 0ms market execution, Extended minus QI+OFI gross PnL increment is
+  `170.63670928692516`, turnover increment is about `-13.332M`, and turnover
+  efficiency increment is `0.02455973004218196 bps`.
+- At 0.25 bps market fee, Extended minus QI net PnL increment is negative at
+  0ms, 100ms, and 250ms.
+- At 0.25 bps market fee, QI+OFI minus QI net PnL increment is negative at
+  0ms, 100ms, and 250ms.
+- These are diagnostic comparisons only and do not select a new strategy.
+
+Passive diagnostics:
+
+- Passive fill rates remain low, ranging from about `0.014115` to `0.051494`
+  across model/latency scenarios.
+- Passive maker/taker role handling is explicit. At `0ms`, passive fills are
+  all maker fills for the three models in this dataset. At `100ms` and `250ms`,
+  marketable-limit taker-on-arrival fills appear.
+- Passive terminal inventory remains material. Examples:
+  Extended `0ms=11.957668360736466`, `100ms=7.732312207016806`,
+  `250ms=10.35683844478512`;
+  QI+OFI `0ms=9.130302156076135`, `100ms=5.819067941774399`,
+  `250ms=5.234827553236007`;
+  QI `0ms=1.943989932014357`, `100ms=3.204774389905958`,
+  `250ms=3.6848790029233167`.
+- Terminal inventory stress applies deterministic mark shocks to remaining
+  inventory only and does not create synthetic liquidation trades.
+- Passive QI at 100ms has terminal-equity deltas of about `-201.580293` and
+  `+201.580293` for `-10 bps` and `+10 bps` terminal mark shocks.
+
+Accounting and cost conventions:
+
+- Fees are applied once as quote fees on fill notional after execution.
+- Market fills use taker-fee semantics.
+- Passive fills use actual Phase 11 `liquidity_role`: maker fills use maker
+  fee bps, and taker or marketable-limit fills use taker fee bps.
+- Spread, displayed-depth consumption, arrival-time market state, marketable
+  limit behavior, and implementation shortfall are already embedded in fill
+  prices. They are diagnostics only and are not subtracted again.
+- Primary accounting retains terminal inventory. Terminal inventory stress
+  changes only the terminal mark applied to remaining inventory.
+
+Synthetic tests added:
+
+- Exact market fee calculation.
+- Exact market breakeven calculation.
+- Fixed-fill net PnL monotonicity under increasing fees.
+- Maker rebate handling.
+- Mixed maker/taker role-specific fee reconciliation.
+- Fee overlay does not change gross PnL.
+- Fee-grid interpolation reproduces a known zero-fee/breakeven case.
+- Passive breakeven rebate flagging.
+- Latency causality: arrival time equals create time plus configured latency,
+  and no fill occurs before arrival.
+- Latency validation does not mutate signal timestamps.
+- Terminal inventory stress and scenario isolation.
+
+Exact local verification:
+
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/run_phase13_cost_latency.py --clean`:
+  generated all 30 execution scenarios and all 30 zero-fee ledgers, then failed
+  only in figure generation due to a report-stage lookup bug. No reconciliation
+  failure occurred.
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/run_phase13_cost_latency.py --reuse-execution`:
+  PASS, reused the checksum-validated regenerated execution grid and produced
+  final reports, figures, execution-grid artifact hash, and results hash.
+- `python -m pytest`: PASS, `191 passed, 49 warnings in 3.09s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `python -m json.tool reports/phase13/phase13_summary.json`: PASS.
+- `python -m json.tool reports/phase13/execution_grid_manifest.json`: PASS.
+- Phase 13 result hash recomputation:
+  PASS, matched stored hash
+  `3798edf860c8a493d17fcbbe201b6fd5a2e61a10ab955d504ee160bfdffef990`.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- Guardrail scan: no `2026-` date references in Phase 13 reports or plan.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 13 has not yet been committed, pushed, or confirmed in Python 3.11
+  GitHub Actions.
+- `gh` is not installed locally, so Phase 12 CI evidence is recorded from the
+  user-provided accepted run IDs.
+- Real execution/accounting remains intentionally bounded to one development
+  date, `2024-07-01`.
+- Latency values below the 100ms book-state grid can share the same as-of book
+  snapshot; this is documented rather than smoothed or optimized away.
+- Fee scenarios are generic stress tests and are not current exchange fee
+  schedules.
+- No predictive models, features, signal thresholds, order sizing, or fills
+  were optimized or changed.
+- No 2026 holdout data was accessed.
+- No Phase 14 robustness or regime analysis was started.
+- Negative cost-adjusted results are retained.
+- No annualized metrics or Sharpe ratio are reported.
+
+Next steps:
+
+- Stop before Phase 14.
+- Commit and push the exact Phase 13 artifact state only after user acceptance,
   then confirm Python 3.11 GitHub Actions on that exact commit before relying
   on CI portability.
