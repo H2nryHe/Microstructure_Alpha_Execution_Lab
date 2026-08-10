@@ -1,0 +1,282 @@
+plan_version: phase8_modeling_plan_v1
+phase: Phase 8 - Baseline Predictive Modeling
+frozen_inputs:
+  pre_phase7_snapshot_hash: 0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a
+  phase7_results_hash: b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04
+  phase7_audit_hash: b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1
+  phase7_audit_commit: d785b28907776865ebd1ca799cfd6ad1611e3717
+  dataset_role: development
+  holdout_policy: 2026 holdout dates must not be read in Phase 8
+modeling_question: >
+  Can compact multivariate models provide stable incremental predictive
+  information beyond the already-strong qi_1 baseline?
+target_selection:
+  primary_regression_target: ret_fwd_1s
+  target_choice_note: >
+    The 1s target is development-informed by Phase 7 and must not be described
+    as independent of Phase 7.
+  secondary_classification_target: next_mid_change_direction
+  classification_encoding:
+    down: 0
+    up: 1
+  unavailable_next_mid_policy: exclude unavailable observations; never encode as class 0
+dates:
+  train:
+    - '2024-01-01'
+    - '2024-02-01'
+    - '2024-03-01'
+    - '2024-04-01'
+    - '2024-05-01'
+    - '2024-06-01'
+    - '2024-07-01'
+    - '2024-08-01'
+    - '2024-09-01'
+    - '2024-10-01'
+    - '2024-11-01'
+    - '2024-12-01'
+  validation:
+    - '2025-01-01'
+    - '2025-02-01'
+    - '2025-03-01'
+    - '2025-04-01'
+    - '2025-05-01'
+    - '2025-06-01'
+    - '2025-07-01'
+    - '2025-08-01'
+    - '2025-09-01'
+    - '2025-10-01'
+    - '2025-11-01'
+    - '2025-12-01'
+  validation_note: 2025 is development validation, not untouched holdout
+anchor_rule:
+  source_grid: 100ms research grid
+  primary_sample: deterministic non-overlapping 1s anchors
+  row_rule: row_index % 10 == 0
+  offset: 0
+  alignment: deterministic UTC fixed-grid alignment inherited from Phase 4
+  full_grid_modeling: secondary diagnostic only
+feature_sets:
+  qi_only:
+    - qi_1
+  qi_ofi:
+    - qi_1
+    - ofi_1s
+  qi_trade_imbalance:
+    - qi_1
+    - trade_imbalance_1s
+  core_independent_microstructure:
+    - qi_1
+    - ofi_1s
+    - trade_imbalance_1s
+  extended_book_flow:
+    - qi_1
+    - di_5
+    - di_10
+    - ofi_1s
+    - trade_imbalance_1s
+    - spread_bps
+    - realized_vol_5s
+    - mom_1s
+    - book_update_count_1s
+    - trade_count_1s
+  reference_ofi_only:
+    - ofi_1s
+  reference_trade_imbalance_only:
+    - trade_imbalance_1s
+excluded_primary_features:
+  - microprice_deviation_bps
+exclusion_reason: >
+  Phase 7 audit showed microprice_deviation_bps = spread_bps * qi_1 / 2 and
+  mean rank correlation with qi_1 was approximately 0.9993.
+regression_models:
+  null_mean:
+    model_type: train_mean_predictor
+    feature_sets:
+      - qi_only
+    fit_target_mean_on_train_only: true
+  qi_linear:
+    model_type: ridge_regression
+    alpha: 0.0
+    solver: svd
+    standardized_features: true
+    feature_sets:
+      - qi_only
+  ridge:
+    model_type: ridge_regression
+    alpha: 1.0
+    solver: auto
+    standardized_features: true
+    feature_sets:
+      - qi_only
+      - qi_ofi
+      - qi_trade_imbalance
+      - core_independent_microstructure
+      - extended_book_flow
+      - reference_ofi_only
+      - reference_trade_imbalance_only
+  lightgbm_regression:
+    model_type: lightgbm_lgbmregressor
+    feature_sets:
+      - qi_only
+      - qi_ofi
+      - qi_trade_imbalance
+      - core_independent_microstructure
+      - extended_book_flow
+      - reference_ofi_only
+      - reference_trade_imbalance_only
+    params:
+      n_estimators: 120
+      learning_rate: 0.05
+      num_leaves: 15
+      max_depth: 4
+      min_child_samples: 200
+      subsample: 0.8
+      colsample_bytree: 0.9
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      random_state: 8008
+      deterministic: true
+      force_col_wise: true
+      n_jobs: 1
+classification_models:
+  logistic_qi:
+    model_type: logistic_regression
+    feature_set: qi_only
+    C: 1.0
+    penalty: l2
+    solver: lbfgs
+    max_iter: 1000
+    standardized_features: true
+  logistic_core:
+    model_type: logistic_regression
+    feature_set: core_independent_microstructure
+    C: 1.0
+    penalty: l2
+    solver: lbfgs
+    max_iter: 1000
+    standardized_features: true
+  lightgbm_classifier:
+    model_type: lightgbm_lgbmclassifier
+    optional: true
+    feature_set: core_independent_microstructure
+    params:
+      n_estimators: 120
+      learning_rate: 0.05
+      num_leaves: 15
+      max_depth: 4
+      min_child_samples: 200
+      subsample: 0.8
+      colsample_bytree: 0.9
+      reg_alpha: 0.1
+      reg_lambda: 1.0
+      random_state: 8008
+      deterministic: true
+      force_col_wise: true
+      n_jobs: 1
+preprocessing:
+  ridge_and_logistic:
+    scaler: StandardScaler fitted on TRAIN only
+    imputation: TRAIN median per feature
+    missing_indicators:
+      rule: add indicator for any selected feature with TRAIN missing rate > 0
+      indicator_suffix: _missing
+      required_semantic_indicator:
+        - trade_imbalance_1s_missing
+    winsorization: none
+  lightgbm:
+    imputation: native NaN handling where supported
+    missing_indicators: none
+  train_only_learning:
+    - means
+    - medians
+    - standard deviations
+    - model coefficients
+    - tree structure
+metrics:
+  regression_primary:
+    - validation Spearman IC
+  regression_secondary:
+    - Pearson correlation
+    - MAE
+    - RMSE
+    - R2
+    - sign accuracy on non-zero future returns
+    - prediction mean/std
+    - target mean/std
+    - daily mean/median/std/min/max Spearman IC
+    - positive-day count
+  incremental_lift:
+    baseline: qi_linear on qi_only
+    fields:
+      - mean delta daily IC
+      - median delta daily IC
+      - min delta daily IC
+      - max delta daily IC
+      - positive-lift days
+      - negative-lift days
+  prediction_redundancy:
+    rank_correlate_predictions_with:
+      - qi_1
+      - ofi_1s
+      - trade_imbalance_1s
+  classification:
+    - ROC AUC
+    - log loss
+    - Brier score
+    - calibration by predicted-probability decile
+  feature_importance:
+    - LightGBM gain importance
+    - LightGBM split importance
+    - deterministic bounded permutation importance on validation when feasible
+negative_control:
+  regression:
+    name: deterministic_permuted_train_target
+    model: ridge
+    feature_set: core_independent_microstructure
+    seed: 8008
+    bounded_train_rows: 200000
+    bounded_validation_rows: 200000
+    expected: no persistent validation IC
+determinism:
+  seed: 8008
+  output_hash: phase8_results_hash over compact outputs excluding paths/timestamps
+outputs:
+  directory: reports/phase8
+  tables:
+    - regression_results.csv
+    - daily_regression_metrics.csv
+    - ablation_results.csv
+    - prediction_correlations.csv
+    - feature_importance.csv
+    - classification_results.csv
+    - classification_calibration.csv
+    - negative_control.csv
+    - phase8_summary.json
+    - README.md
+  figures:
+    - model_mean_daily_ic_comparison.png
+    - delta_ic_vs_qi_baseline.png
+    - per_date_qi_ridge_lightgbm_ic.png
+    - prediction_vs_qi_rank_correlation.png
+    - lightgbm_feature_importance.png
+    - prediction_shape_vs_qi_1.png
+    - prediction_shape_vs_ofi_1s.png
+    - prediction_shape_vs_trade_imbalance_1s.png
+    - next_mid_classification_auc_comparison.png
+    - next_mid_probability_calibration.png
+acceptance_criteria:
+  - exact Phase 7 audit commit is green under Python 3.11 CI
+  - modeling plan frozen before validation results
+  - only 2024 TRAIN and 2025 VALIDATION data used
+  - 2026 holdout never accessed
+  - primary sample uses deterministic non-overlapping 1s anchors
+  - qi-only benchmark is central
+  - Ridge and LightGBM compared against QI when local dependencies support them
+  - incremental daily IC reported
+  - feature redundancy handled honestly
+  - preprocessing fitted on TRAIN only
+  - future/target columns cannot enter feature matrices
+  - classification excludes unavailable next-mid outcomes
+  - no threshold tuning, PnL, fill simulation, or backtest
+  - negative-control model reported
+  - compact deterministic outputs exist

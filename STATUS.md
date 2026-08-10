@@ -14,8 +14,8 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 4 - Research dataset construction
 [x] Phase 5 - Feature engineering
 [x] Phase 6 - Label generation
-[ ] Phase 7 - Baseline statistical research
-[ ] Phase 8 - Predictive modeling
+[x] Phase 7 - Baseline statistical research
+[x] Phase 8 - Predictive modeling
 [ ] Phase 9 - Walk-forward evaluation
 [ ] Phase 10 - Signal construction
 [ ] Phase 11 - Execution simulator
@@ -1988,21 +1988,18 @@ Assumptions and limitations:
 - PyArrow emitted sandbox CPU-info warnings while reading parquet; these did not
   affect the Phase 7 gate.
 - Phase 7 evidence is statistical predictability on the frozen development
-  sample only and is not executable profitability.
+  sample only and is not an executable trading result.
 - No suspicious-audit exception was opened from Phase 7 outputs because the
   negative control was near zero, non-overlap robustness was close to full-grid
   IC, and 2024/2025 signs were stable. The high same-sign primary family should
   still be treated as research evidence only, not as a trading claim.
-- Python 3.11 CI has not yet been run for the current Phase 7 artifact state.
+- Python 3.11 CI was later confirmed on the exact pushed Phase 7 audit artifact
+  commit recorded below.
 
 Next steps:
 
-- Commit and push the Phase 7 implementation, outputs, and status update when
-  Git operations are available.
-- Confirm GitHub Actions `tests` and `research-smoke` pass under Python 3.11 on
-  that commit.
-- Do not begin Phase 8 until Phase 7 is accepted and any required CI
-  confirmation is green.
+- See the Phase 7 audit section for the exact pushed commit and Python 3.11 CI
+  runs that cleared the pre-Phase-8 gate.
 
 ## Phase 7 Suspicious-Result / Robustness Audit
 
@@ -2172,17 +2169,236 @@ Assumptions and limitations:
   affect the audit gate.
 - The changed-state and unique-state diagnostics used consecutive BBO identity.
   They intentionally did not use future labels.
-- The audit did not reinterpret Phase 7 as profitability. It only tested
+- The audit did not reinterpret Phase 7 as an economic result. It only tested
   timestamp lineage, label construction, repeated-state weighting, bucket
   mechanics, feature redundancy, discreteness, spread mechanics, and temporal
   alignment sensitivity.
-- Python 3.11 CI has not yet been run for the current audit artifact state.
+- Python 3.11 CI was confirmed on the exact pushed audit artifact commit.
 
 Next steps:
 
-- Commit and push the audit implementation, audit outputs, and status update
-  when Git operations are available.
-- Confirm GitHub Actions `tests` and `research-smoke` pass under Python 3.11 on
-  that commit.
-- Do not begin Phase 8 until the audit is accepted and any required CI
-  confirmation is green.
+- Exact pushed audit artifact commit:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+- Commit message:
+  `docs: Add Phase 7 robustness audit results to STATUS.md`.
+- `origin/main` and local `HEAD` both resolved to that SHA before Phase 8 work
+  started.
+- GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- GitHub Actions `tests` workflow: PASS.
+  Run: `31346275365`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31346275365`.
+  Head SHA:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+- GitHub Actions `research-smoke` workflow: PASS.
+  Run: `31346275370`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31346275370`.
+  Head SHA:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+- Phase 8 may now begin using only 2024 TRAIN and 2025 VALIDATION data.
+- Do not access 2026 holdout data or begin Phase 9.
+
+## Phase 8 - Baseline Predictive Modeling
+
+Status: PASS locally
+
+Pre-Phase-8 CI gate:
+
+- Exact pushed Phase 7 audit artifact commit:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+- GitHub Actions workflows use `actions/setup-python@v5` with
+  `python-version: "3.11"`.
+- GitHub Actions `tests` workflow: PASS.
+  Run: `31346275365`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31346275365`.
+  Head SHA:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+- GitHub Actions `research-smoke` workflow: PASS.
+  Run: `31346275370`.
+  URL:
+  `https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/runs/31346275370`.
+  Head SHA:
+  `d785b28907776865ebd1ca799cfd6ad1611e3717`.
+
+Frozen plan:
+
+- Plan file: `data/manifests/phase8_modeling_plan.yaml`.
+- Phase 8 modeling plan hash:
+  `823ee7a98be9a5199842536a65edd2394a39f1c5c6ae13947c29bd7c1c2494fe`.
+- Frozen Phase 7 snapshot hash:
+  `0bcdb7eddebbe83458998eff78844471afb78fc66d249a53aeb25667bebd803a`.
+- Phase 7 result hash:
+  `b86d51c4317f87d0cabf579f152d07c139e7fc23e47356d655bd09057342eb04`.
+- Phase 7 audit hash:
+  `b6b8206e03c81b47787d5ae4d4e5b960b4748bc75eed0ee5be4862ebf190d6e1`.
+- The plan was created before Phase 8 validation model results were generated.
+
+Data split and target:
+
+- TRAIN dates: all 2024 first-of-month development dates,
+  `2024-01-01` through `2024-12-01`.
+- VALIDATION dates: all 2025 first-of-month development dates,
+  `2025-01-01` through `2025-12-01`.
+- 2025 is development validation, not an untouched holdout.
+- 2026 holdout access: `false`.
+- Primary target: `ret_fwd_1s`.
+- Secondary classification target: `next_mid_change_direction`, with
+  unavailable observations excluded.
+- Primary anchor rule: deterministic non-overlapping 1s anchors from the 100ms
+  grid, `row_index % 10 == 0`, offset `0`.
+- Training rows: `1,036,749`.
+- Validation rows: `1,036,771`.
+- Classification validation rows: `911,358`.
+
+Feature sets:
+
+- `qi_only`: `qi_1`.
+- `qi_ofi`: `qi_1`, `ofi_1s`.
+- `qi_trade_imbalance`: `qi_1`, `trade_imbalance_1s`.
+- `core_independent_microstructure`: `qi_1`, `ofi_1s`,
+  `trade_imbalance_1s`.
+- `extended_book_flow`: `qi_1`, `di_5`, `di_10`, `ofi_1s`,
+  `trade_imbalance_1s`, `spread_bps`, `realized_vol_5s`, `mom_1s`,
+  `book_update_count_1s`, `trade_count_1s`.
+- Reference baselines: `ofi_1s` only and `trade_imbalance_1s` only.
+- `microprice_deviation_bps` was excluded from primary models because the
+  Phase 7 audit showed it is nearly rank-equivalent to `qi_1` under the
+  observed spread regime.
+
+Model configs:
+
+- Null regression: training-set mean predictor.
+- QI baseline: single-feature standardized ridge with `alpha=0.0`,
+  `solver=svd`.
+- Ridge regression: `alpha=1.0`, standardized features, training-only median
+  imputation, explicit missing indicators for features missing in TRAIN.
+- LightGBM regression: `n_estimators=120`, `learning_rate=0.05`,
+  `num_leaves=15`, `max_depth=4`, `min_child_samples=200`, `subsample=0.8`,
+  `colsample_bytree=0.9`, `reg_alpha=0.1`, `reg_lambda=1.0`,
+  `random_state=8008`, `deterministic=true`, `force_col_wise=true`,
+  `n_jobs=1`.
+- Classification: QI-only logistic regression, core-feature logistic
+  regression, and LightGBM classifier with the same tree parameters.
+
+Implementation and outputs:
+
+- Added reusable Phase 8 helpers in `src/microalpha/research/phase8.py`.
+- Added runner `scripts/run_phase8_modeling.py`.
+- Added leakage/isolation/modeling tests in
+  `tests/unit/test_phase8_modeling.py`.
+- Created compact tracked outputs under `reports/phase8/`:
+  `regression_results.csv`, `daily_regression_metrics.csv`,
+  `ablation_results.csv`, `prediction_correlations.csv`,
+  `feature_importance.csv`, `classification_results.csv`,
+  `classification_calibration.csv`, `negative_control.csv`,
+  `phase8_summary.json`, `README.md`, and required figures.
+- Phase 8 result hash:
+  `d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d`.
+
+Validation metrics:
+
+- QI baseline mean daily Spearman IC:
+  `0.4222578166269703`.
+- Best Ridge model: `ridge / qi_only`.
+  Spearman IC `0.424256903031`, mean daily IC `0.422257816627`,
+  Pearson `0.274089676645`, MAE `2.58063266482e-05`, RMSE
+  `5.04536924006e-05`, R2 `0.0712236661297`, non-zero sign accuracy
+  `0.867339596343`, positive validation days `12 / 12`.
+- Best incremental model: `lightgbm_regression / extended_book_flow`.
+  Spearman IC `0.437010448125`, mean daily IC `0.430171064696`,
+  Pearson `0.337969588481`, MAE `2.17870943295e-05`, RMSE
+  `4.9273301211e-05`, R2 `0.114173740143`, non-zero sign accuracy
+  `0.870892101463`, positive validation days `12 / 12`.
+
+Incremental lift over QI:
+
+- `lightgbm_regression / extended_book_flow`: mean delta daily IC
+  `0.00791324806945`, median `0.00832294095587`, min
+  `0.00177382728405`, max `0.0149799477797`, positive-lift days `12`,
+  negative-lift days `0`.
+- `lightgbm_regression / core_independent_microstructure`: mean delta
+  `0.00502243518434`, median `0.00498025879287`, min
+  `-0.00122501618755`, max `0.0115030072751`, positive-lift days `11`,
+  negative-lift days `1`.
+- `lightgbm_regression / qi_ofi`: mean delta `0.00484766312093`, median
+  `0.00421298509425`, min `-0.00163878344482`, max `0.0104240363204`,
+  positive-lift days `11`, negative-lift days `1`.
+- Ridge multivariate variants did not improve mean daily IC over QI-only.
+
+Prediction redundancy:
+
+- QI-only ridge prediction rank correlation with `qi_1`: `1.0`.
+- LightGBM QI-only prediction rank correlation with `qi_1`:
+  `0.999794341414`.
+- LightGBM `core_independent_microstructure` prediction rank correlation:
+  `qi_1=0.960831733082`, `ofi_1s=0.629918550616`,
+  `trade_imbalance_1s=0.316948322822`.
+- LightGBM `extended_book_flow` prediction rank correlation:
+  `qi_1=0.950510869209`, `ofi_1s=0.625371024709`,
+  `trade_imbalance_1s=0.312459706788`.
+- Interpretation: the best model remains heavily related to QI, with modest
+  incremental information from flow/deeper-book features.
+
+Classification metrics:
+
+- `logistic_qi / qi_only`: ROC AUC `0.763726139363`, log loss
+  `0.584211503425`, Brier `0.199419383388`.
+- `logistic_core / core_independent_microstructure`: ROC AUC
+  `0.762554132261`, delta AUC `-0.00117200710254`, log loss
+  `0.583598394067`, delta log loss `-0.000613109357836`, Brier
+  `0.199174840627`, delta Brier `-0.000244542761368`.
+- `lightgbm_classifier / core_independent_microstructure`: ROC AUC
+  `0.764691788037`, delta AUC `0.000965648673324`, log loss
+  `0.577684004165`, delta log loss `-0.00652749926056`, Brier
+  `0.197286487243`, delta Brier `-0.00213289614558`.
+- No decision-threshold tuning was performed.
+
+Negative control:
+
+- Control: deterministic permuted train target with ridge on
+  `core_independent_microstructure`, bounded to `200,000` train rows and
+  `200,000` validation rows.
+- Validation against permuted target: Spearman IC `0.0022175796`, Pearson
+  `0.0018329581`, R2 `-1.74617e-05`, non-zero sign accuracy
+  `0.5024767963`.
+- The diagnostic rank correlation against the real target was also recorded
+  separately as `0.2265100018`; it is not the negative-control target metric.
+
+Exact local test results:
+
+- `MPLCONFIGDIR=/tmp/microalpha-mpl PYTHONPATH=src /tmp/microalpha-phase8-venv/bin/python scripts/run_phase8_modeling.py --clean`:
+  PASS, result hash
+  `d8471add338d79106fb1839008c5168535bb644505b5282a5e6236147b31255d`.
+- `python -m pytest`: PASS, `126 passed, 37 warnings in 3.89s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `8199bdda9ceea7571824b87d0fcd1927d457efb258075075a853f9dfb8885bd0`.
+- Forbidden economic-word scan over `STATUS.md`, `reports/phase8`,
+  `scripts/run_phase8_modeling.py`, and
+  `data/manifests/phase8_modeling_plan.yaml`: PASS, no matches.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 8 LightGBM execution used a temporary environment at
+  `/tmp/microalpha-phase8-venv` with working LightGBM dependencies.
+- PyArrow emitted sandbox CPU-info warnings while reading parquet; they did not
+  affect the Phase 8 gate.
+- The current Phase 8 artifact state has not yet been confirmed by GitHub
+  Actions under Python 3.11.
+- 2025 is development validation because Phase 7 already examined 2025.
+- No 2026 holdout date was read.
+- No Phase 9 walk-forward evaluation, trading signal, execution threshold,
+  fill simulation, cost analysis, PnL, or backtest was implemented.
+
+Next steps:
+
+- Do not begin Phase 9 until the user explicitly accepts Phase 8 and requests
+  continuation.
+- If the Phase 8 artifact commit is pushed, confirm GitHub Actions under Python
+  3.11 for that exact commit before relying on CI portability.

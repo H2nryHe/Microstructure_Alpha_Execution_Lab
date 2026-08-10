@@ -1,0 +1,2 @@
+control,model,feature_set,train_rows,validation_rows,spearman_ic,pearson_corr,mae,rmse,r2,sign_accuracy_nonzero,prediction_mean,prediction_std,target_mean,target_std,row_count,real_target_spearman_ic_diagnostic
+deterministic_permuted_train_target,ridge,core_independent_microstructure,200000,200000,0.00221757955079,0.00183295812083,1.66503015095e-05,5.22809553163e-05,-1.746169464e-05,0.502476796329,-6.34858142472e-08,2.83021885617e-07,8.43946158907e-08,5.22804988652e-05,200000,0.226510001812

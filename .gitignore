@@ -37,6 +37,7 @@ data/manifests/*
 !data/manifests/pre_phase7_research_snapshot.json
 !data/manifests/pre_phase7_verification.json
 !data/manifests/phase7_research_plan.yaml
+!data/manifests/phase8_modeling_plan.yaml
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*
