@@ -1,0 +1,51 @@
+{
+  "market_fee_bps": [
+    0.0,
+    0.25,
+    0.5
+  ],
+  "market_latencies_ms": [
+    0,
+    100
+  ],
+  "market_scenario_rows": 108,
+  "order_size_dates": [
+    "2024-07-01",
+    "2025-01-01",
+    "2025-07-01"
+  ],
+  "order_size_rows": 27,
+  "passive_dates": [
+    "2024-07-01",
+    "2025-01-01",
+    "2025-07-01"
+  ],
+  "passive_primary_rows": 18,
+  "passive_queue_ttl_dates": [
+    "2024-07-01",
+    "2025-07-01"
+  ],
+  "phase10_signal_artifact_hash": "68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6",
+  "phase10_signal_entries_verified_for_phase14": 18,
+  "phase11_execution_config_hash": "7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef",
+  "phase11_execution_plan_hash": "f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4",
+  "phase13_commit_sha": "ebfbee1a0c06c5a908e760ce8015346e66f35295",
+  "phase13_execution_grid_artifact_hash": "45ada7b581b9e5240661b2fc5bdb3e137f8a5e86674fa9563685104f10eda5cb",
+  "phase13_research_smoke_run_id": 31405386687,
+  "phase13_results_hash": "3798edf860c8a493d17fcbbe201b6fd5a2e61a10ab955d504ee160bfdffef990",
+  "phase13_tests_run_id": 31405386682,
+  "phase14_plan_hash": "a0315262cb252c9e8b0bb0d63891e92cdfe5d16d0d7924cc570dc49b64107317",
+  "phase14_results_hash": "6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a",
+  "phase14_robustness_artifact_hash": "af685ef974b6cc5fd21a0c3ffe24fff6ff088f185ae8b32a337d25942c058379",
+  "phase14_status": "PASS",
+  "primary_market_dates": [
+    "2024-07-01",
+    "2024-10-01",
+    "2025-01-01",
+    "2025-04-01",
+    "2025-07-01",
+    "2025-10-01"
+  ],
+  "queue_sensitivity_rows": 12,
+  "ttl_sensitivity_rows": 18
+}

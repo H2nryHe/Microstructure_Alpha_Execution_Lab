@@ -21,7 +21,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 11 - Execution simulator
 [x] Phase 12 - Portfolio / inventory accounting
 [x] Phase 13 - Cost and latency analysis
-[ ] Phase 14 - Robustness and regime analysis
+[x] Phase 14 - Robustness and regime analysis
 [ ] Phase 15 - Research report
 [ ] Phase 16 - Performance engineering
 [ ] Phase 17 - Final packaging
@@ -3507,10 +3507,14 @@ Exact local verification:
 Assumptions and limitations:
 
 - Local default `python` is Python 3.10.9, not Python 3.11.
-- Phase 13 has not yet been committed, pushed, or confirmed in Python 3.11
-  GitHub Actions.
-- `gh` is not installed locally, so Phase 12 CI evidence is recorded from the
-  user-provided accepted run IDs.
+- Exact accepted Phase 13 commit
+  `ebfbee1a0c06c5a908e760ce8015346e66f35295` is on `origin/main`.
+- Python 3.11 GitHub Actions for exact Phase 13 commit
+  `ebfbee1a0c06c5a908e760ce8015346e66f35295` are green:
+  `tests` run `31405386682` PASS and `research-smoke` run `31405386687`
+  PASS.
+- `gh` is not installed locally; Phase 13 CI evidence was confirmed via the
+  GitHub public API after the GitHub connector returned no PR-filtered runs.
 - Real execution/accounting remains intentionally bounded to one development
   date, `2024-07-01`.
 - Latency values below the 100ms book-state grid can share the same as-of book
@@ -3526,7 +3530,231 @@ Assumptions and limitations:
 
 Next steps:
 
-- Stop before Phase 14.
-- Commit and push the exact Phase 13 artifact state only after user acceptance,
-  then confirm Python 3.11 GitHub Actions on that exact commit before relying
-  on CI portability.
+- Phase 13 CI is confirmed. Phase 14 may proceed only under the frozen
+  Phase 14 plan and without 2026 holdout access.
+
+## Phase 14 - Execution and Economic Robustness
+
+Status: PASS locally
+
+Pre-Phase-14 gate:
+
+- Exact accepted Phase 13 commit:
+  `ebfbee1a0c06c5a908e760ce8015346e66f35295`.
+- `origin/main` was confirmed at
+  `ebfbee1a0c06c5a908e760ce8015346e66f35295` before Phase 14 execution.
+- GitHub Actions on that exact SHA:
+  `tests` run `31405386682` PASS and `research-smoke` run
+  `31405386687` PASS.
+- `gh` is not installed locally; workflow status was confirmed through the
+  GitHub public API after the connector returned no PR-filtered runs.
+
+Frozen Phase 14 plan:
+
+- Plan file: `data/manifests/phase14_robustness_plan.yaml`.
+- Plan hash:
+  `a0315262cb252c9e8b0bb0d63891e92cdfe5d16d0d7924cc570dc49b64107317`.
+- Robustness artifact hash:
+  `af685ef974b6cc5fd21a0c3ffe24fff6ff088f185ae8b32a337d25942c058379`.
+- Results hash:
+  `6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a`.
+- Phase 10 signal artifact hash verified:
+  `68edd84a5ea6b72035976a0b0f48aabfc0183e17d6946fcbf69da7190f5de5d6`.
+- Phase 10 signal entries verified for Phase 14: `18`.
+- Phase 11 execution plan hash:
+  `f5fa9ff916ef084cb1f7aa7d95f22058868ed39745aad14c27a0e2c2ee7d81a4`.
+- Phase 11 execution config hash:
+  `7886f78e7552404f88ce446094353133a1590d22dd33ae1f3b647a3eb24132ef`.
+
+Exact date sets:
+
+- Primary market dates:
+  `2024-07-01`, `2024-10-01`, `2025-01-01`, `2025-04-01`,
+  `2025-07-01`, `2025-10-01`.
+- Passive robustness dates:
+  `2024-07-01`, `2025-01-01`, `2025-07-01`.
+- Order-size sensitivity dates:
+  `2024-07-01`, `2025-01-01`, `2025-07-01`.
+- Passive queue and TTL sensitivity dates:
+  `2024-07-01`, `2025-07-01`.
+
+Execution scope:
+
+- Instrument: `BTC-USDT`.
+- Vendor symbol: Tardis/Binance `BTCUSDT`.
+- Models: `qi_direct_baseline`, `lightgbm_qi_ofi`, and
+  `lightgbm_extended`.
+- Primary market latencies: `0ms` and `100ms`.
+- Primary market fee overlays: `0.00`, `0.25`, and `0.50` bps.
+- Order-size sensitivities: `$1,000`, `$10,000`, and `$50,000` quote
+  notional, interpreted only as displayed-book size sensitivity.
+- Passive primary settings: `queue_fraction=1.0`, `TTL=1000ms`.
+- Passive queue sensitivities: `0.50` and `1.00`.
+- Passive TTL sensitivities: `500ms`, `1000ms`, and `2000ms`.
+- No predictive models, features, signal thresholds, order sizing policy,
+  latency assumptions, or fee assumptions were optimized.
+
+Compact reports:
+
+- `reports/phase14/market_multiday_results.csv`
+- `reports/phase14/market_date_level_summary.csv`
+- `reports/phase14/market_breakeven_by_date.csv`
+- `reports/phase14/model_ranking_stability.csv`
+- `reports/phase14/incremental_economics_by_date.csv`
+- `reports/phase14/latency_robustness.csv`
+- `reports/phase14/order_size_sensitivity.csv`
+- `reports/phase14/passive_multiday_results.csv`
+- `reports/phase14/passive_queue_sensitivity.csv`
+- `reports/phase14/passive_ttl_sensitivity.csv`
+- `reports/phase14/passive_inventory_stress.csv`
+- `reports/phase14/robustness_manifest.json`
+- `reports/phase14/phase14_summary.json`
+- `reports/phase14/README.md`
+- Figures are under `reports/phase14/figures`.
+
+Scenario counts:
+
+- Primary market scenarios after fee overlays: `108`.
+- Passive primary scenarios: `18`.
+- Order-size scenarios: `27`.
+- Queue sensitivity scenarios: `12`.
+- TTL sensitivity scenarios: `18`.
+- Total execution scenarios in the robustness manifest: `111`.
+
+Cross-date market economics:
+
+- Mean daily gross bps per turnover at `0ms`:
+  QI `0.328320`, QI+OFI `0.156474`, Extended `0.026818`.
+- Mean daily gross bps per turnover at `100ms`:
+  QI `0.140139`, QI+OFI `-0.004184`, Extended `-0.125410`.
+- Each model retained negative gross days:
+  QI `2/6` at both latencies, QI+OFI `2/6` at `0ms` and `3/6` at
+  `100ms`, Extended `2/6` at `0ms` and `3/6` at `100ms`.
+- Positive net days at `0.25 bps`:
+  QI `3/6` at `0ms` and `4/6` at `100ms`, QI+OFI `3/6` and `2/6`,
+  Extended `4/6` and `3/6`.
+- Positive net days at `0.50 bps`:
+  QI `2/6` at `0ms` and `1/6` at `100ms`, QI+OFI `1/6` and `2/6`,
+  Extended `2/6` and `2/6`.
+
+Breakeven distribution:
+
+- Mean breakeven bps at `0ms`:
+  QI `0.687184`, QI+OFI `0.485834`, Extended `0.652277`.
+- Mean breakeven bps at `100ms`:
+  QI `0.587916`, QI+OFI `0.534749`, Extended `0.607614`.
+- Fraction of dates with breakeven fee above `0.50 bps`:
+  QI `2/6` at `0ms` and `1/6` at `100ms`, QI+OFI `1/6` and `2/6`,
+  Extended `2/6` and `2/6`.
+- Result: market transaction-cost headroom is unstable by date and generally
+  thin around a `0.50 bps` fee overlay.
+
+Model ranking stability:
+
+- Gross dollar PnL first-place counts across date/latency contexts:
+  QI `6`, Extended `5`, QI+OFI `1`.
+- Gross bps-per-turnover first-place counts:
+  QI `8`, Extended `4`, QI+OFI `0`.
+- Net PnL first-place counts at `0.25 bps`:
+  QI `8`, Extended `4`, QI+OFI `0`.
+- Net PnL first-place counts at `0.50 bps`:
+  QI `8`, Extended `4`, QI+OFI `0`.
+- No ranking result is used to select a new strategy.
+
+Incremental economics:
+
+- Extended minus QI mean delta net PnL is negative in all four
+  latency/fee combinations, from about `-2443.68` to `-3323.64`.
+- QI+OFI minus QI mean delta net PnL is negative in all four
+  latency/fee combinations, from about `-2960.26` to `-5034.68`.
+- Extended minus QI+OFI mean delta net PnL is positive on average in all four
+  latency/fee combinations, but still has negative dates.
+- Result: added predictive complexity does not robustly improve net market
+  economics versus QI under moderate generic costs.
+
+Latency robustness:
+
+- At `100ms`, gross PnL worsened on `5/6` dates for each model and improved
+  on `1/6` date for each model.
+- Median gross bps erosion:
+  QI `0.209682`, QI+OFI `0.078180`, Extended `0.053930`.
+- Improvements are interpreted cautiously as changed arrival/fill selection,
+  not evidence that latency is beneficial.
+
+Order-size sensitivity:
+
+- Market fill rate remained `1.0` for the displayed-book sensitivity grid.
+- Mean levels consumed increase with notional for all models.
+- Mean implementation shortfall increases from about `0.0000023-0.0000028`
+  at `$1,000` to about `0.0000127-0.0000139` at `$50,000`.
+- Mean gross bps at `$50,000`:
+  QI `0.633733`, QI+OFI `-0.160003`, Extended `-1.309970`.
+- These results are displayed-book size sensitivity only, not market capacity.
+
+Passive robustness:
+
+- Passive primary mean fill rates remain low:
+  QI `0.015585` at `0ms` and `0.023620` at `100ms`, QI+OFI `0.040079`
+  and `0.048835`, Extended `0.046999` and `0.054416`.
+- Passive primary mean gross bps:
+  QI `-3.446490` at `0ms` and `-1.003580` at `100ms`, QI+OFI `0.162445`
+  and `-0.122177`, Extended `-4.870050` and `-4.096950`.
+- Queue sensitivity mean fill rates increased under `queue_fraction=0.50`
+  versus `1.00`, but economics did not improve systematically across models.
+- TTL sensitivity increased fill rate as TTL moved from `500ms` to `2000ms`,
+  but higher fill rate did not systematically produce better economics.
+- Residual inventory remains visible. Mean passive terminal positions:
+  QI `0.207200` at `0ms` and `1.331700` at `100ms`, QI+OFI `2.345570`
+  and `0.770292`, Extended `4.794220` and `3.958080`.
+- Terminal inventory stress applies `-10`, `-5`, `0`, `+5`, and `+10` bps
+  mark shocks without synthetic liquidation fills. Across passive primary
+  scenarios, `+/-10 bps` shocks moved terminal equity by as much as about
+  `752.137` quote units in absolute value.
+
+Acceptance-gate evidence:
+
+- No holdout dates were accessed. Guardrail scan found no forbidden date-prefix
+  references in Phase 14 reports, plan, runner, or helper module.
+- All six primary dates and all three passive/order-size dates were retained.
+- Negative gross days, negative net days, passive failures, low fill rates,
+  residual inventory, and model underperformance cases are retained.
+- Deterministic result hash recomputation matched
+  `6da1560197c3619f72bbaaf4a76673dcd4c9313f1f8c33dfc3106b694659da0a`.
+- `reports/phase14/phase14_summary.json` and
+  `reports/phase14/robustness_manifest.json` parse as valid JSON.
+- No annualization or Sharpe ratio is reported.
+
+Exact local verification:
+
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python scripts/run_phase14_robustness.py --clean`:
+  PASS; generated all compact reports, figures, robustness manifest, and
+  summary.
+- `python -m pytest`: PASS, `204 passed, 49 warnings in 3.50s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `python -m compileall -q src scripts tests`: PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- `python -m json.tool reports/phase14/phase14_summary.json`: PASS.
+- `python -m json.tool reports/phase14/robustness_manifest.json`: PASS.
+- Phase 14 result hash recomputation: PASS, matched stored hash.
+
+Assumptions and limitations:
+
+- Local default `python` is Python 3.10.9, not Python 3.11.
+- Phase 14 is locally verified but not yet committed, pushed, or confirmed in
+  GitHub Actions.
+- Cost scenarios are generic research fee overlays, not exchange-specific fee
+  schedules.
+- Displayed-book size sensitivity omits hidden liquidity, impact from repeated
+  trading, and strategic reaction by other participants.
+- Passive queue assumptions are bounded diagnostics and are not a calibrated
+  queue-position model.
+- The Phase 14 results do not choose a best model, execution mode, fee,
+  latency, order size, queue fraction, or TTL.
+
+Next steps:
+
+- Stop before Phase 15.
+- Commit and push Phase 14 only after user acceptance, then confirm GitHub
+  Actions on the exact Phase 14 commit before relying on CI portability.

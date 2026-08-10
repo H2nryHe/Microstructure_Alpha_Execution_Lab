@@ -1,0 +1,10 @@
+metric,model,first_place_count
+gross_pnl,lightgbm_extended,5.0
+gross_pnl,lightgbm_qi_ofi,1.0
+gross_pnl,qi_direct_baseline,6.0
+gross_pnl_bps_of_turnover,lightgbm_extended,4.0
+gross_pnl_bps_of_turnover,qi_direct_baseline,8.0
+net_pnl_0_25bps_fee,lightgbm_extended,4.0
+net_pnl_0_25bps_fee,qi_direct_baseline,8.0
+net_pnl_0_50bps_fee,lightgbm_extended,4.0
+net_pnl_0_50bps_fee,qi_direct_baseline,8.0

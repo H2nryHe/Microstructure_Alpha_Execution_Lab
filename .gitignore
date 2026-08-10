@@ -43,6 +43,7 @@ data/manifests/*
 !data/manifests/phase11_execution_plan.yaml
 !data/manifests/phase12_accounting_plan.yaml
 !data/manifests/phase13_cost_latency_plan.yaml
+!data/manifests/phase14_robustness_plan.yaml
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*
