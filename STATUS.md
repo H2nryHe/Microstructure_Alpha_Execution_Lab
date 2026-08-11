@@ -24,7 +24,7 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 14 - Robustness and regime analysis
 [x] Phase 15 - Research report
 [x] Phase 16 - Performance engineering
-[ ] Phase 17 - Final packaging
+[x] Phase 17 - Final packaging
 ```
 
 ## Pre-Phase-16 Gate
@@ -4059,8 +4059,138 @@ Assumptions and limitations:
   from Git and public validation. No private career artifact was created,
   restored, or committed for Phase 16.
 
+## Phase 17 - Final Repository Packaging and Release Readiness
+
+Status: PASS locally; final Python 3.11 GitHub Actions verification pending
+after push
+
+Accepted Phase 16 state:
+
+- Exact Phase 16 current commit:
+  `cda51383f1f41be6fc1243ca828330ab73393b54`.
+- GitHub Actions `tests`: PASS, run `31522113442`.
+- GitHub Actions `research-smoke`: PASS, run `31522113477`.
+- Frozen `phase16_performance_plan_hash`:
+  `70fc7a9f1dc3fd80642d0dd83b8d09ba17fd3011be23ba432b92a788a539b350`.
+- Frozen `phase16_benchmark_artifact_hash`:
+  `d7d7ae72b9a02754f30b6c906424994ad4da0cba789af2c53a815bf05645ae59`.
+- Frozen `phase16_results_hash`:
+  `c86d724e084734ed52bd02c3d6cf6d5e75b16c5e6cecf418f5368bb3b92759f0`.
+
+Packaging artifacts:
+
+- `REPRODUCIBILITY.md`.
+- `DATA_GUIDE.md`.
+- `RELEASE_CHECKLIST.md`.
+- `reports/final/PROJECT_SUMMARY.md`.
+- `reports/final/RELEASE_VALIDATION.json`.
+- `data/manifests/phase17_packaging_manifest.yaml`.
+
+Hashes:
+
+- `phase17_packaging_manifest_hash`:
+  `7bfb66e28924d87977d4ce8292666edb3b21603be402f085cc2b892286812f88`.
+- `phase17_release_artifact_hash`:
+  `8676bb675086e8c20da5be33e2de8387e8c14a8c94d4eb660dc3a7c7c8b00776`.
+- Release artifact hash scope:
+  README, reproducibility/data/release-checklist docs, public final summary,
+  final report, final metrics, final artifact index, final figures, Phase 16
+  performance docs/summary/figures, and the Phase 17 packaging manifest.
+- Exclusions:
+  timestamps, runtime measurements, absolute local paths, operational CI run
+  IDs, private files, and `RELEASE_VALIDATION.json` itself.
+
+Public/private scan:
+
+- Current Git tree contains no `reports/final/RESUME_BULLETS.md` and no
+  `reports/final/INTERVIEW_STORIES.md`.
+- Current repo path contains neither private file.
+- Scan found no tracked API keys, credentials, tokens, private-key blocks, raw
+  resume artifacts, cover letters, application notes, recruiter messages, or
+  interview scripts. Remaining references to resume/interview materials are
+  privacy-exclusion documentation only.
+
+Link audit:
+
+- Phase 17 markdown link audit: PASS, broken link count `0`.
+- No public link points to private career files.
+
+Repository-size audit:
+
+- Forbidden large/raw-data tracked paths: `0`.
+- No tracked Parquet outputs, bytecode, profiler dumps, zip/gzip raw sources,
+  caches, model cache files, or environment directories were found.
+- Largest tracked files remain curated reports/figures and small regression
+  fixtures. Top examples:
+  `reports/phase7/bucket_results.csv` (`827515` bytes),
+  `reports/phase7/direction_results.csv` (`735825` bytes),
+  `data/manifests/research_dates.yaml` (`165988` bytes), and
+  `tests/fixtures/real_subsets/tardis_binance_BTCUSDT_incremental_book_L2_2019-12-01_rows_1_2050.csv`
+  (`153576` bytes).
+
+Packaging/build audit:
+
+- `pyproject.toml` is sensible for package name, description, Python floor,
+  dependencies, dev dependencies, CLI entry points, and package discovery.
+- CLI entry points:
+  `microalpha-smoke` is the primary smoke/reproducibility tool,
+  `microalpha-ingest` is a data-ingestion tool, and `microalpha-qa` is a
+  market-data QA tool.
+- `python -m build` is blocked locally because the `build` frontend is not
+  installed.
+- Local editable install/build checks are also blocked by the restricted local
+  dependency/network path and lack of a local Python 3.11 interpreter. The
+  project's declared Python 3.11 install path is verified by GitHub Actions.
+- The Python floor was not weakened.
+
+Fresh-clone validation:
+
+- Fresh local clone source commit:
+  `cd4025d6724099f4d4e1be863def7b0eddf9ee10`.
+- `python3 -m pip install -e ".[dev]"`: BLOCKED locally by restricted PyPI
+  access while resolving build/runtime dependencies.
+- `python3 -m pip install -e ".[dev]" --no-build-isolation`: BLOCKED locally by
+  restricted dependency resolution for `lightgbm`.
+- `PYTHONPATH=src python3 -m pytest`: PASS,
+  `218 passed, 1 skipped, 49 warnings in 4.65s`.
+- `PYTHONPATH=src python3 -m microalpha.cli --manifest-out /tmp/microalpha-phase17-fresh-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- Bounded demo from clone:
+  `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl-fresh python3 scripts/run_phase16_performance.py --output-dir /tmp/microalpha-phase17-fresh-demo/reports --work-root /tmp/microalpha-phase17-fresh-demo/work --repetitions 1`:
+  PASS; expected `phase16_summary.json`, `equivalence_results.csv`, and smoke
+  manifest artifacts existed.
+
+Final local validation:
+
+- `PYTHONPATH=src python3 -m pytest`: PASS,
+  `219 passed, 49 warnings in 4.88s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python3 -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+- GitHub workflow YAML audit: PASS after quoting the workflow `on` key for
+  PyYAML portability while preserving GitHub Actions semantics.
+
+No-2026 confirmation:
+
+- No 2026 data was accessed.
+- Phase 17 references to 2026 are holdout-policy guardrails and documentation
+  only.
+- Public limitations continue to state that 2026 remains an untouched temporal
+  holdout reserved for a future confirmatory evaluation.
+
+Final release recommendation:
+
+- Recommended release tag after explicit user authorization: `v1.0.0`.
+- No Git tag was created.
+- No GitHub Release was created.
+
 Next steps:
 
-- Stop before Phase 17.
-- Do not begin Phase 17 until Phase 16 is committed, pushed, and exact
-  Python 3.11 GitHub Actions `tests` and `research-smoke` are both green.
+- Commit and push Phase 17 validation artifacts.
+- Confirm exact Python 3.11 GitHub Actions `tests` and `research-smoke` are
+  both green on the final pushed commit.
+- Stop. Do not begin new research.

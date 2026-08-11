@@ -1,0 +1,118 @@
+{
+  "broken_link_count": 0,
+  "broken_links": [],
+  "compile_status": "PASS: compileall -q src scripts tests",
+  "forbidden_large_data_count": 0,
+  "forbidden_large_data_paths": [],
+  "fresh_clone_status": "PARTIAL/PASS: clone at cd4025d, PYTHONPATH pytest PASS, smoke PASS, bounded demo PASS, expected artifacts present; editable install locally blocked by restricted dependency/network path and no local Python 3.11",
+  "git_tag_created": false,
+  "github_release_created": false,
+  "largest_tracked_files": [
+    {
+      "path": "reports/phase7/bucket_results.csv",
+      "size_bytes": 827515
+    },
+    {
+      "path": "reports/phase7/direction_results.csv",
+      "size_bytes": 735825
+    },
+    {
+      "path": "STATUS.md",
+      "size_bytes": 177999
+    },
+    {
+      "path": "data/manifests/research_dates.yaml",
+      "size_bytes": 165988
+    },
+    {
+      "path": "tests/fixtures/real_subsets/tardis_binance_BTCUSDT_incremental_book_L2_2019-12-01_rows_1_2050.csv",
+      "size_bytes": 153576
+    },
+    {
+      "path": "reports/phase7/audit/return_discreteness.csv",
+      "size_bytes": 134209
+    },
+    {
+      "path": "reports/phase12/figures/passive_pnl_path.png",
+      "size_bytes": 131166
+    },
+    {
+      "path": "reports/phase8/figures/prediction_vs_qi_rank_correlation.png",
+      "size_bytes": 128293
+    },
+    {
+      "path": "reports/phase10/figures/long_short_future_mid_separation_by_date.png",
+      "size_bytes": 114421
+    },
+    {
+      "path": "reports/phase7/nonoverlap_ic.csv",
+      "size_bytes": 111191
+    },
+    {
+      "path": "reports/final/figures/architecture_diagram.png",
+      "size_bytes": 108599
+    },
+    {
+      "path": "reports/phase10/figures/signal_transition_rate_by_date.png",
+      "size_bytes": 108457
+    },
+    {
+      "path": "reports/phase10/signal_manifest.json",
+      "size_bytes": 108103
+    },
+    {
+      "path": "reports/phase10/figures/mean_signed_future_mid_effect_by_date.png",
+      "size_bytes": 106788
+    },
+    {
+      "path": "reports/phase7/next_move_results.csv",
+      "size_bytes": 106470
+    },
+    {
+      "path": "reports/phase12/figures/market_latency_pnl_path.png",
+      "size_bytes": 100608
+    },
+    {
+      "path": "reports/phase9/figures/prediction_qi_rank_correlation_by_fold.png",
+      "size_bytes": 99127
+    },
+    {
+      "path": "reports/phase10/figures/active_signal_coverage_by_date_model.png",
+      "size_bytes": 97781
+    },
+    {
+      "path": "reports/phase7/daily_ic.csv",
+      "size_bytes": 97229
+    },
+    {
+      "path": "reports/phase16/figures/throughput_before_vs_after.png",
+      "size_bytes": 96765
+    }
+  ],
+  "no_2026_access_confirmed": true,
+  "packaging_build_status": "BLOCKED LOCALLY: python -m build module unavailable; pip wheel/install blocked by local Python/dependency environment. Python 3.11 package install verified by GitHub Actions.",
+  "phase17_packaging_manifest_hash": "7bfb66e28924d87977d4ce8292666edb3b21603be402f085cc2b892286812f88",
+  "phase17_release_artifact_hash": "8676bb675086e8c20da5be33e2de8387e8c14a8c94d4eb660dc3a7c7c8b00776",
+  "private_file_count_current_tree": 0,
+  "private_files_current_tree": [],
+  "pytest_result_summary": "PASS: 219 passed, 49 warnings in 4.88s",
+  "release_hash_scope": [
+    "README.md",
+    "REPRODUCIBILITY.md",
+    "DATA_GUIDE.md",
+    "RELEASE_CHECKLIST.md",
+    "reports/final/PROJECT_SUMMARY.md",
+    "reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md",
+    "reports/final/FINAL_METRICS.json",
+    "reports/final/FINAL_ARTIFACT_INDEX.md",
+    "reports/final/figures/*.png",
+    "reports/phase16/PERFORMANCE_ENGINEERING.md",
+    "reports/phase16/README.md",
+    "reports/phase16/phase16_summary.json",
+    "reports/phase16/figures/*.png",
+    "data/manifests/phase17_packaging_manifest.yaml"
+  ],
+  "ruff_status": "PASS: All checks passed",
+  "smoke_status": "PASS: config_hash=29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8",
+  "source_commit": "cd4025d6724099f4d4e1be863def7b0eddf9ee10"
+}
