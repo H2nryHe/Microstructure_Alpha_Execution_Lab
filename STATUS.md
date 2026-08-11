@@ -23,9 +23,29 @@ treated as immutable unless the specification itself requires revision.
 [x] Phase 13 - Cost and latency analysis
 [x] Phase 14 - Robustness and regime analysis
 [x] Phase 15 - Research report
-[ ] Phase 16 - Performance engineering
+[x] Phase 16 - Performance engineering
 [ ] Phase 17 - Final packaging
 ```
+
+## Pre-Phase-16 Gate
+
+Status: PASS
+
+Accepted Phase 15 state:
+
+- Exact commit on `origin/main`:
+  `1eb43e516366c08165b5ac05d367d0bf342dd82e`.
+- GitHub Actions `tests`: PASS, run `31417149603`.
+- GitHub Actions `research-smoke`: PASS, run `31417149604`.
+- Both runs are on commit
+  `1eb43e516366c08165b5ac05d367d0bf342dd82e` and use the Python 3.11 CI path.
+
+Phase 15 privacy correction remains in force:
+
+- `reports/final/RESUME_BULLETS.md` and
+  `reports/final/INTERVIEW_STORIES.md` are intentionally private career
+  artifacts, excluded from Git, public validation, and public hash scope.
+- Phase 16 will not restore or publish those private files.
 
 ## CI / Config Hardening
 
@@ -3805,11 +3825,14 @@ Phase 15 hashes:
 - `phase15_final_report_hash`:
   `b49dd9edf51a0b1d2fb4564c89f87497446819689fc9153aef1a428aacdb2740`.
 - `phase15_results_hash`:
-  `963e6f673f1f5c377c97c1dda95e04ff6586aba64fbae364705dd30564e1ef9c`.
+  `49f24d5831081edaa978f7cbee197896111e2b97f7a4b831b6682b310cd00fa7`.
 - Hash scope:
   final report hash covers the canonical final report; results hash covers
   README, final markdown artifacts, `FINAL_METRICS.json`, and curated figure
   SHA-256 identities. Runtime, timestamps, and absolute paths are excluded.
+- Phase 16 note: the public Phase 15 results hash changed after Phase 16 because
+  README now includes a small public performance-engineering section. The
+  canonical final report hash remains unchanged.
 
 README status:
 
@@ -3901,8 +3924,136 @@ Assumptions and limitations:
   queue diagnostics, no hidden liquidity, no self-impact, and no opened 2026
   confirmatory holdout.
 
+## Phase 16 - Performance Engineering
+
+Status: PASS locally; Python 3.11 GitHub Actions verification pending after push
+
+Pre-gate:
+
+- Accepted Phase 15 exact commit on `origin/main`:
+  `1eb43e516366c08165b5ac05d367d0bf342dd82e`.
+- GitHub Actions `tests`: PASS, run `31417149603`.
+- GitHub Actions `research-smoke`: PASS, run `31417149604`.
+- Both pre-gate runs are on commit
+  `1eb43e516366c08165b5ac05d367d0bf342dd82e` and use the Python 3.11 CI path.
+
+Frozen benchmark plan:
+
+- Plan file: `data/manifests/phase16_performance_plan.yaml`.
+- `phase16_performance_plan_hash`:
+  `70fc7a9f1dc3fd80642d0dd83b8d09ba17fd3011be23ba432b92a788a539b350`.
+- Benchmark dates/scopes: bounded non-2026 engineering/development fixtures
+  representing `2019-12-01` book replay and `2024-07-01` feature/execution
+  paths.
+- Benchmark interpreter: local `python3` reports Python 3.10.9. Python 3.11+
+  compatibility remains a CI requirement.
+
+Profiled stages:
+
+- Phase 3 book replay.
+- Phase 5 feature engineering.
+- Phase 11 market execution.
+- Phase 11 passive execution.
+- Representative two-date orchestration path.
+
+Measured bottleneck:
+
+- Baseline `cProfile` found frozen Phase 5 `_trade_window_features` consumed
+  `2.186412557` cumulative seconds in the bounded profile, `81.9%` of profiled
+  Phase 5 runtime.
+- `_ofi_window_features` was also part of the repeated trailing-window
+  aggregation path.
+
+Optimization changes:
+
+- Replaced Phase 5 repeated per-cutoff scans of active OFI/trade windows with
+  deterministic per-window running accumulators.
+- Preserved `(T-W, T]` membership, cutoff semantics, Decimal output formatting,
+  OFI definition, trade-side semantics, missing-value policy, and downstream
+  schema.
+- Phase 3 replay, Phase 11 execution, models, signals, execution assumptions,
+  and economic parameters were not changed.
+
+C++ decision:
+
+- C++ was not introduced. Profiling showed a stable Python repeated-work issue
+  that was better fixed with a small Python algorithmic change while preserving
+  a simple fallback/reference path.
+
+Benchmark results, median of three bounded repetitions:
+
+- Phase 5 feature engineering: baseline `1.4930219580419362s`, optimized
+  `0.2923121249768883s`, speedup `5.107629244459094x`.
+- Representative two-date orchestration: baseline `2.991125874919817s`,
+  optimized `0.6055903749074787s`, speedup `4.939189919220228x`.
+- Phase 3 replay was unchanged; measured optimized/reference variation was
+  `1.1153789158747465x`.
+- Phase 11 market execution was unchanged; measured optimized/reference
+  variation was `0.9248205971224753x`.
+- Phase 11 passive execution was unchanged; measured optimized/reference
+  variation was `0.9902838716122426x`.
+
+Equivalence evidence:
+
+- Phase 5 reference vs optimized feature CSV SHA-256:
+  `d8503550c2d9c597f488a43bbf9c166f9673ce6db666dd6437b04e004ad4ffcf`
+  for both outputs.
+- Phase 3 deterministic replay hash:
+  `cf2a800a27af5df8b279801638ae3f4c66004b1fd7162585c40581710c10b054`.
+- Phase 11 market execution deterministic artifact hash:
+  `12c26a69b47fa408dd2d3ac6b297bebc9f4566ee1bf471e1284f382cdf7b854a`.
+- Phase 11 passive execution deterministic artifact hash:
+  `e647c4f9377be0d1ab85cbeab3af136c6ed814c8440c250ba28afba4aab45873`.
+
+Phase 16 artifacts:
+
+- `reports/phase16/baseline_benchmarks.csv`.
+- `reports/phase16/optimized_benchmarks.csv`.
+- `reports/phase16/profile_hotspots.csv`.
+- `reports/phase16/equivalence_results.csv`.
+- `reports/phase16/phase16_summary.json`.
+- `reports/phase16/PERFORMANCE_ENGINEERING.md`.
+- `reports/phase16/README.md`.
+- Figures:
+  `reports/phase16/figures/baseline_vs_optimized_runtime_by_stage.png`,
+  `reports/phase16/figures/throughput_before_vs_after.png`, and
+  `reports/phase16/figures/hotspot_runtime_contribution.png`.
+
+Hashes:
+
+- `phase16_benchmark_artifact_hash`:
+  `d7d7ae72b9a02754f30b6c906424994ad4da0cba789af2c53a815bf05645ae59`.
+- `phase16_results_hash`:
+  `c86d724e084734ed52bd02c3d6cf6d5e75b16c5e6cecf418f5368bb3b92759f0`.
+
+Local validation:
+
+- `PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python3 scripts/run_phase16_performance.py`:
+  PASS.
+- `PYTHONPATH=src python3 -m pytest`: PASS,
+  `215 passed, 49 warnings in 3.39s`.
+- `ruff check src tests scripts`: PASS, `All checks passed!`.
+- `PYTHONPYCACHEPREFIX=/tmp/microalpha-pycache python3 -m compileall -q src scripts tests`:
+  PASS.
+- `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
+  PASS, config hash
+  `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+
+Assumptions and limitations:
+
+- Benchmarks are bounded engineering fixtures, not full 24-day reruns.
+- Wall-clock performance is reported as local evidence only and is not used as
+  a CI pass/fail threshold.
+- Local Python is 3.10.9; Python 3.11 compatibility must be confirmed by
+  GitHub Actions after commit/push.
+- No 2026 holdout data was accessed. Phase 16 `2026` references are guardrails
+  or documentation only.
+- Private resume bullets and interview-preparation materials remain excluded
+  from Git and public validation. No private career artifact was created,
+  restored, or committed for Phase 16.
+
 Next steps:
 
-- Stop before Phase 16.
-- Do not begin Phase 16 until the user explicitly accepts the Phase 15 privacy
-  hardening correction.
+- Stop before Phase 17.
+- Do not begin Phase 17 until Phase 16 is committed, pushed, and exact
+  Python 3.11 GitHub Actions `tests` and `research-smoke` are both green.

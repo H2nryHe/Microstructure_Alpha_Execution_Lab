@@ -1,0 +1,70 @@
+{
+  "baseline_medians": {
+    "phase11_market_execution": 0.277534999884665,
+    "phase11_passive_execution": 0.14595170901156962,
+    "phase3_book_replay": 0.017645665910094976,
+    "phase5_feature_engineering": 1.4930219580419362,
+    "representative_multidate_orchestration": 2.991125874919817
+  },
+  "cplusplus_decision": "not justified after profiling",
+  "environment": {
+    "environment_id": "local_mac_python310_phase16",
+    "python": "3.10.9"
+  },
+  "equivalence": [
+    {
+      "comparison": "phase5_reference_vs_optimized",
+      "details": "exact feature CSV SHA-256 equality",
+      "optimized_hash": "d8503550c2d9c597f488a43bbf9c166f9673ce6db666dd6437b04e004ad4ffcf",
+      "reference_hash": "d8503550c2d9c597f488a43bbf9c166f9673ce6db666dd6437b04e004ad4ffcf",
+      "status": "PASS"
+    },
+    {
+      "comparison": "phase3_deterministic_replay",
+      "details": "book replay unchanged; repeated output hash equality",
+      "optimized_hash": "cf2a800a27af5df8b279801638ae3f4c66004b1fd7162585c40581710c10b054",
+      "reference_hash": "cf2a800a27af5df8b279801638ae3f4c66004b1fd7162585c40581710c10b054",
+      "status": "PASS"
+    },
+    {
+      "comparison": "phase11_market_execution_deterministic",
+      "details": "execution code unchanged; repeated artifact hash equality",
+      "optimized_hash": "12c26a69b47fa408dd2d3ac6b297bebc9f4566ee1bf471e1284f382cdf7b854a",
+      "reference_hash": "12c26a69b47fa408dd2d3ac6b297bebc9f4566ee1bf471e1284f382cdf7b854a",
+      "status": "PASS"
+    },
+    {
+      "comparison": "phase11_passive_execution_deterministic",
+      "details": "execution code unchanged; repeated artifact hash equality",
+      "optimized_hash": "e647c4f9377be0d1ab85cbeab3af136c6ed814c8440c250ba28afba4aab45873",
+      "reference_hash": "e647c4f9377be0d1ab85cbeab3af136c6ed814c8440c250ba28afba4aab45873",
+      "status": "PASS"
+    }
+  ],
+  "no_2026_access": true,
+  "optimization_targets": [
+    "phase5_feature_engineering"
+  ],
+  "optimization_version": "phase16_python_window_accumulators_v1",
+  "optimized_medians": {
+    "phase11_market_execution": 0.30009604105725884,
+    "phase11_passive_execution": 0.1473837080411613,
+    "phase3_book_replay": 0.01582033303566277,
+    "phase5_feature_engineering": 0.2923121249768883,
+    "representative_multidate_orchestration": 0.6055903749074787
+  },
+  "phase15_commit_sha": "1eb43e516366c08165b5ac05d367d0bf342dd82e",
+  "phase15_research_smoke_run_id": 31417149604,
+  "phase15_tests_run_id": 31417149603,
+  "phase16_benchmark_artifact_hash": "d7d7ae72b9a02754f30b6c906424994ad4da0cba789af2c53a815bf05645ae59",
+  "phase16_performance_plan_hash": "70fc7a9f1dc3fd80642d0dd83b8d09ba17fd3011be23ba432b92a788a539b350",
+  "phase16_results_hash": "c86d724e084734ed52bd02c3d6cf6d5e75b16c5e6cecf418f5368bb3b92759f0",
+  "phase16_status": "PASS",
+  "speedups": {
+    "phase11_market_execution": 0.9248205971224753,
+    "phase11_passive_execution": 0.9902838716122426,
+    "phase3_book_replay": 1.1153789158747465,
+    "phase5_feature_engineering": 5.107629244459094,
+    "representative_multidate_orchestration": 4.939189919220228
+  }
+}

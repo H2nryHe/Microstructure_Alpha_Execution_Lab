@@ -1,0 +1,41 @@
+stage,function/module,cumulative time,self time,call count,fraction of stage runtime,optimization candidate,reason
+phase3_book_replay,run_phase16_performance.py:574:phase3,0.030966416000000004,1.45e-05,1,0.9931154713137309,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,replay.py:109:replay_events,0.030951916000000003,0.002387652,1,0.9926504457733503,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,replay.py:128:flush_group,0.027813032,0.002124682,2501,0.8919841541670136,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,state.py:110:metrics,0.020862968000000003,0.0049117530000000005,2502,0.6690905495270516,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,state.py:87:depth,0.01052641,0.00487864,5004,0.3375896205873992,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,state.py:80:top_n,0.005650103,0.0022968140000000003,5006,0.18120291039867592,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,replay.py:87:_apply_event,0.0036971290000000004,0.001086917,2520,0.11856961455735343,no,profiled for Phase 16 baseline evidence
+phase3_book_replay,state.py:85:<listcomp>,0.003353289,0.003353289,5006,0.10754241581221892,no,profiled for Phase 16 baseline evidence
+phase5_feature_engineering,run_phase16_performance.py:610:<lambda>,2.6682385830000004,1.458e-06,1,0.9999922076427917,no,profiled for Phase 16 baseline evidence
+phase5_feature_engineering,run_phase16_performance.py:577:phase5_reference,2.668237125,0.008312542000000001,1,0.9999916612191517,no,profiled for Phase 16 baseline evidence
+phase5_feature_engineering,phase16.py:157:build_feature_table_reference,2.659900125,0.024039635,1,0.9968671523809112,no,profiled for Phase 16 baseline evidence
+phase5_feature_engineering,engineering.py:531:_trade_window_features,2.186412557,1.487852237,900,0.819415300274275,yes,measured Python window aggregation path
+phase5_feature_engineering,engineering.py:89:signed_quantity,0.333833204,0.333833204,2829406,0.1251127259681135,yes,measured Python window aggregation path
+phase5_feature_engineering,engineering.py:93:notional,0.32608623800000003,0.32608623800000003,2829406,0.12220934780611888,yes,measured Python window aggregation path
+phase5_feature_engineering,engineering.py:522:_ofi_window_features,0.147635328,0.008113504,900,0.055330201172189425,yes,measured Python window aggregation path
+phase5_feature_engineering,engineering.py:256:_sum_decimal,0.127298262,0.07360923200000001,4500,0.047708353689775905,yes,measured Python window aggregation path
+phase11_market_execution,run_phase16_performance.py:265:run_market_fixture,0.634395791,0.006735597,1,0.9986959311882029,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,simulator.py:506:artifact_hash,0.5485420830000001,0.005603718000000001,1,0.8635409536908506,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,dataclasses.py:1217:asdict,0.299095378,0.001764347,3000,0.47085012429692735,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,dataclasses.py:1241:_asdict_inner,0.296594668,0.075361947,3000,0.46691338805511695,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,simulator.py:520:_jsonable,0.19515368900000002,0.067188862,6000,0.307220189549883,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,simulator.py:524:<dictcomp>,0.186774549,0.027225676,6000,0.29402935010300474,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,copy.py:128:deepcopy,0.163083781,0.090395794,57000,0.25673421992720624,no,profiled for Phase 16 baseline evidence
+phase11_market_execution,copy.py:259:_reconstruct,0.091489522,0.018715982000000003,6000,0.1440271430926842,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,run_phase16_performance.py:284:run_passive_fixture,0.350304416,0.0028900410000000003,1,0.9985368695652127,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,simulator.py:506:artifact_hash,0.29038070800000004,0.002242794,1,0.8277253437434546,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,dataclasses.py:1217:asdict,0.176311981,0.00105637,1760,0.5025743482907771,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,dataclasses.py:1241:_asdict_inner,0.174836117,0.04471785,1760,0.49836742268221157,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,copy.py:128:deepcopy,0.09626267200000001,0.053726888,33440,0.27439513395932424,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,simulator.py:520:_jsonable,0.08958173000000001,0.030331446,2560,0.2553512207063816,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,simulator.py:524:<dictcomp>,0.085864882,0.012170944000000001,2560,0.24475640774641672,no,profiled for Phase 16 baseline evidence
+phase11_passive_execution,copy.py:259:_reconstruct,0.053689822000000005,0.010953168000000001,3520,0.1530419382078058,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,run_phase16_performance.py:616:<lambda>,5.463351959000001,1.5125000000000002e-05,1,0.9999954319436419,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,run_phase16_performance.py:595:orchestration_reference,5.463336834000001,7.791e-06,1,0.9999926635093508,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,run_phase16_performance.py:577:phase5_reference,5.4341898760000005,0.009384835000000001,2,0.9946576924011763,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,phase16.py:157:build_feature_table_reference,5.424733583,0.04580602,2,0.9929268411080351,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,engineering.py:531:_trade_window_features,4.418028223,2.978014206,1800,0.8086625343476403,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,engineering.py:89:signed_quantity,0.715154982,0.715154982,5658812,0.13089980665690762,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,engineering.py:93:notional,0.6476985740000001,0.6476985740000001,5658812,0.1185527895945704,no,profiled for Phase 16 baseline evidence
+representative_multidate_orchestration,engineering.py:522:_ofi_window_features,0.295855347,0.015114741000000001,1800,0.05415246861932972,no,profiled for Phase 16 baseline evidence

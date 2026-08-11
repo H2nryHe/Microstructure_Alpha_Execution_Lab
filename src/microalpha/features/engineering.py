@@ -96,6 +96,16 @@ class TradeEvent:
 
 
 @dataclass
+class _TradeWindowTotals:
+    buy_volume: Decimal = Decimal("0")
+    sell_volume: Decimal = Decimal("0")
+    buy_notional: Decimal = Decimal("0")
+    sell_notional: Decimal = Decimal("0")
+    signed_volume: Decimal = Decimal("0")
+    count: int = 0
+
+
+@dataclass
 class FeatureBuildStats:
     total_rows: int
     feature_count: int
@@ -358,6 +368,93 @@ def _advance_window(queue, cutoff: datetime, window_ms: int) -> None:
         queue.popleft()
 
 
+class _OFIWindowAccumulator:
+    def __init__(self, windows_ms: Iterable[int]) -> None:
+        self._queues = {window: deque() for window in windows_ms}
+        self._sums = {window: Decimal("0") for window in windows_ms}
+
+    def append(self, event: OFIEvent) -> None:
+        for window, queue in self._queues.items():
+            queue.append((event.observation_time, event.ofi_event))
+            self._sums[window] += event.ofi_event
+
+    def features(self, cutoff: datetime) -> dict[str, str]:
+        result = {}
+        for window, queue in self._queues.items():
+            start = cutoff - timedelta(milliseconds=window)
+            while queue and queue[0][0] <= start:
+                _timestamp, value = queue.popleft()
+                self._sums[window] -= value
+            suffix = _window_name(window)
+            result[f"ofi_{suffix}"] = _format(self._sums[window])
+            result[f"book_update_count_{suffix}"] = str(len(queue))
+        return result
+
+
+class _TradeWindowAccumulator:
+    def __init__(self, windows_ms: Iterable[int]) -> None:
+        self._queues = {window: deque() for window in windows_ms}
+        self._totals = {window: _TradeWindowTotals() for window in windows_ms}
+
+    def append(self, trade: TradeEvent) -> None:
+        for window, queue in self._queues.items():
+            queue.append(trade)
+            self._add(window, trade)
+
+    def features(self, cutoff: datetime) -> dict[str, str]:
+        result = {}
+        for window, queue in self._queues.items():
+            start = cutoff - timedelta(milliseconds=window)
+            while queue and queue[0].observation_time <= start:
+                self._subtract(window, queue.popleft())
+            suffix = _window_name(window)
+            result.update(self._format_window(window, suffix))
+        return result
+
+    def _add(self, window: int, trade: TradeEvent) -> None:
+        totals = self._totals[window]
+        if trade.side == "buy":
+            totals.buy_volume += trade.quantity
+            totals.buy_notional += trade.notional
+        elif trade.side == "sell":
+            totals.sell_volume += trade.quantity
+            totals.sell_notional += trade.notional
+        totals.signed_volume += trade.signed_quantity
+        totals.count += 1
+
+    def _subtract(self, window: int, trade: TradeEvent) -> None:
+        totals = self._totals[window]
+        if trade.side == "buy":
+            totals.buy_volume -= trade.quantity
+            totals.buy_notional -= trade.notional
+        elif trade.side == "sell":
+            totals.sell_volume -= trade.quantity
+            totals.sell_notional -= trade.notional
+        totals.signed_volume -= trade.signed_quantity
+        totals.count -= 1
+
+    def _format_window(self, window: int, suffix: str) -> dict[str, str]:
+        totals = self._totals[window]
+        total_volume = totals.buy_volume + totals.sell_volume
+        total_notional = totals.buy_notional + totals.sell_notional
+        return {
+            f"buy_volume_{suffix}": _format(totals.buy_volume),
+            f"sell_volume_{suffix}": _format(totals.sell_volume),
+            f"total_volume_{suffix}": _format(total_volume),
+            f"trade_volume_{suffix}": _format(total_volume),
+            f"buy_notional_{suffix}": _format(totals.buy_notional),
+            f"sell_notional_{suffix}": _format(totals.sell_notional),
+            f"trade_notional_{suffix}": _format(total_notional),
+            f"trade_count_{suffix}": str(totals.count),
+            f"signed_trade_volume_{suffix}": _format(totals.signed_volume),
+            f"trade_imbalance_{suffix}": _format(
+                Decimal("NaN")
+                if total_volume == 0
+                else (totals.buy_volume - totals.sell_volume) / total_volume
+            ),
+        }
+
+
 def build_feature_table(
     *,
     fixed_clock_path: str | Path,
@@ -376,8 +473,8 @@ def build_feature_table(
 
     ofi_index = 0
     trade_index = 0
-    ofi_windows = {window: deque() for window in config.ofi_windows_ms}
-    trade_windows = {window: deque() for window in config.trade_windows_ms}
+    ofi_accumulator = _OFIWindowAccumulator(config.ofi_windows_ms)
+    trade_accumulator = _TradeWindowAccumulator(config.trade_windows_ms)
     mid_series = _build_mid_series(state_rows)
     fieldnames = _feature_fieldnames(config)
 
@@ -387,14 +484,10 @@ def build_feature_table(
         for row in fixed_rows:
             cutoff = parse_iso_utc(row["feature_cutoff_time"])
             while ofi_index < len(ofi_events) and ofi_events[ofi_index].observation_time <= cutoff:
-                event = ofi_events[ofi_index]
-                for queue in ofi_windows.values():
-                    queue.append((event.observation_time, event.ofi_event))
+                ofi_accumulator.append(ofi_events[ofi_index])
                 ofi_index += 1
             while trade_index < len(trades) and trades[trade_index].observation_time <= cutoff:
-                trade = trades[trade_index]
-                for queue in trade_windows.values():
-                    queue.append((trade.observation_time, trade))
+                trade_accumulator.append(trades[trade_index])
                 trade_index += 1
             feature_row = {
                 "feature_version": config.feature_version,
@@ -409,8 +502,8 @@ def build_feature_table(
                 "latest_trade_event_time": row.get("latest_trade_event_time", ""),
             }
             feature_row.update(_state_features(row, config))
-            feature_row.update(_ofi_window_features(ofi_windows, cutoff))
-            feature_row.update(_trade_window_features(trade_windows, cutoff))
+            feature_row.update(ofi_accumulator.features(cutoff))
+            feature_row.update(trade_accumulator.features(cutoff))
             feature_row.update(_mid_series_features(mid_series, cutoff, config))
             writer.writerow(feature_row)
 

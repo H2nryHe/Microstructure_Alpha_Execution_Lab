@@ -132,6 +132,14 @@ The cross-date conclusion is that strong predictive structure existed, but the
 economic edge was materially eroded by turnover, latency, costs, fill
 uncertainty, and inventory.
 
+## Performance Engineering
+
+Phase 16 profiled bounded replay, feature, execution, and representative
+orchestration paths without opening the 2026 holdout. The targeted Phase 5
+trailing-window accumulator change reduced bounded feature-engineering median
+runtime from 1.493s to 0.292s, a 5.11x speedup, with exact feature CSV hash
+equivalence against the frozen reference implementation.
+
 ## Reproduce
 
 Python 3.11 or newer is expected.

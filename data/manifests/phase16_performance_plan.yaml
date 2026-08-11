@@ -1,0 +1,79 @@
+phase: 16
+name: performance_engineering
+status: frozen_before_optimization
+upstream_gate:
+  phase15_commit_sha: 1eb43e516366c08165b5ac05d367d0bf342dd82e
+  github_actions:
+    tests:
+      run_id: 31417149603
+      conclusion: success
+      python_version: "3.11"
+    research_smoke:
+      run_id: 31417149604
+      conclusion: success
+      python_version: "3.11"
+development_policy:
+  no_2026_access: true
+  no_research_finding_changes: true
+  no_model_changes: true
+  no_feature_definition_changes: true
+  no_signal_changes: true
+  no_execution_assumption_changes: true
+  no_economic_parameter_optimization: true
+benchmark_environment:
+  environment_id: local_mac_python310_phase16
+  benchmark_interpreter_python_version: "3.10.9"
+  historical_system_python_note: Phase 0 local machine note recorded Python 3.9.6; Phase 16 benchmark command used python3 reporting 3.10.9.
+  ci_python_version_required_for_acceptance: "3.11"
+  machine_scope: same_local_workspace_for_baseline_and_optimized
+  dependency_path: installed_project_dependencies
+benchmark_dates:
+  engineering_validation:
+    - "2019-12-01"
+  development_execution:
+    - "2024-07-01"
+benchmark_stages:
+  phase3_book_replay:
+    input: tests/fixtures/real_subsets/tardis_binance_BTCUSDT_incremental_book_L2_2019-12-01_rows_1_2050.csv
+    rows_or_events: bounded_real_l2_subset
+    repetitions: 3
+  phase5_feature_engineering:
+    input: generated_deterministic_bounded_2019_style_csv_fixture
+    rows_or_events: synthetic_bounded_development_fixture_no_2026
+    repetitions: 3
+  phase11_market_execution:
+    input: deterministic_bounded_order_and_book_fixture
+    rows_or_events: synthetic_bounded_development_fixture_no_2026
+    repetitions: 3
+  phase11_passive_execution:
+    input: deterministic_bounded_order_book_and_trade_fixture
+    rows_or_events: synthetic_bounded_development_fixture_no_2026
+    repetitions: 3
+  representative_multidate_orchestration:
+    input: two_bounded_generated_development_dates
+    rows_or_events: phase3_plus_phase5_bounded_paths
+    repetitions: 3
+timing_methodology:
+  clock: time.perf_counter
+  cpu_time: time.process_time
+  memory: resource_ru_maxrss_best_effort
+  cache_convention: warm_local_process_after_fixture_generation
+  primary_statistic: median_runtime_seconds
+  profiler: cProfile_with_compact_pstats_summary
+correctness_comparison:
+  reference_implementation: frozen_pre_optimization_python_path
+  optimized_implementation: phase16_python_path
+  feature_windows: exact_csv_row_and_dataset_hash_equality
+  execution: order_and_fill_artifact_hash_equality
+  replay: deterministic_replay_stats_and_output_hash_equality_when_replay_code_is_unchanged
+  numeric_tolerance: exact_for_decimal_csv_fields_and_hashes
+optimization_acceptance:
+  require_profiled_hotspot: true
+  require_measured_speedup: true
+  require_equivalence: true
+  no_wall_clock_ci_gate: true
+  cplusplus_only_if_profile_justifies: true
+hash_policy:
+  exclude_absolute_local_paths: true
+  exclude_timestamps: true
+  exclude_non_deterministic_environment_fields_from_result_identity: true

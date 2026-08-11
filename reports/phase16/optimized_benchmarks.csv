@@ -1,0 +1,16 @@
+stage,dataset/date,input rows/events,output rows,runtime_seconds,cpu_time_seconds,throughput_rows_per_sec,peak_memory_mb if available,repeat_id,environment_id,implementation
+phase3_book_replay,2019-12-01 bounded book events,2520,2520,0.01582033303566277,0.01579300000000039,159288.6821231465,100.2421875,1,local_mac_python310_phase16,unchanged
+phase3_book_replay,2019-12-01 bounded book events,2520,2520,0.016039417125284672,0.016021000000000285,157112.94121950673,100.2421875,2,local_mac_python310_phase16,unchanged
+phase3_book_replay,2019-12-01 bounded book events,2520,2520,0.015638957964256406,0.015639999999999432,161136.0555965162,100.2421875,3,local_mac_python310_phase16,unchanged
+phase5_feature_engineering,2024-07-01 bounded feature fixture,9900,900,0.2923121249768883,0.2907909999999987,33867.907466317876,105.50390625,1,local_mac_python310_phase16,optimized
+phase5_feature_engineering,2024-07-01 bounded feature fixture,9900,900,0.3020064998418093,0.3008740000000003,32780.751424838905,108.1875,2,local_mac_python310_phase16,optimized
+phase5_feature_engineering,2024-07-01 bounded feature fixture,9900,900,0.2862163749523461,0.28515000000000157,34589.21594422511,108.99609375,3,local_mac_python310_phase16,optimized
+phase11_market_execution,2024-07-01 bounded market execution fixture,3000,3000,0.30009604105725884,0.29874500000000026,9996.799655972785,133.08203125,1,local_mac_python310_phase16,unchanged
+phase11_market_execution,2024-07-01 bounded market execution fixture,3000,3000,0.3331190408207476,0.313639000000002,9005.789619856372,133.08203125,2,local_mac_python310_phase16,unchanged
+phase11_market_execution,2024-07-01 bounded market execution fixture,3000,3000,0.2840669169090688,0.28340299999999985,10560.89189351224,133.08203125,3,local_mac_python310_phase16,unchanged
+phase11_passive_execution,2024-07-01 bounded passive execution fixture,800,800,0.15273704193532467,0.15232800000000069,5237.760204487618,133.08203125,1,local_mac_python310_phase16,unchanged
+phase11_passive_execution,2024-07-01 bounded passive execution fixture,800,800,0.1473837080411613,0.14716400000000007,5428.00836423912,133.08203125,2,local_mac_python310_phase16,unchanged
+phase11_passive_execution,2024-07-01 bounded passive execution fixture,800,800,0.14670179202221334,0.14651899999999785,5453.239452445579,133.08203125,3,local_mac_python310_phase16,unchanged
+representative_multidate_orchestration,2019-12-01 plus 2024-07-01 bounded two-date path,22320,4320,0.6483712911140174,0.6278289999999984,34424.71976458159,133.08203125,1,local_mac_python310_phase16,optimized
+representative_multidate_orchestration,2019-12-01 plus 2024-07-01 bounded two-date path,22320,4320,0.6028069159947336,0.6000890000000005,37026.781557687034,133.08203125,2,local_mac_python310_phase16,optimized
+representative_multidate_orchestration,2019-12-01 plus 2024-07-01 bounded two-date path,22320,4320,0.6055903749074787,0.6033340000000003,36856.59634767151,133.08203125,3,local_mac_python310_phase16,optimized
