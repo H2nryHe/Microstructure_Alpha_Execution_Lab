@@ -353,6 +353,48 @@
     "value": 31413110254
   },
   {
+    "claim_strings": [],
+    "description": "Exact reference-vs-optimized Phase 5 feature output SHA-256.",
+    "metric_name": "phase16_feature_equivalence_sha256",
+    "source_file": "reports/phase16/equivalence_results.csv",
+    "source_phase": "Phase 16",
+    "unit": "sha256",
+    "value": "d8503550c2d9c597f488a43bbf9c166f9673ce6db666dd6437b04e004ad4ffcf"
+  },
+  {
+    "claim_strings": [
+      "0.292s"
+    ],
+    "description": "Optimized median runtime for the bounded Phase 5 feature-engineering benchmark.",
+    "metric_name": "phase16_feature_optimized_median_runtime_seconds",
+    "source_file": "reports/phase16/phase16_summary.json",
+    "source_phase": "Phase 16",
+    "unit": "seconds",
+    "value": 0.2923121249768883
+  },
+  {
+    "claim_strings": [
+      "1.493s"
+    ],
+    "description": "Frozen reference median runtime for the bounded Phase 5 feature-engineering benchmark.",
+    "metric_name": "phase16_feature_reference_median_runtime_seconds",
+    "source_file": "reports/phase16/phase16_summary.json",
+    "source_phase": "Phase 16",
+    "unit": "seconds",
+    "value": 1.4930219580419362
+  },
+  {
+    "claim_strings": [
+      "5.11x speedup"
+    ],
+    "description": "Median speedup for the bounded Phase 5 feature-engineering benchmark.",
+    "metric_name": "phase16_feature_speedup_ratio",
+    "source_file": "reports/phase16/phase16_summary.json",
+    "source_phase": "Phase 16",
+    "unit": "ratio",
+    "value": 5.107629244459094
+  },
+  {
     "claim_strings": [
       "0.447 changed-state IC"
     ],

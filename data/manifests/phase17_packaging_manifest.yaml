@@ -1,0 +1,62 @@
+phase: 17
+name: final_repository_packaging_and_release_readiness
+accepted_phase16:
+  commit_sha: cda51383f1f41be6fc1243ca828330ab73393b54
+  tests_run_id: 31522113442
+  research_smoke_run_id: 31522113477
+  phase16_performance_plan_hash: 70fc7a9f1dc3fd80642d0dd83b8d09ba17fd3011be23ba432b92a788a539b350
+  phase16_benchmark_artifact_hash: d7d7ae72b9a02754f30b6c906424994ad4da0cba789af2c53a815bf05645ae59
+  phase16_results_hash: c86d724e084734ed52bd02c3d6cf6d5e75b16c5e6cecf418f5368bb3b92759f0
+public_artifacts:
+  - README.md
+  - REPRODUCIBILITY.md
+  - DATA_GUIDE.md
+  - RELEASE_CHECKLIST.md
+  - reports/final/PROJECT_SUMMARY.md
+  - reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md
+  - reports/final/FINAL_METRICS.json
+  - reports/final/FINAL_ARTIFACT_INDEX.md
+  - reports/final/RELEASE_VALIDATION.json
+  - reports/phase16/PERFORMANCE_ENGINEERING.md
+  - reports/phase16/README.md
+required_final_figures:
+  - reports/final/figures/architecture_diagram.png
+  - reports/final/figures/qi_decile_future_1s_move.png
+  - reports/final/figures/daily_ic_stability.png
+  - reports/final/figures/qi_vs_extended_walkforward_ic.png
+  - reports/final/figures/signal_coverage_and_separation.png
+  - reports/final/figures/market_gross_vs_net_economics.png
+  - reports/final/figures/pnl_turnover_vs_fee.png
+  - reports/final/figures/phase14_breakeven_distribution.png
+  - reports/final/figures/qi_vs_extended_economic_efficiency.png
+  - reports/final/figures/passive_fill_inventory_tradeoff.png
+required_phase16_figures:
+  - reports/phase16/figures/baseline_vs_optimized_runtime_by_stage.png
+  - reports/phase16/figures/throughput_before_vs_after.png
+  - reports/phase16/figures/hotspot_runtime_contribution.png
+supported_python:
+  requires_python: ">=3.11"
+  ci_python: "3.11"
+public_cli_entry_points:
+  microalpha-smoke: smoke/reproducibility manifest tool
+  microalpha-ingest: raw CSV ingestion tool
+  microalpha-qa: market-data QA tool
+packaging_validation_scope:
+  local_python: "3.10.9"
+  python311_install_verification: GitHub Actions tests and research-smoke
+  build_frontend_local_status: build module unavailable locally
+privacy_exclusions:
+  - reports/final/RESUME_BULLETS.md
+  - reports/final/INTERVIEW_STORIES.md
+no_holdout_rule:
+  no_2026_data_access: true
+  statement: 2026 remains an untouched temporal holdout reserved for future confirmatory evaluation.
+release_policy:
+  recommended_tag: v1.0.0
+  tag_created: false
+  github_release_created: false
+hash_policy:
+  exclude_timestamps: true
+  exclude_runtime_measurements_from_release_identity: true
+  exclude_absolute_local_paths: true
+  exclude_private_files: true

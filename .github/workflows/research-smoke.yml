@@ -1,6 +1,6 @@
 name: research-smoke
 
-on:
+"on":
   push:
   pull_request:
 

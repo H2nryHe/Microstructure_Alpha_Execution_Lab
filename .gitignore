@@ -45,6 +45,7 @@ data/manifests/*
 !data/manifests/phase13_cost_latency_plan.yaml
 !data/manifests/phase14_robustness_plan.yaml
 !data/manifests/phase16_performance_plan.yaml
+!data/manifests/phase17_packaging_manifest.yaml
 
 # Experiment outputs are generated artifacts.
 experiments/runs/*
@@ -56,6 +57,8 @@ reports/final/*
 !reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md
 !reports/final/FINAL_METRICS.json
 !reports/final/FINAL_ARTIFACT_INDEX.md
+!reports/final/PROJECT_SUMMARY.md
+!reports/final/RELEASE_VALIDATION.json
 !reports/final/figures/
 !reports/final/figures/*.png
 !reports/figures/.gitkeep

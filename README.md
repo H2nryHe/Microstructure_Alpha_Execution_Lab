@@ -5,6 +5,14 @@ short-horizon future mid-price movement, and do those forecasts retain economic
 value after causal market-data reconstruction, event-driven execution,
 accounting, transaction costs, latency, and cross-date robustness tests?
 
+**What matters in 60 seconds:** this is a reproducible BTC-USDT microstructure
+research and execution lab, not a toy notebook. It reconstructs L2 books,
+builds leakage-controlled features and labels, tests QI/OFI/model signals,
+simulates execution and accounting, stresses costs/latency, and profiles the
+pipeline. The main result is that short-horizon predictive structure is real,
+but executable economics are thin once turnover, spread, latency, queue
+uncertainty, and inventory are included.
+
 ## Research Question
 
 The project tests the full chain from causal market-data reconstruction to
@@ -59,6 +67,8 @@ Tardis L2 + Trades
     -> Accounting
     -> Cost / Latency Analysis
     -> Cross-Date Robustness
+
+Performance Engineering wraps the pipeline without changing alpha semantics.
 ```
 
 The strongest engineering choice is causal replay. Exchange event time is
@@ -140,23 +150,31 @@ trailing-window accumulator change reduced bounded feature-engineering median
 runtime from 1.493s to 0.292s, a 5.11x speedup, with exact feature CSV hash
 equivalence against the frozen reference implementation.
 
-## Reproduce
+## Reproduce / Quick Start
 
 Python 3.11 or newer is expected.
 
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest
-ruff check src tests scripts
-python -m compileall -q src scripts tests
 microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml
+PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python3 scripts/run_phase16_performance.py --output-dir /tmp/microalpha-phase16-demo/reports --work-root /tmp/microalpha-phase16-demo/work --repetitions 1
 ```
+
+The first three commands are the lightweight smoke/synthetic verification path.
+The Phase 16 command is a bounded demonstration that does not require large raw
+vendor datasets. Full historical research reproduction is separate and requires
+external Binance/Tardis source files kept outside Git.
 
 Final report artifacts:
 
 - [Final research report](reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md)
 - [Final metrics registry](reports/final/FINAL_METRICS.json)
 - [Final artifact index](reports/final/FINAL_ARTIFACT_INDEX.md)
+- [Project summary](reports/final/PROJECT_SUMMARY.md)
+- [Reproducibility guide](REPRODUCIBILITY.md)
+- [Data guide](DATA_GUIDE.md)
+- [Release checklist](RELEASE_CHECKLIST.md)
 
 Private career-material drafts are intentionally excluded from the public
 repository and from Phase 15 validation/hash scope.

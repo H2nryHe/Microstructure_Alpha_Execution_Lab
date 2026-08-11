@@ -1,7 +1,7 @@
 # Phase 15 Final Artifact Index
 
 - phase15_final_report_hash: `b49dd9edf51a0b1d2fb4564c89f87497446819689fc9153aef1a428aacdb2740`
-- phase15_results_hash: `49f24d5831081edaa978f7cbee197896111e2b97f7a4b831b6682b310cd00fa7`
+- phase15_results_hash: `e5198e704d7c978725cd1c23ece26e31d96286da83eca001a18337f03a198405`
 - accepted_phase14_commit: `7290d86afa18b67fdf0c46b2eeea22253dab7bc1`
 - phase14_tests_run_id: `31413110254`
 - phase14_research_smoke_run_id: `31413111431`
@@ -29,8 +29,9 @@
 The final report hash covers only the canonical final research report.
 The Phase 15 results hash covers README, final markdown documents,
 `FINAL_METRICS.json`, and SHA-256 identities of the curated figure files.
-The current public results hash includes the Phase 16 performance note added to
-README after Phase 15 acceptance; the canonical final report hash is unchanged.
+The current public results hash includes the Phase 16 performance note, Phase
+17 public README links, and Phase 16 performance metrics added after Phase 15
+acceptance; the canonical final report hash is unchanged.
 Private resume and interview-preparation materials are excluded from
 repository validation and public hash scope.
 Runtime, timestamps, and absolute paths are excluded.
