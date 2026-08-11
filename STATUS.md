@@ -4061,8 +4061,7 @@ Assumptions and limitations:
 
 ## Phase 17 - Final Repository Packaging and Release Readiness
 
-Status: PASS locally; final Python 3.11 GitHub Actions verification pending
-after push
+Status: PASS locally and in Python 3.11 GitHub Actions
 
 Accepted Phase 16 state:
 
@@ -4188,9 +4187,14 @@ Final release recommendation:
 - No Git tag was created.
 - No GitHub Release was created.
 
+GitHub Actions verification:
+
+- Phase 17 validation commit:
+  `5ec5ad399845432189290f8684569b86990e8d56`.
+- GitHub Actions `tests`: PASS, run `31524414826`.
+- GitHub Actions `research-smoke`: PASS, run `31524414807`.
+
 Next steps:
 
-- Commit and push Phase 17 validation artifacts.
-- Confirm exact Python 3.11 GitHub Actions `tests` and `research-smoke` are
-  both green on the final pushed commit.
 - Stop. Do not begin new research.
+- Do not create a Git tag or GitHub Release without explicit user authorization.
