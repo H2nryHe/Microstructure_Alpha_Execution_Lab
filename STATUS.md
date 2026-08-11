@@ -3926,7 +3926,7 @@ Assumptions and limitations:
 
 ## Phase 16 - Performance Engineering
 
-Status: PASS locally; Python 3.11 GitHub Actions verification pending after push
+Status: PASS locally and in Python 3.11 GitHub Actions
 
 Pre-gate:
 
@@ -4038,6 +4038,13 @@ Local validation:
 - `PATH=/tmp/microalpha-config-smoke-venv/bin:$PATH microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml`:
   PASS, config hash
   `29d8157421a085a12a31c0f77c29b3b09f57cd2663c45513928815977eef1dd8`.
+
+GitHub Actions verification:
+
+- Phase 16 implementation commit:
+  `1aa0650cd4b881f16c0166100c226387f387f9fe`.
+- GitHub Actions `tests`: PASS, run `31521948969`.
+- GitHub Actions `research-smoke`: PASS, run `31521949016`.
 
 Assumptions and limitations:
 
