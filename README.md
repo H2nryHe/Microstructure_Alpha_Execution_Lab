@@ -39,7 +39,7 @@ This repository is an end-to-end market-microstructure research system built aro
 
 ---
 
-## System architecture
+## Architecture
 
 ![Architecture diagram](reports/final/figures/architecture_diagram.png)
 
@@ -183,7 +183,7 @@ The reference and optimized feature outputs matched exactly by SHA-256. C++ acce
 
 ---
 
-## Quick start
+## Reproduce / Quick Start
 
 **Python 3.11+** is expected.
 
