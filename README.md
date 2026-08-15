@@ -1,197 +1,250 @@
-# Microstructure Alpha Execution Lab
+<div align="center">
 
-**Research question:** Can BTC-USDT order-book and order-flow signals forecast
-short-horizon future mid-price movement, and do those forecasts retain economic
-value after causal market-data reconstruction, event-driven execution,
-accounting, transaction costs, latency, and cross-date robustness tests?
+# Microstructure Alpha & Execution Lab
 
-**What matters in 60 seconds:** this is a reproducible BTC-USDT microstructure
-research and execution lab, not a toy notebook. It reconstructs L2 books,
-builds leakage-controlled features and labels, tests QI/OFI/model signals,
-simulates execution and accounting, stresses costs/latency, and profiles the
-pipeline. The main result is that short-horizon predictive structure is real,
-but executable economics are thin once turnover, spread, latency, queue
-uncertainty, and inventory are included.
+**Causal L2 research → walk-forward alpha → event-driven execution → cost robustness**
 
-## Research Question
+[![tests](https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/workflows/tests.yml/badge.svg)](https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/workflows/tests.yml)
+[![research-smoke](https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/workflows/research-smoke.yml/badge.svg)](https://github.com/H2nryHe/Microstructure_Alpha_Execution_Lab/actions/workflows/research-smoke.yml)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![Status](https://img.shields.io/badge/status-research%20complete-2ea44f)
+![Reproducible](https://img.shields.io/badge/research-deterministic%20%26%20reproducible-6f42c1)
 
-The project tests the full chain from causal market-data reconstruction to
-statistical prediction, signal construction, execution simulation, accounting,
-and cost robustness. The goal is to determine whether short-horizon
-microstructure predictability survives the mechanics required to trade it.
+*Can BTC-USDT order-book and order-flow signals forecast short-horizon price moves — and does that signal survive the mechanics and costs required to trade it?*
 
-## Key Findings
+</div>
 
-- Queue imbalance showed strong, stable 1s predictive rank signal: 0.43 mean daily
-  Spearman IC, with 24/24 development dates positive across ~20.7M observations.
-- OFI added incremental information beyond QI; LightGBM improved predictive IC
-  modestly and consistently, including +0.0107 Extended delta across 18
-  expanding folds.
-- Predictive lift did not automatically translate into better execution
-  economics. Phase 13 found 0.376 bps QI reference breakeven, 0.253 bps
-  QI+OFI reference breakeven, and 0.277 bps Extended reference breakeven.
-- Cross-date robustness favored the simpler economic-efficiency baseline: QI
-  ranked first in 8 first-place efficiency contexts, while Extended-minus-QI
-  averaged -2443.68 mean Extended-minus-QI net delta in the 0.25 bps market
-  cost scenario.
-- Passive execution remained fill- and inventory-constrained: 1.56% QI passive
-  mean fill rate, 4.70% Extended passive mean fill rate, and 4.79 mean Extended
-  terminal position at 0ms in Phase 14 diagnostics.
+---
+
+## 60-second result
+
+This repository is an end-to-end market-microstructure research system built around **incremental L2 order-book data and trades**. It reconstructs market state causally, engineers leakage-controlled features, validates short-horizon signals, retrains models chronologically, converts predictions into trading states, simulates execution and accounting, and then attacks the result with latency, fee, queue, inventory, and cross-date robustness tests.
+
+> **Core conclusion:** short-horizon predictive structure is strong and reproducible, but better predictive IC does **not** automatically produce better net trading economics. Turnover, spread, latency, queue uncertainty, and residual inventory materially constrain monetization.
+
+### Headline evidence
+
+| Question | Result |
+|---|---|
+| **Is there a real short-horizon signal?** | Queue imbalance reached **~0.43 mean daily Spearman IC at 1s**, with **24/24 development dates positive** across ~20.7M observations. |
+| **Does multivariate ML add information?** | Extended LightGBM added **+0.0107 mean IC** versus direct QI across **18 expanding walk-forward folds**, positive in **18/18** folds. |
+| **Does higher predictive IC improve economics?** | Not robustly. The simpler QI signal remained the stronger market-efficiency baseline across the cross-date execution study. |
+| **How much cost headroom remains?** | QI's six-date 0ms **mean / median breakeven fee was ~0.687 / 0.440 bps**; only **3/6** dates stayed net-positive at 0.25 bps and **2/6** at 0.50 bps. |
+| **Can passive execution solve the spread problem?** | Not cleanly. Passive fills remained low, queue-sensitive, adverse-selection-prone, and inventory-constrained. |
+| **Was the system performance-engineered?** | Profiling-driven refactoring cut the representative feature-engineering benchmark from **1.493s to 0.292s (5.11×)** with an **exact reference-vs-optimized output SHA-256 match**. |
+
+---
+
+## System architecture
 
 ![Architecture diagram](reports/final/figures/architecture_diagram.png)
 
-## Verified Scale
-
-- 6.49M L2 rows in the 2019 validation-day replay.
-- 816K completed event states and 864K fixed 100ms observations.
-- 91 features generated with observation-time leakage controls.
-- 24 development dates from 2024-2025; 2026 remains an untouched temporal
-  holdout.
-- 18 expanding folds in chronological walk-forward evaluation.
-
-## Architecture
-
 ```text
 Tardis L2 + Trades
-    -> Immutable Raw Data
-    -> Market Data QA
-    -> Order Book Replay
-    -> Causal Research Dataset
-    -> Microstructure Features
-    -> Forward Labels
-    -> Statistical Research
-    -> Predictive Modeling
-    -> Walk-Forward Evaluation
-    -> Signal Construction
-    -> Execution Simulator
-    -> Accounting
-    -> Cost / Latency Analysis
-    -> Cross-Date Robustness
-
-Performance Engineering wraps the pipeline without changing alpha semantics.
+        ↓
+Immutable Raw Data
+        ↓
+Market Data QA
+        ↓
+Causal Order-Book Replay
+        ↓
+Research Dataset
+        ↓
+Microstructure Features + Forward Labels
+        ↓
+Statistical Research + Walk-Forward Modeling
+        ↓
+Signal Construction
+        ↓
+Event-Driven Execution
+        ↓
+Portfolio Accounting
+        ↓
+Cost / Latency / Queue / Inventory Stress
+        ↓
+Cross-Date Robustness
 ```
 
-The strongest engineering choice is causal replay. Exchange event time is
-preserved, but local observation time plus source order governs what the
-research process could have known at each cutoff. Features are backward-looking
-from T; labels are strictly after T; no cross-day feature or label leakage is
-allowed.
+Performance engineering wraps the pipeline without changing the research semantics.
 
-## Data Integrity
+---
 
-The pipeline preserves raw source files as immutable byte streams, computes
-checksums, writes metadata manifests, validates schemas, and records deterministic
-hashes for major research artifacts. Market-data QA checks duplicates, invalid
-prices or quantities, sequence issues where applicable, crossed or locked
-books, update gaps, stale BBO, and discontinuities.
+## Why this is not a toy backtest
 
-Source hardening used Binance official public trades for real trade ingestion
-validation and Tardis normalized Binance incremental L2 for order-book replay.
-The canonical internal instrument is `BTC-USDT`; the vendor symbol is
-`BTCUSDT`.
+- **Observation-time causality.** Exchange timestamps are preserved, but local observation time plus source order governs replay so the research never silently reorders what a live process could have observed.
+- **Frozen research design.** Development dates were selected before predictive analysis; 2026 remains an untouched temporal holdout.
+- **Leakage controls.** Feature windows are strictly backward-looking, labels strictly forward-looking, cross-day leakage is disabled, and suspicious results are attacked with changed-state, non-overlap, permutation, and temporal-mismatch checks.
+- **Execution before economics.** Signals are desired states, not fills. Market and passive orders pass through latency-aware event-driven execution, partial-fill logic, queue assumptions, cancellations, and inventory accounting.
+- **Costs are applied explicitly.** Fee stress is separated from fill mechanics so spread/slippage is not double-counted.
+- **Deterministic artifacts.** Major stages emit hashes, manifests, compact reports, regression tests, and CI-verifiable outputs.
 
-## Signal Research
+---
 
-Top-of-book QI was the dominant simple signal. The Phase 7 robustness audit
-attacked the strong headline IC rather than accepting it at face value:
-changed-state checks produced 0.447 changed-state IC, non-overlap sampling
-produced 0.425 non-overlap IC, and a five-minute temporal mismatch control
-produced only 0.004 temporal mismatch IC.
+## Research findings
 
-OFI provided the clearest incremental information beyond QI. Microprice and
-depth imbalance were useful but highly redundant with QI, which is why the
-final interpretation separates interpretable signal families from raw feature
-count.
+### 1. Queue imbalance is the dominant simple signal
 
-## Predictive Modeling
+Top-of-book queue imbalance produced the strongest interpretable baseline. The development study found approximately **0.426 mean daily 1s Spearman IC**, with all 24 pre-registered development dates positive.
 
-Phase 8 found 0.422 QI baseline mean daily IC and +0.008 Extended LightGBM
-lift, positive in 12/12 validation months. Phase 9 repeated the comparison
-under chronological retraining: QI produced 0.432 QI mean IC, QI+OFI added
-+0.0067 QI+OFI delta, and Extended added +0.0107 Extended delta across
-18 expanding folds. The rolling-six-month comparison retained +0.0082
-rolling-6 Extended delta.
+The strong result was treated as suspicious until it survived targeted audits:
 
-The modeling conclusion is modest but real: nonlinear multivariate modeling
-added stable predictive information, but QI remained the dominant ranking
-signal.
+- changed-state-only IC: ~0.447
+- non-overlap IC: ~0.425
+- five-minute temporal-mismatch control: ~0.004
 
-## Execution Reality
+Microprice and deeper imbalance features were useful but highly redundant with QI. **OFI provided the clearest incremental information beyond QI.**
 
-Signals are desired states, not fills. The primary Phase 10 q10/q90 signal rule
-produced 21.7% QI active coverage, 20.2% QI+OFI active coverage, and 17.3%
-Extended active coverage. Market orders filled reliably but paid spread,
-displayed-depth consumption, and latency through fill prices. Passive orders
-introduced queue uncertainty, low fill rates, adverse selection, and residual
-inventory.
+### 2. ML adds signal, but only modestly
 
-Reference-day Phase 12 accounting showed 0.376 bps QI market 0ms, 0.252 bps
-QI+OFI market 0ms, and 0.277 bps Extended market 0ms gross PnL per turnover.
-Extended generated more gross dollars in that diagnostic, but QI had better
-turnover efficiency.
+A direct QI baseline remained hard to beat. Under chronological retraining, Extended LightGBM improved mean IC by approximately **+0.0107** across 18 expanding folds, while QI+OFI added approximately **+0.0067**.
 
-## Cost / Robustness
+The important result is not that "LightGBM wins." It is that a simple, interpretable microstructure variable captured most of the ranking structure, while nonlinear modeling added a small but repeatable adjustment.
 
-Phase 13 showed that transaction-cost headroom was thin: no reference-day market
-scenario remained net positive at a 0.50 bps fee overlay. Phase 14 then froze a
-six-date robustness plan before evaluating new date outcomes. QI had 0.687 bps
-QI mean breakeven at 0ms and 0.440 bps QI median breakeven at 0ms, but only
-3/6 QI net-positive days at 0.25 bps and 2/6 QI net-positive days at 0.50 bps.
+### 3. Predictive strength and economic efficiency diverge
 
-The cross-date conclusion is that strong predictive structure existed, but the
-economic edge was materially eroded by turnover, latency, costs, fill
-uncertainty, and inventory.
+The primary q10/q90 signal rule produced active coverage of roughly:
 
-## Performance Engineering
+| Signal | Active coverage |
+|---|---:|
+| QI | 21.7% |
+| QI + OFI | 20.2% |
+| Extended | 17.3% |
 
-Phase 16 profiled bounded replay, feature, execution, and representative
-orchestration paths without opening the 2026 holdout. The targeted Phase 5
-trailing-window accumulator change reduced bounded feature-engineering median
-runtime from 1.493s to 0.292s, a 5.11x speedup, with exact feature CSV hash
-equivalence against the frozen reference implementation.
+Extended predictions produced stronger conditional future-mid separation, but the more complex signals also changed states differently and created additional turnover. Once execution and costs were introduced, stronger predictive IC did not robustly dominate the simpler QI baseline economically.
 
-## Reproduce / Quick Start
+---
 
-Python 3.11 or newer is expected.
+## Execution reality
+
+The execution layer separates **prediction quality** from **realizability**.
+
+### Market orders
+
+- high fill certainty
+- immediate spread / displayed-depth cost through the actual fill price
+- latency changes the market state seen at arrival
+- higher turnover quickly consumes sub-basis-point predictive edge
+
+### Passive orders
+
+- conservative queue-position approximation from visible L2 depth
+- partial fills, TTL, cancel handling, and taker-on-arrival behavior
+- low fill participation in the reference diagnostics
+- residual inventory and post-fill adverse-selection risk remain visible
+
+The project deliberately does **not** claim exact FIFO queue reconstruction from L2 data.
+
+---
+
+## Cost and cross-date robustness
+
+The reference-day study showed very thin market-order transaction-cost headroom. The later mechanically selected six-date robustness study produced a more nuanced result:
+
+- QI six-date **mean breakeven fee at 0ms:** ~0.687 bps
+- QI six-date **median breakeven fee at 0ms:** ~0.440 bps
+- QI net-positive days at **0.25 bps:** 3/6
+- QI net-positive days at **0.50 bps:** 2/6
+- Extended / QI+OFI did not robustly improve net economics versus QI
+
+This is the central research lesson of the repository:
+
+> **Predictive alpha ≠ executable gross edge ≠ cost-adjusted net edge.**
+
+---
+
+## Performance engineering
+
+Profiling identified repeated trailing-window aggregation as a material feature-engineering bottleneck. A bounded refactor replaced repeated work with a more efficient accumulator while preserving the frozen scientific output.
+
+| Benchmark | Reference | Optimized | Speedup |
+|---|---:|---:|---:|
+| Feature-engineering stage | 1.493s | 0.292s | **5.11×** |
+| Representative orchestration | 2.991s | 0.606s | **4.94×** |
+
+The reference and optimized feature outputs matched exactly by SHA-256. C++ acceleration was evaluated after profiling and **not introduced** because the measured bottleneck did not justify the additional complexity.
+
+---
+
+## Verified scale
+
+| Item | Scale |
+|---|---:|
+| L2 rows on engineering validation day | **6.49M** |
+| Completed event states | **816K** |
+| Fixed 100ms observations | **864K / day** |
+| Leakage-controlled features | **91** |
+| Pre-registered development dates | **24** |
+| Primary state-observation research rows | **~20.7M** |
+| Expanding walk-forward folds | **18** |
+
+---
+
+## Quick start
+
+**Python 3.11+** is expected.
 
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest
 microalpha-smoke --manifest-out /tmp/microalpha-smoke.yaml
-PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl python3 scripts/run_phase16_performance.py --output-dir /tmp/microalpha-phase16-demo/reports --work-root /tmp/microalpha-phase16-demo/work --repetitions 1
 ```
 
-The first three commands are the lightweight smoke/synthetic verification path.
-The Phase 16 command is a bounded demonstration that does not require large raw
-vendor datasets. Full historical research reproduction is separate and requires
-external Binance/Tardis source files kept outside Git.
+Run the bounded performance demo without downloading the full historical research dataset:
 
-Final report artifacts:
+```bash
+PYTHONPATH=src MPLCONFIGDIR=/tmp/microalpha-mpl \
+python3 scripts/run_phase16_performance.py \
+  --output-dir /tmp/microalpha-phase16-demo/reports \
+  --work-root /tmp/microalpha-phase16-demo/work \
+  --repetitions 1
+```
 
-- [Final research report](reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md)
-- [Final metrics registry](reports/final/FINAL_METRICS.json)
-- [Final artifact index](reports/final/FINAL_ARTIFACT_INDEX.md)
-- [Project summary](reports/final/PROJECT_SUMMARY.md)
-- [Reproducibility guide](REPRODUCIBILITY.md)
-- [Data guide](DATA_GUIDE.md)
-- [Release checklist](RELEASE_CHECKLIST.md)
+The smoke path is intentionally lightweight. Full historical research reproduction requires external Binance/Tardis source files that are kept outside Git.
 
-Private career-material drafts are intentionally excluded from the public
-repository and from Phase 15 validation/hash scope.
+---
 
-Accepted Phase 14 commit:
-`7290d86afa18b67fdf0c46b2eeea22253dab7bc1`. GitHub Actions on that commit:
-tests run `31413110254` PASS and research-smoke run `31413111431` PASS.
+## Repository map
+
+```text
+src/microalpha/        research, replay, execution, accounting, utilities
+configs/               frozen research / execution configuration
+data/manifests/        deterministic plans and artifact identities
+scripts/               reproducible stage runners and verification tools
+tests/                 unit, integration, causality, determinism checks
+reports/final/         final report, metrics registry, summary, figures
+reports/phase16/       performance-engineering evidence
+.github/workflows/     Python 3.11 tests and research-smoke CI
+```
+
+---
+
+## Deep dives
+
+| Document | Purpose |
+|---|---|
+| [Project summary](reports/final/PROJECT_SUMMARY.md) | 500–800 word technical overview |
+| [Final research report](reports/final/MICROSTRUCTURE_ALPHA_EXECUTION_LAB_REPORT.md) | Full methodology, findings, failures, and limitations |
+| [Final metrics registry](reports/final/FINAL_METRICS.json) | Source-traceable public numeric claims |
+| [Final artifact index](reports/final/FINAL_ARTIFACT_INDEX.md) | Canonical public outputs and hashes |
+| [Reproducibility guide](REPRODUCIBILITY.md) | Environment, data policy, determinism, and reproduction |
+| [Data guide](DATA_GUIDE.md) | Instrument mapping, source conventions, and raw-data policy |
+| [Performance engineering](reports/phase16/PERFORMANCE_ENGINEERING.md) | Profiling, hotspot selection, optimization, and equivalence evidence |
+| [Release checklist](RELEASE_CHECKLIST.md) | Public/private, CI, packaging, and release hygiene |
+
+---
 
 ## Limitations
 
-This is a BTC-USDT research system using Tardis/Binance historical
-reconstruction. It uses displayed book data only, does not observe hidden
-liquidity, does not model self-impact or market reaction, and uses an
-approximate passive queue model. Fee overlays are generic research stresses,
-not live venue pricing.
+This is a historical **BTC-USDT** research system built from Binance/Tardis reconstruction. It uses displayed-book data only, does not observe hidden liquidity, does not model endogenous self-impact or strategic market reaction, and uses a simplified passive queue approximation. Fee overlays are generic research stresses rather than live venue pricing.
 
-The execution robustness sample is limited relative to the full development
-universe. The report synthesizes development evidence through Phase 14 and does
-not claim final confirmatory validation. 2026 remains reserved as an untouched
-temporal holdout.
+Execution robustness covers a bounded development-date sample rather than the entire historical universe. The repository does **not** claim production trading performance or profitability.
+
+**2026 remains an untouched temporal holdout reserved for a future confirmatory evaluation after the research and execution rules are fully frozen.**
+
+---
+
+<div align="center">
+
+**Research complete · deterministic artifacts · Python 3.11 CI verified**
+
+</div>
