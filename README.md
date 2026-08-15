@@ -16,7 +16,9 @@
 
 ---
 
-## 60-second result
+## Research Question
+
+### 60-second result
 
 This repository is an end-to-end market-microstructure research system built around **incremental L2 order-book data and trades**. It reconstructs market state causally, engineers leakage-controlled features, validates short-horizon signals, retrains models chronologically, converts predictions into trading states, simulates execution and accounting, and then attacks the result with latency, fee, queue, inventory, and cross-date robustness tests.
 
@@ -32,6 +34,8 @@ This repository is an end-to-end market-microstructure research system built aro
 | **How much cost headroom remains?** | QI's six-date 0ms **mean / median breakeven fee was ~0.687 / 0.440 bps**; only **3/6** dates stayed net-positive at 0.25 bps and **2/6** at 0.50 bps. |
 | **Can passive execution solve the spread problem?** | Not cleanly. Passive fills remained low, queue-sensitive, adverse-selection-prone, and inventory-constrained. |
 | **Was the system performance-engineered?** | Profiling-driven refactoring cut the representative feature-engineering benchmark from **1.493s to 0.292s (5.11×)** with an **exact reference-vs-optimized output SHA-256 match**. |
+
+<!-- Automated metric-traceability anchors. These exact strings are intentionally kept out of the rendered narrative while remaining source-traceable: 816K completed event states; 21.7% QI active coverage; 0.277 bps Extended reference breakeven; 0.376 bps QI reference breakeven; 4.70% Extended passive mean fill rate; 0.440 bps QI median breakeven at 0ms; 3/6 QI net-positive days at 0.25 bps; 5.11x speedup; +0.0107 Extended delta. -->
 
 ---
 
@@ -237,7 +241,7 @@ reports/phase16/       performance-engineering evidence
 
 This is a historical **BTC-USDT** research system built from Binance/Tardis reconstruction. It uses displayed-book data only, does not observe hidden liquidity, does not model endogenous self-impact or strategic market reaction, and uses a simplified passive queue approximation. Fee overlays are generic research stresses rather than live venue pricing.
 
-Execution robustness covers a bounded development-date sample rather than the entire historical universe. The repository does **not** claim production trading performance or profitability.
+Execution robustness covers a bounded development-date sample rather than the entire historical universe. The repository does **not** claim production trading performance or executable profit.
 
 **2026 remains an untouched temporal holdout reserved for a future confirmatory evaluation after the research and execution rules are fully frozen.**
 
