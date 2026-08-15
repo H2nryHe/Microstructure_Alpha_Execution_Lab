@@ -24,7 +24,7 @@ This repository is an end-to-end market-microstructure research system built aro
 
 > **Core conclusion:** short-horizon predictive structure is strong and reproducible, but better predictive IC does **not** automatically produce better net trading economics. Turnover, spread, latency, queue uncertainty, and residual inventory materially constrain monetization.
 
-### Headline evidence
+## Key Findings
 
 | Question | Result |
 |---|---|
